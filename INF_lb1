@@ -1,0 +1,61 @@
+import wikipedia                                                                
+import help_wiki_function                                                       
+                                                                                
+def FindLang(lang):                                                             
+    if (lang in wikipedia.languages().keys()):                                  
+        wikipedia.set_lang(lang)                                                
+        return True                                                             
+    else:                                                                       
+        return False                                                            
+                                                                                
+def MaxWord(pages_titles):                                                      
+    pagetit = ''                                                                
+    maxlen = 0                                                                  
+    for i in pages_titles:                                                      
+        if help_wiki_function.is_page_valid(i) == True:                         
+            active_page = wikipedia.page(i)                                     
+            page_content = active_page.summary                                  
+            lpage_content = page_content.split(' ')                                
+            if maxlen <= len(lpage_content):
+                maxlen = len(lpage_content)                                     
+                pagetit = active_page.title                                     
+    result = str(maxlen) + ' ' + pagetit                                        
+    return result                                                               
+                                                                                
+def FindLink(pages_titles):                                                     
+    result = []                                                                 
+    link = []                                                                   
+    bol = 0                                                                     
+    for i in range(len(pages_titles)-1):
+        if help_wiki_function.is_page_valid(pages_titles[i]) == True:           
+            active_page = wikipedia.page(pages_titles[i])                       
+            bol = 0                                                             
+            result.append(pages_titles[i])                                      
+            link = active_page.links                                            
+            if pages_titles[i+1] in link:                                       
+                bol = 1                                                         
+                break                                                           
+            res = ''                                                            
+            if bol == 0:
+            result.append(pages_titles[i])                                      
+            link = active_page.links                                            
+            if pages_titles[i+1] in link:                                       
+                bol = 1                                                         
+                break                                                           
+            res = ''                                                            
+            if bol == 0:                                                        
+                for k in link:                                                  
+                    if help_wiki_function.is_page_valid(k) == True:             
+                        if pages_titles[i+1] in wikipedia.page(k).links:        
+                            res = k                                             
+                            break                                               
+                result.append(res)                                              
+    result.append(pages_titles[len(pages_titles)-1])                            
+    return result                                                               
+                                                                                
+pages_names = input().split(', ') 
+if FindLang(pages_names.pop()):                                                 
+    print(MaxWord(pages_names))                                                 
+    print(FindLink(pages_names))                                                
+else:                                                                           
+    print('no results')        
