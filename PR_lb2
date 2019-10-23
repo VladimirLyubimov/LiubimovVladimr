@@ -1,0 +1,123 @@
+#include <stdio.h>
+
+int FirstNegativeElementIndex(int amount, int *array){
+int I = 1;
+while (I <= amount){
+ if (array[I] < 0){
+  return (I - 1);
+ }
+ I = I + 1;
+}
+return -1;
+}
+
+int LastNegativeElementIndex(int amount, int *array){
+    int i = 1;
+    int index = -1;
+    while (i <= amount){
+        if (array[i] < 0){
+            index = i;
+        }
+        i = i + 1;
+    }
+    return (index - 1);
+}
+
+int MultiBetweenNegatives(int *array, int amount){
+    int res = 1;
+    int LastIndex = LastNegativeElementIndex(amount, array) + 1;
+    int FirstIndex = FirstNegativeElementIndex(amount, array) + 1;
+    int i = FirstIndex;
+    int a = 0;
+    while (i < LastIndex){
+        a = array[i];
+        res = res * a;
+        i = i + 1;
+    } 
+    return res;    
+}
+
+int MultiBeforeAndAfter(int *array, int amount){
+    int i = 1;
+    int LastIndex = LastNegativeElementIndex(amount, array) + 1;
+    int FirstIndex = FirstNegativeElementIndex(amount, array) + 1;
+    int result = 1;
+    while (i <= (amount-1)){
+        if ((i < FirstIndex) || (i >= LastIndex)){ 
+            result = result * array[i];
+        }
+        i = i + 1;
+    }
+    return result;
+}
+
+int main(){
+  int amount = 0;
+  int con_num;
+  int array[21];
+  int I = 0;
+  int answer;
+     
+  //int LastIndex;
+  //int FirstIndex;
+     
+  char ch;
+    
+  do{
+   scanf("%d%c", &array[I], &ch);
+   amount = amount + 1;
+   I = I + 1;
+  }while (ch != '\n');
+  
+  //LastIndex = LastNegativeElementIndex(amount, array) + 1;
+  //FirstIndex = FirstNegativeElementIndex(amount, array) + 1;
+    
+  switch(array[0]){
+      case 0 : {
+          answer = FirstNegativeElementIndex(amount, array);
+          if (answer == -1){
+              printf("Данные некорректны\n");
+          }else {
+          printf("%d\n", answer);    
+          }
+          break;
+      }
+      case 1 : {
+          answer = LastNegativeElementIndex(amount, array);
+          if (answer == -2){
+               printf("Данные некорректны\n");
+          }else {
+               printf("%d\n", answer);
+          }
+          break;
+      }
+      case 2 : {
+          if ((FirstNegativeElementIndex(amount, array) + 1 > 0) && (LastNegativeElementIndex(amount, array) + 1 > 0) && (FirstNegativeElementIndex(amount, array) + 1 < LastNegativeElementIndex(amount, array) + 1)){
+              answer = MultiBetweenNegatives(array, amount);
+              printf("%d\n", answer);
+          } else{
+                if (array[0] == 2){
+                    printf("Данные некорректны\n");    
+                }
+          }
+          break;
+      }
+      case 3 : {
+          if ((FirstNegativeElementIndex(amount, array) + 1 > 0) && (LastNegativeElementIndex(amount, array) + 1 > 0) && (FirstNegativeElementIndex(amount, array) + 1 < LastNegativeElementIndex(amount, array) + 1)){
+              answer = MultiBeforeAndAfter(array, amount);
+              printf("%d\n", answer);
+          } else{
+                if (array[0] == 3){
+                    printf("Данные некорректны\n");    
+                }
+          }
+          break;
+      }      
+  }
+  int num = array[0];
+  if ((num != 0) && (num != 1) && (num != 2) && (num != 3)) {
+      printf("Данные некорректны\n");
+  }    
+    
+  return 0;
+ }
