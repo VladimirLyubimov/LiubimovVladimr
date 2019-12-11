@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <wchar.h>
+#include <locale.h>
+
+struct MyWord{
+    char* buf;
+    char* postbuf;
+    int num;
+    int len;
+};
+
+typedef struct MyWord word;
+    
+struct MySentence{
+    word* buf;
+    int len;
+    int num;
+};
+
+typedef struct MySentence sentence;
+
+struct MyText{
+    sentence* buf;
+    int len;
+};
