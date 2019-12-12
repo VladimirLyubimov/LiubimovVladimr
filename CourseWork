@@ -5,8 +5,8 @@
 #include <locale.h>
 
 struct MyWord{
-    char* buf;
-    char* postbuf;
+    wchar_t* buf;
+    //wchar_t* postbuf;
     int num;
     int len;
 };
@@ -16,7 +16,7 @@ typedef struct MyWord word;
 struct MySentence{
     word* buf;
     int len;
-    int num;
+    //int num;
 };
 
 typedef struct MySentence sentence;
@@ -25,3 +25,70 @@ struct MyText{
     sentence* buf;
     int len;
 };
+
+typedef struct MyText text;
+
+word ReadWord(){
+	word inword;
+	int size = 10;
+	int n = 0;
+	inword.buf = malloc(size * sizeof(wchar_t));
+	wchar_t wc;
+	while(1){
+		wc = fgetwc(stdin);
+		if (wcschr(L" ,!?.\n", wc)){
+			inword.buf[n] = wc;
+			n++;
+			inword.len = n - 1;
+			if (wcschr(L",!?.", wc)){
+				inword.buf[n] = fgetwc(stdin);
+				n++;
+				inword.len = n - 2;
+			}
+			break;
+		}
+		inword.buf[n] = wc;
+		n++;
+		if(n == size - 2){
+			size+=10;
+			inword.buf = realloc(inword.buf, size * sizeof(wchar_t));
+		}
+	};
+	inword.buf[n] = L'\0';
+	return inword;
+};
+
+sentence ReadSentence(){
+	sentence insent;
+	int size = 10;
+	int n = 0;
+	insent.buf = malloc(size * sizeof(word*));
+	word wd;
+	while(1){
+		wd = ReadWord();
+		if (wcschr(L"!?.", wd.buf[wd.len-1])){
+			insent.buf[n] = wd;
+			insent.buf[n].num = n;
+			break;
+		}
+		insent.buf[n] = wd;
+		insent.buf[n].num = n;
+		n++;
+		if(n == size - 1){
+			size+=10;
+			insent.buf = realloc(insent.buf, size * sizeof(word*));
+		}		
+	};
+	insent.len = n;
+	return insent;
+};
+
+int main(){
+	word tword;
+	sentence tsent;
+	//tword = ReadWord();
+	tsent = ReadSentence();
+    	wprintf (L"%ls\n",tsent.buf[0]);
+	wprintf(L"%d\n", tsent.len);
+	return 0;	
+}
