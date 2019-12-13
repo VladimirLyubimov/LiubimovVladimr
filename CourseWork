@@ -6,7 +6,6 @@
 
 struct MyWord{
     wchar_t* buf;
-    //wchar_t* postbuf;
     int num;
     int len;
 };
@@ -36,14 +35,19 @@ word ReadWord(){
 	wchar_t wc;
 	while(1){
 		wc = fgetwc(stdin);
-		if (wcschr(L" ,!?.\n", wc)){
+		if (wcschr(L" ,!?.", wc)){
 			inword.buf[n] = wc;
 			n++;
 			inword.len = n - 1;
 			if (wcschr(L",!?.", wc)){
-				inword.buf[n] = fgetwc(stdin);
-				n++;
-				inword.len = n - 2;
+				wc = fgetwc(stdin);
+				if (wcschr(L" ", wc)){
+					inword.buf[n] = wc;
+					n++;
+					inword.len = n - 2;
+				}
+				else
+					break;
 			}
 			break;
 		}
@@ -66,21 +70,29 @@ sentence ReadSentence(){
 	word wd;
 	while(1){
 		wd = ReadWord();
-		if (wcschr(L"!?.", wd.buf[wd.len-1])){
+		if (wcschr(L"!?.", wd.buf[wd.len])){
 			insent.buf[n] = wd;
-			insent.buf[n].num = n;
+			insent.buf[n].num = n + 1;
 			break;
 		}
 		insent.buf[n] = wd;
-		insent.buf[n].num = n;
+		insent.buf[n].num = n + 1;
 		n++;
 		if(n == size - 1){
 			size+=10;
 			insent.buf = realloc(insent.buf, size * sizeof(word*));
 		}		
 	};
-	insent.len = n;
+	insent.len = n + 1;
 	return insent;
+};
+
+void PrintSentence(sentence outsent){
+	int i = 0;
+	while(i < outsent.len){
+		wprintf (L"%ls",outsent.buf[i]);
+		i++;
+	} 
 };
 
 int main(){
@@ -88,7 +100,8 @@ int main(){
 	sentence tsent;
 	//tword = ReadWord();
 	tsent = ReadSentence();
-    	wprintf (L"%ls\n",tsent.buf[0]);
-	wprintf(L"%d\n", tsent.len);
+    	//wprintf (L"%ls\n",tsent.buf[0]);
+    	PrintSentence(tsent);
+	wprintf(L"\n%d", tsent.len);
 	return 0;	
 }
