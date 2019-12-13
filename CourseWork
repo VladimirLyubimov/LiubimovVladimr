@@ -15,7 +15,7 @@ typedef struct MyWord word;
 struct MySentence{
     word* buf;
     int len;
-    //int num;
+    int num;
 };
 
 typedef struct MySentence sentence;
@@ -41,7 +41,7 @@ word ReadWord(){
 			inword.len = n - 1;
 			if (wcschr(L",!?.", wc)){
 				wc = fgetwc(stdin);
-				if (wcschr(L" ", wc)){
+				if (wcschr(L" \n", wc)){
 					inword.buf[n] = wc;
 					n++;
 					inword.len = n - 2;
@@ -95,19 +95,21 @@ text ReadText(){
 	sentence sent;
 	while(1){
 		sent = ReadSentence();
-		if (wcschr(L"!?.", wd.buf[wd.len])){
-			insent.buf[n] = wd;
-			insent.buf[n].num = n + 1;
+		if (wcschr(L"!?.", sent.buf[sent.len - 1].buf) == (sent.buf[sent.len - 1].buf + wcslen(sent.buf[sent.len - 1].buf) - 1)){
+			intext.buf[n] = sent;
+			intext.buf[n].num = n + 1;
 			break;
 		}
-		insent.buf[n] = wd;
-		insent.buf[n].num = n + 1;
+		intext.buf[n] = sent;
+		intext.buf[n].num = n + 1;
 		n++;
 		if(n == size - 1){
 			size+=10;
-			insent.buf = realloc(insent.buf, size * sizeof(word*));
+			intext.buf = realloc(intext.buf, size * sizeof(sentence*));
 		}			
 	}
+	intext.len = n;
+	return intext;
 };
 
 void PrintSentence(sentence outsent){
@@ -121,10 +123,12 @@ void PrintSentence(sentence outsent){
 int main(){
 	word tword;
 	sentence tsent;
+	text ttext;
 	//tword = ReadWord();
-	tsent = ReadSentence();
-    //wprintf (L"%ls\n",tsent.buf[0]);
-    PrintSentence(tsent);
-	wprintf(L"\n%d", tsent.len);
+	//tsent = ReadSentence();
+	ttext = ReadText();
+    //wprintf (L"%ls\n",ttext.buf[0]);
+    	PrintSentence(ttext.buf[0]);
+	wprintf(L"\n%d", ttext.len);
 	return 0;	
 }
