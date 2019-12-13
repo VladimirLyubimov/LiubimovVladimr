@@ -53,7 +53,7 @@ word ReadWord(){
 		}
 		inword.buf[n] = wc;
 		n++;
-		if(n == size - 2){
+		if(n == size - 4){
 			size+=10;
 			inword.buf = realloc(inword.buf, size * sizeof(wchar_t));
 		}
@@ -87,6 +87,29 @@ sentence ReadSentence(){
 	return insent;
 };
 
+text ReadText(){
+	text intext;
+	int size = 10;
+	int n = 0;
+	intext.buf = malloc(size * sizeof(sentence*));
+	sentence sent;
+	while(1){
+		sent = ReadSentence();
+		if (wcschr(L"!?.", wd.buf[wd.len])){
+			insent.buf[n] = wd;
+			insent.buf[n].num = n + 1;
+			break;
+		}
+		insent.buf[n] = wd;
+		insent.buf[n].num = n + 1;
+		n++;
+		if(n == size - 1){
+			size+=10;
+			insent.buf = realloc(insent.buf, size * sizeof(word*));
+		}			
+	}
+};
+
 void PrintSentence(sentence outsent){
 	int i = 0;
 	while(i < outsent.len){
@@ -100,8 +123,8 @@ int main(){
 	sentence tsent;
 	//tword = ReadWord();
 	tsent = ReadSentence();
-    	//wprintf (L"%ls\n",tsent.buf[0]);
-    	PrintSentence(tsent);
+    //wprintf (L"%ls\n",tsent.buf[0]);
+    PrintSentence(tsent);
 	wprintf(L"\n%d", tsent.len);
 	return 0;	
 }
