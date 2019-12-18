@@ -39,17 +39,16 @@ text ReadText(){
 	j = 0;
 	k = 0;
 	intext.buf = malloc(tsize * sizeof(sentence*));
-    intext.buf[i].buf = malloc(ssize * sizeof(word*));
-    intext.buf[i].buf[j].buf = malloc(wsize * sizeof(wchar_t));
+    for (int n = 0; n < 10; n++){
+        intext.buf[n].buf = malloc(ssize * sizeof(word*));
+        for(int m = 0; m < 10; m++)
+            intext.buf[n].buf[m].buf = malloc(wsize * sizeof(wchar_t));
+    }
 	wc = ' ';
 	while (!wcschr(L"!", wc)){
         wc = fgetwc(stdin);
-        //wprintf(L"%c", wc);
-        //if (wcschr(L"!", wc))
-            //break;
         intext.buf[i].buf[j].buf[k] = wc;
-        //wprintf(L"%c", intext.buf[i].buf[j].buf[k]);
-        printf("%d %d\n", j, i);
+        //printf("%d %d\n", j, i);
         if (wcschr(L" \n", wc)){
             //intext.buf[i].buf[j].len = k - 2;
             intext.buf[i].buf[j].buf[k + 1] = L'\0';
@@ -58,27 +57,26 @@ text ReadText(){
             k = 0;
             wsize = 10;
             j = j + 1;
-            intext.buf[i].buf[j].buf = malloc(wsize * sizeof(wchar_t));
+            //intext.buf[i].buf[j].buf = malloc(wsize * sizeof(wchar_t));
             if (wcschr(L".", ctrlwc)){
                 ssize = 10;
                 intext.buf[i].len = j + 1;
                 j = 0;
                 i = i + 1;
-                intext.buf[i].buf = malloc(ssize * sizeof(word*));
+                //intext.buf[i].buf = malloc(ssize * sizeof(word*));
             }
         }
-        
-        if (k == wsize - 3){
+        if (k == wsize - 2){
             wsize = wsize + 10;
             intext.buf[i].buf[j].buf = realloc(intext.buf[i].buf[j].buf, wsize * sizeof(wchar_t));
         }
-        
-         if (j == wsize - 3){
-            ssize = ssize + 10;
+
+        if (j == ssize - 2){
+           ssize = ssize + 10;
             intext.buf[i].buf = realloc(intext.buf[i].buf, ssize * sizeof(word*));
         }
-        
-         if (i == wsize - 3){
+              
+         if (i == tsize - 2){
             tsize = tsize + 10;
             intext.buf = realloc(intext.buf, tsize * sizeof(sentence*));
         }
@@ -102,6 +100,6 @@ void PrintSentence(sentence outsent){
 int main(){
     text ttext;
     ttext = ReadText();
-    //PrintSentence(ttext.buf[0]);
+    PrintSentence(ttext.buf[0]);
     return 0;
 };
