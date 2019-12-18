@@ -50,7 +50,7 @@ text ReadText(){
         intext.buf[i].buf[j].buf[k] = wc;
         k = k + 1;
         //printf("%d %d\n", j, i);
-        if (wcschr(L" \n", wc)){
+        if (wcschr(L" \n!", wc)){
             //intext.buf[i].buf[j].len = k - 2;
             intext.buf[i].buf[j].buf[k] = L'\0';
             ctrlwc = intext.buf[i].buf[j].buf[k - 2];
