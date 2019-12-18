@@ -48,11 +48,12 @@ text ReadText(){
 	while (!wcschr(L"!", wc)){
         wc = fgetwc(stdin);
         intext.buf[i].buf[j].buf[k] = wc;
+        k = k + 1;
         //printf("%d %d\n", j, i);
         if (wcschr(L" \n", wc)){
             //intext.buf[i].buf[j].len = k - 2;
-            intext.buf[i].buf[j].buf[k + 1] = L'\0';
-            ctrlwc = intext.buf[i].buf[j].buf[k - 1];
+            intext.buf[i].buf[j].buf[k] = L'\0';
+            ctrlwc = intext.buf[i].buf[j].buf[k - 2];
             intext.buf[i].buf[j].num = j + 1;
             k = 0;
             wsize = 10;
@@ -80,9 +81,9 @@ text ReadText(){
             tsize = tsize + 10;
             intext.buf = realloc(intext.buf, tsize * sizeof(sentence*));
         }
-        k = k + 1;
 	}
     
+    printf("%d", i);
     intext.len = i;
     intext.trlen = tsize;
     
@@ -100,6 +101,6 @@ void PrintSentence(sentence outsent){
 int main(){
     text ttext;
     ttext = ReadText();
-    PrintSentence(ttext.buf[0]);
+    //PrintSentence(ttext.buf[0]);
     return 0;
 };
