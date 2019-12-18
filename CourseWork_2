@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <wchar.h>
+#include <locale.h>
+ 
+struct MyWord{
+    wchar_t* buf;
+    int num;
+    int len;
+};
+ 
+typedef struct MyWord word;
+ 
+struct MySentence{
+    word* buf;
+    //int len;
+    int num;
+};
+ 
+typedef struct MySentence sentence;
+ 
+struct MyText{
+    sentence* buf;
+    int len;
+    int trlen;
+};
+ 
+typedef struct MyText text;
+ 
+text ReadText(){
+	text intext;
+	wchar_t wc;
+	int tsize = 10;
+    int ssize = 10;
+    int wsize = 10;
+	int i, j, k;
+	i = 0;
+	j = 0;
+	k = 0;
+	intext.buf = malloc(tsize * sizeof(sentence*));
+    intext.buf[i].buf = malloc(ssize * sizeof(word*));
+    intext.buf[i].buf[j].buf = malloc(wsize * sizeof(wchar_t));
+	wc = ' ';
+	while (!wcschr(L"!", wc)){
+        wc = fgetwc(stdin);
+        intext.buf[i].buf[j].buf[k] = wc;
+        k = k + 1;
+        if (wcschr(L" ", wc)){
+            //intext.buf[i].buf[j].len = k - 2;
+            intext.buf[i].buf[j].buf[k] = "\0";
+            intext.buf[i].buf[j].num = j + 1;
+            k = 0;
+            wsize = 10;
+            j = j + 1;
+            intext.buf[i].buf[j].buf = malloc(wsize * sizeof(wchar_t));
+            if (wcschr(L".", wc)){
+                ssize = 10;
+                intext.buf[i].buf.len = j + 1;
+                j = 0;
+                i = i + 1;
+                intext.buf[i].buf = malloc(ssize * sizeof(word*));
+            }
+        }
+        
+        if (k == wsize - 3){
+            wsize = wsize + 10;
+            intext.buf[i].buf[j].buf = realloc(wsize * sizeof(wchar_t));
+        }
+        
+         if (j == wsize - 2){
+            ssize = ssize + 10;
+            intext.buf[i].buf = realloc(ssize * sizeof(word*));
+        }
+        
+         if (i == wsize - 2){
+            tsize = tsize + 10;
+            intext.buf = realloc(tsize * sizeof(sentence));
+        }
+	}
+    
+    intext.len = i;
+    intext.trlen = tsize;
+    
+    return intext;
+};
