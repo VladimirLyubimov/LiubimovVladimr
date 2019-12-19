@@ -90,12 +90,26 @@ text ReadText(){
     return intext;
 };
 
-void PrintSentence(sentence outsent){
+void PrintWord(word outword){
 	int i = 0;
-	while(i < outsent.len){
-		wprintf (L"%ls",outsent.buf[i]);
+	wchar_t wc = 'a';
+	while(!wcschr(L"! ", wc)){
+		wc = outword.buf[i];
+		wprintf (L"%c", wc);
 		i = i + 1;
-    }
+    	}
+};
+
+void PrintSentence(sentence outsent){
+	for(int i = 0; i < outsent.len; i++){
+		PrintWord(outsent.buf[i]);
+	}
+};
+
+void PrintText(text outtext){
+	for(int i = 0; i < outtext.len; i++){
+		PrintSentence(outtext.buf[i]);
+	}
 };
 
 int main(){
