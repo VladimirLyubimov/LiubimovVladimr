@@ -15,7 +15,7 @@ typedef struct MyWord word;
 struct MySentence{
     word* buf;
     int len;
-    int num;
+    //int num;
 };
  
 typedef struct MySentence sentence;
@@ -48,9 +48,9 @@ text ReadText(){
 	while (!wcschr(L"!", wc)){
         wc = fgetwc(stdin);
         intext.buf[i].buf[j].buf[k] = wc;
+        //wprintf(L"%d %d %d\n", k, j, i);
         k = k + 1;
-        //printf("%d %d\n", j, i);
-        if (wcschr(L" \n!", wc)){
+        if (wcschr(L"! \n", wc)){
             //intext.buf[i].buf[j].len = k - 2;
             intext.buf[i].buf[j].buf[k] = L'\0';
             ctrlwc = intext.buf[i].buf[j].buf[k - 2];
@@ -61,7 +61,7 @@ text ReadText(){
             //intext.buf[i].buf[j].buf = malloc(wsize * sizeof(wchar_t));
             if (wcschr(L".", ctrlwc)){
                 ssize = 10;
-                intext.buf[i].len = j + 1;
+                intext.buf[i].len = j;
                 j = 0;
                 i = i + 1;
                 //intext.buf[i].buf = malloc(ssize * sizeof(word*));
@@ -83,7 +83,7 @@ text ReadText(){
         }
 	}
     
-    printf("%d", i);
+    wprintf(L"%d\n", i);
     intext.len = i;
     intext.trlen = tsize;
     
@@ -93,8 +93,10 @@ text ReadText(){
 void PrintWord(word outword){
 	int i = 0;
 	wchar_t wc = 'a';
-	while(!wcschr(L"! ", wc)){
+    while (1){
 		wc = outword.buf[i];
+        if (wcschr(L"\0", wc))
+            break;
 		wprintf (L"%c", wc);
 		i = i + 1;
     	}
@@ -115,6 +117,8 @@ void PrintText(text outtext){
 int main(){
     text ttext;
     ttext = ReadText();
-    //PrintSentence(ttext.buf[0]);
+    //PrintWord(ttext.buf[0].buf[]);
+    //wprintf(L"%c", ttext.buf[0].buf[1].buf[10]);
+    PrintText(ttext);
     return 0;
 };
