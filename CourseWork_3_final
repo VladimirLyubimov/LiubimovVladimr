@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <wchar.h>
+#include <locale.h>
+#include <ctype.h>
+
+#define LEN 10
+
+struct MySentence{
+    wchar_t* buf;
+    int num;
+};
+
+typedef struct MySentence sentence;
+
+struct MyText{
+	sentence* buf;
+    int third_len;
+	int size;
+	int i;
+};
+
+typedef struct MyText mytext;
+
+wchar_t* InputSentence(){
+	int size = LEN;
+	int i = 0;
+	wchar_t* sent = malloc(size * sizeof(wchar_t));
+	wchar_t ch;
+    
+	do{
+		ch = fgetwc(stdin);
+		sent[i] = ch;
+		i++;
+		if(i == size - 3){
+			size = size + LEN;
+			sent = realloc(sent, size * sizeof(wchar_t));
+		};
+	}while (!wcschr(L"!.", ch));
+	sent[i] = '\0';
+	
+    return sent;
+};
+
+mytext InputText(){
+	int size = LEN;
+	int i = 0;
+	sentence* content = malloc(size * sizeof(sentence));
+     while(1){
+         wchar_t *cp = InputSentence();
+         if(wcschr(L"!", cp[wcslen(cp) - 1])){
+            content[i].buf = cp;
+            i = i + 1;
+            content[i-1].num = i;
+			break;
+		}
+         else{
+			content[i].buf = cp;
+			i++;
+            content[i-1].num = i;
+			if(i == size - 2){
+				size = size + LEN;
+				content = realloc(content, size * sizeof(sentence));
+			};
+		};
+     };
+
+	struct MyText text;
+	text.buf = content;
+	text.size = size;
+	text.i = i;
+    text.third_len = 0;
+	return text;	
+};
+
+void PrintSentence(sentence sent){
+    wprintf(L"%ls", sent.buf);    
+};
+
+void PrintText(mytext text){
+    for(int i = 0; i < text.i; i++)
+        //wprintf(L"%ls", text.buf[i].buf);
+        PrintSentence(text.buf[i]);
+};
+
+mytext Shift(mytext text, int start){
+    int i = start;
+    while (i < (text.i - 1)){
+        text.buf[i] = text.buf[i+1];
+        i = i + 1;
+    };
+    text.i = text.i - 1;
+    
+    return text;
+}
+
+int SentCompare(sentence samplesent, sentence sent){
+    int bol = 0;
+    wchar_t* s1;
+    wchar_t* s2;
+    s1 = malloc((wcslen(samplesent.buf) + 1) * sizeof(wchar_t));
+    s2 = malloc((wcslen(sent.buf) + 1) * sizeof(wchar_t));
+    wcscpy(s1, samplesent.buf);
+    wcscpy(s2, sent.buf);
+    
+    for(int i = 0; i < wcslen(s1); i++){
+        s1[i] = tolower(s1[i]);
+    }
+    for(int i = 0; i < wcslen(s2); i++){
+        s2[i] = tolower(s2[i]);
+    }
+    
+    bol = wcscmp(s1, s2);
+    
+    free(s1);
+    free(s2);
+    
+    return bol;
+};
+
+mytext ExcludeSentence(mytext text){
+    int i = 0;
+    int j = 1;
+    while (i < text.i - 1){
+            while(j < text.i){
+            if (SentCompare(text.buf[i], text.buf[j]) == 0){
+                free(text.buf[j].buf);
+                text = Shift(text, j);
+                j = j - 1;
+            }
+            j++;
+            }
+            i = i + 1;
+            j = i + 1;
+    }
+    return text;
+}
+
+void MyFree(mytext text){
+    for(int i = 0; i < text.i; i++){
+        free(text.buf[i].buf);
+    }
+    free(text.buf);
+};
+
+void PrintTag(){
+    wprintf();
+};
+
+int main(){
+    setlocale(LC_ALL,"");
+    
+    mytext ttext;
+    
+    ttext = InputText();
+    wprintf(L"%d\n", ttext.size);
+    wprintf(L"%d\n", ttext.i);
+    ttext = ExcludeSentence(ttext);
+    //int a = SentCompare(ttext.buf[2], ttext.buf[1]);
+    //wprintf(L"%d\n", a);
+    PrintText(ttext);
+    wprintf(L"\n%d\n", ttext.size);
+    wprintf(L"%d\n", ttext.i);
+    
+    MyFree(ttext);
+    
+    return 0;
+};
