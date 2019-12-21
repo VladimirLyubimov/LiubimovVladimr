@@ -46,9 +46,9 @@ wchar_t* InputSentence(){
 mytext InputText(){
 	int size = LEN;
 	int i = 0;
-	sentence* content = malloc(size * sizeof(sentence));
-     while(1){
-         wchar_t *cp = InputSentence();
+        sentence* content = malloc(size * sizeof(sentence));
+     	while(1){
+        wchar_t *cp = InputSentence();
          if(wcschr(L"!", cp[wcslen(cp) - 1])){
             content[i].buf = cp;
             i = i + 1;
@@ -70,7 +70,7 @@ mytext InputText(){
 	text.buf = content;
 	text.size = size;
 	text.i = i;
-    text.third_len = 0;
+    	text.third_len = 0;
 	return text;	
 };
 
@@ -88,6 +88,7 @@ mytext Shift(mytext text, int start){
     int i = start;
     while (i < (text.i - 1)){
         text.buf[i] = text.buf[i+1];
+        text.buf[i].num = text.buf[i].num - 1;
         i = i + 1;
     };
     text.i = text.i - 1;
@@ -144,25 +145,58 @@ void MyFree(mytext text){
     free(text.buf);
 };
 
+wchar_t* FindWord(int number, sentence sent){
+    wchar_t* word;
+    wchar_t* st;
+    wchar_t* buf;
+    
+    st = malloc((wcslen(sent.buf) + 1) * sizeof(wchar_t));
+    wcscpy(st, sent.buf);
+    
+    word = wcstok(st, L"!., ", &buf);
+    int i = 1;
+    
+    while ((i < number)){
+        word = wcstok(NULL, L"!., ", &buf);
+        i++;
+    }
+    
+    return word;
+};
+
+sentence SentShift(sentence sent, int w1_len, int w2_len){
+    wchar_t* st;
+    st = malloc((wcslen(sent.buf) + 1 + w2_len) * sizeof(wchar_t));
+    
+    //sent.buf = malloc((wcslen(sent.buf) + 1 + w2_len) * sizeof(wchar_t));
+    wcscpy(st, sent.buf + w1_len);
+    sent.buf = malloc((wcslen(sent.buf) + 1 + w2_len) * sizeof(wchar_t));
+    wcscpy(sent.buf + w2_len, st);
+    free(st);
+    //sent.buf = st;
+    wprintf(L"\n%ls\n", sent.buf);
+    return sent;
+};
+
 void PrintTag(){
-    wprintf();
+    //wprintf();
 };
 
 int main(){
     setlocale(LC_ALL,"");
     
     mytext ttext;
+    wchar_t* word;
     
     ttext = InputText();
+    
     wprintf(L"%d\n", ttext.size);
     wprintf(L"%d\n", ttext.i);
-    ttext = ExcludeSentence(ttext);
-    //int a = SentCompare(ttext.buf[2], ttext.buf[1]);
-    //wprintf(L"%d\n", a);
-    PrintText(ttext);
-    wprintf(L"\n%d\n", ttext.size);
-    wprintf(L"%d\n", ttext.i);
     
+    ttext = ExcludeSentence(ttext);
+    PrintText(ttext);
+    SentShift(ttext.buf[0], 5, 0);
+        
     MyFree(ttext);
     
     return 0;
