@@ -10,13 +10,13 @@
 struct MySentence{
     wchar_t* buf;
     int num;
+    int third_len;
 };
 
 typedef struct MySentence sentence;
 
 struct MyText{
 	sentence* buf;
-    int third_len;
 	int size;
 	int i;
 };
@@ -38,7 +38,6 @@ wchar_t* InputSentence(){
 			sent = realloc(sent, size * sizeof(wchar_t));
 		};
 	}while (!wcschr(L"!.", ch));
-	//sent[i] = fgetwc(stdin);
     sent[i] = '\0';
 	
     return sent;
@@ -49,6 +48,7 @@ mytext InputText(){
 	int i = 0;
         sentence* content = malloc(size * sizeof(sentence));
      	while(1){
+        content[i].third_len = 0;
         wchar_t *cp = InputSentence();
          if(wcschr(L"!", cp[wcslen(cp) - 1])){
             content[i].buf = cp;
@@ -71,7 +71,6 @@ mytext InputText(){
 	text.buf = content;
 	text.size = size;
 	text.i = i;
-    	text.third_len = 0;
 	return text;	
 };
 
@@ -183,7 +182,6 @@ sentence SentShift(sentence sent, int shift, int start){
         }
         sent.buf = st;
     }    
-    //wprintf(L"\n%ls\n", sent.buf);
     return sent;
 };
 
@@ -208,8 +206,48 @@ mytext ShiftWords(mytext text){
 };
 
 mytext DeleteSameSymbols(mytext text){
-
+    for(int i = 0; i < text.i; i++){
+        for(int j = 0; j < wcslen(text.buf[i].buf); j++){
+            if (text.buf[i].buf[j] == text.buf[i].buf[j+1]){
+                text.buf[i] = SentShift(text.buf[i], 1, j);
+                j = j - 1;
+            }
+        }
+    }
+    return text;
 };
+
+int FindThirdWordLen(sentence sent){
+    int len;
+    wchar_t* word;
+    word = FindWord(3, sent);
+    if(word == NULL)
+        len = 0;
+    else
+        len = wcslen(word);
+    return len;
+};
+
+int* MakeThirdLenTable(mytext text){
+    int* lenarr;
+    lenarr = malloc(text.i * sizeof(int));
+    for(int i = 0; i < text.i; i++){
+        lenarr[i] = FindThirdWordLen(text.buf[i]);
+        text.buf[i].third_len = lenarr[i];
+    }
+    return lenarr;
+};
+
+int compare(const void * val1, const void * val2){
+    return ( *(int*)val1 - *(int*)val2 );
+};
+
+int* SortThirdLen(int* lenarr, mytext text){
+    qsort(lenarr, text.i, sizeof(int), compare);    
+    return lenarr;
+};
+
+mytext SortText
 
 int main(){
     setlocale(LC_ALL,"");
@@ -224,10 +262,12 @@ int main(){
     wprintf(L"%d\n", ttext.i);
     
     ttext = ExcludeSentence(ttext);
+    //wprintf(L"%d\n", SortThirdLen(MakeThirdLenTable(ttext), ttext)[4]);
     //wprintf(L"%lc", ttext.buf[1].buf[1]);
     //PrintText(ttext);
     //sent = SentShift(ttext.buf[0], -11, 0);
     //ttext = ShiftWords(ttext);
+    //ttext = DeleteSameSymbols(ttext);
     PrintText(ttext);
     
     MyFree(ttext);
