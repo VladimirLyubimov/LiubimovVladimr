@@ -38,7 +38,8 @@ wchar_t* InputSentence(){
 			sent = realloc(sent, size * sizeof(wchar_t));
 		};
 	}while (!wcschr(L"!.", ch));
-	sent[i] = '\0';
+	//sent[i] = fgetwc(stdin);
+    sent[i] = '\0';
 	
     return sent;
 };
@@ -193,14 +194,21 @@ mytext ShiftWords(mytext text){
     for(int i = 1; i < text.i; i++){
         w1 = FindWord(1, text.buf[i]);
         w2 = FindWord(2, text.buf[i-1]);
-        text.buf[i] = SentShift(text.buf[i], wcslen(w1) - wcslen(w2), 0);
+        text.buf[i] = SentShift(text.buf[i], wcslen(w1) - wcslen(w2), 1);
         for(int j = 0; j < wcslen(w2); j++)
-            text.buf[i].buf[j] = w2[j];
-        //free(w1);
-        //free(w2);
+            text.buf[i].buf[j+1] = w2[j];
     }
+    w1 = FindWord(1, text.buf[0]);
+    w2 = FindWord(2, text.buf[text.i-1]);
+    text.buf[0] = SentShift(text.buf[0], wcslen(w1) - wcslen(w2), 0);
+    for(int j = 0; j < wcslen(w2); j++)
+        text.buf[0].buf[j] = w2[j];
     
     return text;
+};
+
+mytext DeleteSameSymbols(mytext text){
+
 };
 
 int main(){
@@ -216,10 +224,10 @@ int main(){
     wprintf(L"%d\n", ttext.i);
     
     ttext = ExcludeSentence(ttext);
-    //wprintf(L"%lc", ttext.buf[0].buf[6]);
+    //wprintf(L"%lc", ttext.buf[1].buf[1]);
     //PrintText(ttext);
     //sent = SentShift(ttext.buf[0], -11, 0);
-    ttext = ShiftWords(ttext);
+    //ttext = ShiftWords(ttext);
     PrintText(ttext);
     
     MyFree(ttext);
