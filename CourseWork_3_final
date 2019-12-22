@@ -164,22 +164,43 @@ wchar_t* FindWord(int number, sentence sent){
     return word;
 };
 
-sentence SentShift(sentence sent, int w1_len, int w2_len){
+sentence SentShift(sentence sent, int shift, int start){
+    int i = start;
     wchar_t* st;
-    st = malloc((wcslen(sent.buf) + 1 + w2_len) * sizeof(wchar_t));
-    
-    //sent.buf = malloc((wcslen(sent.buf) + 1 + w2_len) * sizeof(wchar_t));
-    wcscpy(st, sent.buf + w1_len);
-    sent.buf = malloc((wcslen(sent.buf) + 1 + w2_len) * sizeof(wchar_t));
-    wcscpy(sent.buf + w2_len, st);
-    free(st);
-    //sent.buf = st;
-    wprintf(L"\n%ls\n", sent.buf);
+    if (shift >= 0)
+        while (i < wcslen(sent.buf)){
+            sent.buf[i] = sent.buf[i+shift];
+            i = i + 1;
+        }
+    else{
+        st = malloc((wcslen(sent.buf) + 2 - shift) * sizeof(wchar_t));
+        wcscpy(st, sent.buf);
+        i = wcslen(sent.buf) + 1;
+        while (i >= start){
+            st[i-shift] = st[i];
+            i = i - 1;
+        }
+        sent.buf = st;
+    }    
+    //wprintf(L"\n%ls\n", sent.buf);
     return sent;
 };
 
-void PrintTag(){
-    //wprintf();
+mytext ShiftWords(mytext text){
+    wchar_t* w1;
+    wchar_t* w2;
+    
+    for(int i = 1; i < text.i; i++){
+        w1 = FindWord(1, text.buf[i]);
+        w2 = FindWord(2, text.buf[i-1]);
+        text.buf[i] = SentShift(text.buf[i], wcslen(w1) - wcslen(w2), 0);
+        for(int j = 0; j < wcslen(w2); j++)
+            text.buf[i].buf[j] = w2[j];
+        //free(w1);
+        //free(w2);
+    }
+    
+    return text;
 };
 
 int main(){
@@ -187,6 +208,7 @@ int main(){
     
     mytext ttext;
     wchar_t* word;
+    sentence sent;
     
     ttext = InputText();
     
@@ -194,9 +216,12 @@ int main(){
     wprintf(L"%d\n", ttext.i);
     
     ttext = ExcludeSentence(ttext);
+    //wprintf(L"%lc", ttext.buf[0].buf[6]);
+    //PrintText(ttext);
+    //sent = SentShift(ttext.buf[0], -11, 0);
+    ttext = ShiftWords(ttext);
     PrintText(ttext);
-    SentShift(ttext.buf[0], 5, 0);
-        
+    
     MyFree(ttext);
     
     return 0;
