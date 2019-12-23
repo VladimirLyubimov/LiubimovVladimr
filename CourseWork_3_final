@@ -288,6 +288,7 @@ int* FindNumInWord(mytext text){
             if (CheckWord(word) == 1){
                 arr[j+1] = i;
                 j = j + 1;
+                break;
                 //PrintSentence(text.buf[i]);
                 //wprintf(L"\n");
             }
@@ -296,13 +297,31 @@ int* FindNumInWord(mytext text){
         }
         k = 0;
     }
-    arr[0] = j + 1;
+    arr[0] = j;
     
     return arr;
 };
 
-void PrintNumWords(mytext text){
-    
+void PrintNumWords(mytext text, int* arr){
+    wchar_t* buf;
+    wchar_t* word;
+    wchar_t* sent;
+    for(int i = 1; i <= arr[0]; i++){
+        sent = malloc((wcslen(text.buf[arr[i]].buf) + 1) * sizeof(wchar_t));
+        wcscpy(sent, text.buf[arr[i]].buf);
+        word = wcstok(sent, L"!. ", &buf);        
+        while(word != NULL){
+            if (CheckWord(word) == 1){
+                wprintf(L"%ls ", word, "\x1B[32m");
+                //PrintSentence(text.buf[i]);
+                //wprintf(L"\n");
+            }
+            else
+                wprintf(L"%ls ", word);
+            word = wcstok(NULL, L" ", &buf);
+        } 
+        free(sent);
+    }
 };
 
 
@@ -329,9 +348,10 @@ int main(){
     PrintText(ttext);
     wprintf(L"\n");
     a = FindNumInWord(ttext);
-    ttext = SortText(ttext);
+    PrintNumWords(ttext, a);
+    //wprintf(L"%d\n", a[5]);
+    //ttext = SortText(ttext);
     //PrintText(ttext);
-    
     MyFree(ttext);
     
     return 0;
