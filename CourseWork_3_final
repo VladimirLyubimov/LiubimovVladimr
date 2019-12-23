@@ -176,6 +176,7 @@ sentence SentShift(sentence sent, int shift, int start){
         st = malloc((wcslen(sent.buf) + 2 - shift) * sizeof(wchar_t));
         wcscpy(st, sent.buf);
         i = wcslen(sent.buf) + 1;
+        free(sent.buf);
         while (i >= start){
             st[i-shift] = st[i];
             i = i - 1;
@@ -267,26 +268,43 @@ mytext SortText(mytext text){
     return text;
 };
 
+int CheckWord(wchar_t* word){
+    int bol = 0;
+    if (!wcschr(L"0123456789", word[0]) && !wcschr(L"0123456789", word[wcslen(word)-1]) && wcspbrk(word, L"0123456789")){
+        bol = 1;
+    }
+    return bol;
+};
+
 int* FindNumInWord(mytext text){
     wchar_t* word;
     int* arr;
-    arr = malloc(text.i * 4);
+    arr = calloc(text.i + 1, sizeof(int));
     int k = 0;
+    int j = 0;
     for(int i = 0; i < text.i; i++){
         word = FindWord(k, text.buf[i]);        
         while(word != NULL){
-            if (!wcschr(L"0123456789", word[0]) && !wcschr(L"0123456789", word[wcslen(word)-1]) && wcspbrk(word, L"0123456789")){
-                PrintSentence(text.buf[i]);
-                wprintf(L"\n");
+            if (CheckWord(word) == 1){
+                arr[j+1] = i;
+                j = j + 1;
+                //PrintSentence(text.buf[i]);
+                //wprintf(L"\n");
             }
             k = k + 1; 
             word = FindWord(k, text.buf[i]);
         }
         k = 0;
     }
+    arr[0] = j + 1;
     
     return arr;
 };
+
+void PrintNumWords(mytext text){
+    
+};
+
 
 int main(){
     setlocale(LC_ALL,"");
@@ -311,7 +329,7 @@ int main(){
     PrintText(ttext);
     wprintf(L"\n");
     a = FindNumInWord(ttext);
-    //ttext = SortText(ttext);
+    ttext = SortText(ttext);
     //PrintText(ttext);
     
     MyFree(ttext);
