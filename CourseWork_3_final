@@ -325,6 +325,9 @@ void PrintNumWords(mytext text, int* arr){
     }
 };
 
+void PrintTip(){
+    wprintf(L"\nДля получения информации о программе нажмите <H>.\nДля выхода из программы нажмите <E>.\nДля замены первого слова в каждом предложении на втрое слово из преыдущего нажмите <1>.\nДля сортировки предложений по длине третьего слова нажмите <2>.\nДля вывода на экран предложений со словами вида *число* нажмите <3>.\nДля замены всех подряд идущих символов на один такой символ в каждом слове каждого предложения нажмите <4>.\n\n");
+}; 
 
 int main(){
     setlocale(LC_ALL,"");
@@ -333,6 +336,7 @@ int main(){
     wchar_t* word;
     sentence sent;
     int* a;
+    wchar_t key;
     
     ttext = InputText();
     ttext.buf[0] = SentShift(ttext.buf[0], -1, 0);
@@ -340,12 +344,41 @@ int main(){
     ttext = ExcludeSentence(ttext);
     
     wprintf(L"Текст введён и повторяющиеся предложения удалены.\n");
-    //wprintf(L"%d\n", SortThirdLen(MakeThirdLenTable(ttext), ttext)[4]);
-    //wprintf(L"%lc", ttext.buf[1].buf[1]);
+    PrintTip();
     PrintText(ttext);
     wprintf(L"\n");
+    
+    while(1){
+        key = getwchar();
+        //switch(key){
+        if (key == 'h'){
+            wprintf(L"Text processor version 1.0. Created by Vladimir Lyubimov, Russia, Saint-Petersburg, ETU LETI, 2019. All rights reserved\n");
+        }
+        else{
+            if (key == 'e'){
+                wprintf(L"You have commanded to stop the execucting of the programm.");
+                break;
+            }
+            else{
+                if (key == '1'){
+                    ttext = ShiftWords(ttext);
+                    PrintText(ttext);
+                }
+                else{
+                    if(key == '2'){
+                        
+                    } 
+                }
+            }
+        }
+        //}
+    }
+    //wprintf(L"%d\n", SortThirdLen(MakeThirdLenTable(ttext), ttext)[4]);
+    //wprintf(L"%lc", ttext.buf[1].buf[1]);
+    //PrintText(ttext);
+    //wprintf(L"\n");
     //sent = SentShift(ttext.buf[0], -11, 0);
-    ttext = ShiftWords(ttext);
+    //ttext = ShiftWords(ttext);
     ttext = DeleteSameSymbols(ttext);
     PrintText(ttext);
     wprintf(L"\n");
