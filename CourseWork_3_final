@@ -352,11 +352,12 @@ int main(){
         key = getwchar();
         //switch(key){
         if (key == 'h'){
-            wprintf(L"Text processor version 1.0. Created by Vladimir Lyubimov, Russia, Saint-Petersburg, ETU LETI, 2019. All rights reserved\n");
+            wprintf(L"Text processor version 1.0. Created by Vladimir Lyubimov, Russia, Saint-Petersburg, ETU LETI, 2019. All rights reserved.\n");
         }
         else{
             if (key == 'e'){
-                wprintf(L"You have commanded to stop the execucting of the programm.");
+                wprintf(L"You have commanded to stop the execucting of the programm.\n");
+                MyFree(ttext);
                 break;
             }
             else{
@@ -366,8 +367,23 @@ int main(){
                 }
                 else{
                     if(key == '2'){
-                        
+                        ttext = SortText(ttext);
+                        PrintText(ttext);
                     } 
+                    else{
+                        if(key == '3'){
+                            a = FindNumInWord(ttext);
+                            PrintNumWords(ttext, a);
+                        }
+                        else{
+                            if(key == '4'){
+                                ttext = DeleteSameSymbols(ttext);
+                                PrintText(ttext);    
+                            }
+                            else
+                                wprintf(L"Incorrect command! Please read a tip and repeat your request.\n");
+                        }
+                    }
                 }
             }
         }
@@ -379,16 +395,15 @@ int main(){
     //wprintf(L"\n");
     //sent = SentShift(ttext.buf[0], -11, 0);
     //ttext = ShiftWords(ttext);
-    ttext = DeleteSameSymbols(ttext);
-    PrintText(ttext);
-    wprintf(L"\n");
-    a = FindNumInWord(ttext);
-    PrintNumWords(ttext, a);
-    wprintf(L"\n");
+    
+    //wprintf(L"\n");
+    //a = FindNumInWord(ttext);
+    //PrintNumWords(ttext, a);
+    //wprintf(L"\n");
     //wprintf(L"%d\n", a[5]);
-    ttext = SortText(ttext);
-    PrintText(ttext);
-    MyFree(ttext);
+    //ttext = SortText(ttext);
+    //PrintText(ttext);
+    //MyFree(ttext);
     
     return 0;
 };
