@@ -326,7 +326,7 @@ void PrintNumWords(mytext text, int* arr){
 };
 
 void PrintTip(){
-    wprintf(L"\nДля получения информации о программе нажмите <H>.\nДля выхода из программы нажмите <E>.\nДля замены первого слова в каждом предложении на втрое слово из преыдущего нажмите <1>.\nДля сортировки предложений по длине третьего слова нажмите <2>.\nДля вывода на экран предложений со словами вида *число* нажмите <3>.\nДля замены всех подряд идущих символов на один такой символ в каждом слове каждого предложения нажмите <4>.\n\n");
+    wprintf(L"\nДля получения информации о программе нажмите <H>.\nДля выхода из программы нажмите <E>.\nДля замены первого слова в каждом предложении на втрое слово из преыдущего нажмите <1>.\nДля сортировки предложений по длине третьего слова нажмите <2>.\nДля вывода на экран предложений со словами вида *число* нажмите <3>.\nДля замены всех подряд идущих символов на один такой символ в каждом слове каждого предложения нажмите <4>.\n");
 }; 
 
 int main(){
@@ -350,13 +350,12 @@ int main(){
     
     while(1){
         key = getwchar();
-        //switch(key){
         if (key == 'h'){
-            wprintf(L"Text processor version 1.0. Created by Vladimir Lyubimov, Russia, Saint-Petersburg, ETU LETI, 2019. All rights reserved.\n");
+            wprintf(L"\nText processor version 1.0. Created by Vladimir Lyubimov, Russia, Saint-Petersburg, ETU LETI, 2019. All rights reserved.\n");
         }
         else{
             if (key == 'e'){
-                wprintf(L"You have commanded to stop the execucting of the programm.\n");
+                wprintf(L"\nYou have commanded to stop the execucting of the programm.\n");
                 MyFree(ttext);
                 break;
             }
@@ -381,29 +380,14 @@ int main(){
                                 PrintText(ttext);    
                             }
                             else
-                                wprintf(L"Incorrect command! Please read a tip and repeat your request.\n");
+                                wprintf(L"\nIncorrect command! Please read a tip and repeat your request.\n");
                         }
                     }
                 }
             }
         }
-        //}
+        PrintTip();
     }
-    //wprintf(L"%d\n", SortThirdLen(MakeThirdLenTable(ttext), ttext)[4]);
-    //wprintf(L"%lc", ttext.buf[1].buf[1]);
-    //PrintText(ttext);
-    //wprintf(L"\n");
-    //sent = SentShift(ttext.buf[0], -11, 0);
-    //ttext = ShiftWords(ttext);
-    
-    //wprintf(L"\n");
-    //a = FindNumInWord(ttext);
-    //PrintNumWords(ttext, a);
-    //wprintf(L"\n");
-    //wprintf(L"%d\n", a[5]);
-    //ttext = SortText(ttext);
-    //PrintText(ttext);
-    //MyFree(ttext);
     
     return 0;
 };
