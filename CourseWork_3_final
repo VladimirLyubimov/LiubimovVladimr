@@ -31,8 +31,8 @@ wchar_t* InputSentence(){
     
 	do{
 		ch = fgetwc(stdin);
-		sent[i] = ch;
-		i++;
+            sent[i] = ch;
+            i++;
 		if(i == size - 4){
 			size = size + LEN;
 			sent = realloc(sent, size * sizeof(wchar_t));
@@ -81,8 +81,8 @@ void PrintSentence(sentence sent){
 
 void PrintText(mytext text){
     for(int i = 0; i < text.i; i++)
-        //wprintf(L"%ls", text.buf[i].buf);
         PrintSentence(text.buf[i]);
+    wprintf(L"%\n");
 };
 
 mytext Shift(mytext text, int start){
@@ -290,8 +290,6 @@ int* FindNumInWord(mytext text){
                 arr[j+1] = i;
                 j = j + 1;
                 break;
-                //PrintSentence(text.buf[i]);
-                //wprintf(L"\n");
             }
             k = k + 1; 
             word = FindWord(k, text.buf[i]);
@@ -314,8 +312,6 @@ void PrintNumWords(mytext text, int* arr){
         while(word != NULL){
             if (CheckWord(word) == 1){
                 wprintf(L"%ls ", word, "\033[0;32m", "\033[0m");
-                //PrintSentence(text.buf[i]);
-                //wprintf(L"\n");
             }
             else
                 wprintf(L"%ls ", word);
