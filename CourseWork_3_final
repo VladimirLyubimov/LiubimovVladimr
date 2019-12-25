@@ -3,7 +3,6 @@
 #include <wchar.h>
 #include <locale.h>
 #include <ctype.h>
-
 #define LEN 10
 
 struct MySentence{
@@ -36,7 +35,7 @@ wchar_t* InputSentence(){
 			size = size + LEN;
 			sent = realloc(sent, size * sizeof(wchar_t));
 		};
-	}while (!wcschr(L"!.", ch));
+	}while (!wcschr(L".\n", ch));
     sent[i] = '\0';
 	
     return sent;
@@ -49,10 +48,7 @@ mytext InputText(){
      	while(1){
         content[i].third_len = 0;
         wchar_t *cp = InputSentence();
-         if(wcschr(L"!", cp[wcslen(cp) - 1])){
-            content[i].buf = cp;
-            i = i + 1;
-            content[i-1].num = i;
+         if(wcschr(L"\n", cp[wcslen(cp) - 1])){
 			break;
 		}
          else{
