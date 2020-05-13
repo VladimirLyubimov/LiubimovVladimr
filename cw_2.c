@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <png.h>
-#define PNG_DEBUG 3
 
 typedef struct png{
     	int width;
@@ -41,11 +40,26 @@ int ReadFile(char *filename, png* image) {
 		fprintf(stderr, "png_create_info_struct failed!\n");
 		return 1;
     	}
+
+	if (setjmp(png_jmpbuf(image->png_ptr))){
+		fprintf(stderr, "Error during init_io!\n");
+		fclose(fl);
+		return 1;
+	}
+	
+	png_init_io(image->png_ptr, fl);
+	png_set_sig_bytes(image->png_ptr, 8);
+
+	png_read_info(image->png_ptr, image->info_ptr);
+
+	image->width = png_get_image_width(image->png_ptr, image->info_ptr);
+	image->height = png_get_image_height(image->png_ptr, image->info_ptr);
 }
 
 
 int main(int argc, char** argv){
 	png* image;
+	image = malloc(1*sizeof(png));
 	ReadFile(argv[1], image);		
 	return 0;
 }
