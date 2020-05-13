@@ -12,11 +12,13 @@ typedef struct png{
     	png_byte bit_depth;
     	png_structp png_ptr;
     	png_infop info_ptr;
-    	png_bytep *row_pointers;
+    	png_bytep* row_pointers;
 }png;
 
 int ReadFile(char *filename, png* image) {
     	int x,y;
+	x = 0;
+	y = 0;
     	char header[8];
     	FILE *fl = fopen(filename, "rb");
     	if (!fl){
@@ -54,12 +56,33 @@ int ReadFile(char *filename, png* image) {
 
 	image->width = png_get_image_width(image->png_ptr, image->info_ptr);
 	image->height = png_get_image_height(image->png_ptr, image->info_ptr);
+	image->bit_depth = png_get_bit_depth(image->png_ptr, image->info_ptr);
+	image->color_type = png_get_color_type(image->png_ptr, image->info_ptr);
+	image->number_of_passes = png_set_interlace_handling(image->png_ptr);
+    	png_read_update_info(image->png_ptr, image->info_ptr);
+
+	if(image->bit_depth == 16)
+		png_set_strip_16(image->png_ptr);
+		
+	if (setjmp(png_jmpbuf(image->png_ptr))){
+		fprintf(stderr, "Error during reading image!\n");
+		return 1;
+	}
+
+	image->row_pointers = (png_bytep*)malloc(image->height * sizeof(png_bytep));
+	for(y; y < image->height; y++){
+		image->row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(image->png_ptr, image->info_ptr));
+	}
+	png_read_image(image->png_ptr, image->row_pointers);
+    	fclose(fl);
+	
+	return 0;
 }
 
 
 int main(int argc, char** argv){
 	png* image;
-	image = malloc(1*sizeof(png));
+	image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], image);		
 	return 0;
 }
