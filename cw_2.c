@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <png.h>
+#include <math.h>
+#define PNG_DEBUG 3
 
 typedef struct png{
     	int width;
@@ -61,8 +63,8 @@ int ReadFile(char *filename, png* image) {
 	image->number_of_passes = png_set_interlace_handling(image->png_ptr);
     	png_read_update_info(image->png_ptr, image->info_ptr);
 
-	if(image->bit_depth == 16)
-		png_set_strip_16(image->png_ptr);
+	//if(image->bit_depth == 16)
+		//png_set_strip_16(image->png_ptr);
 		
 	if (setjmp(png_jmpbuf(image->png_ptr))){
 		fprintf(stderr, "Error during reading image!\n");
@@ -70,7 +72,7 @@ int ReadFile(char *filename, png* image) {
 	}
 
 	image->row_pointers = (png_bytep*)malloc(image->height * sizeof(png_bytep));
-	for(y; y < image->height; y++){
+	for(y = 0; y < image->height; y++){
 		image->row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(image->png_ptr, image->info_ptr));
 	}
 	png_read_image(image->png_ptr, image->row_pointers);
@@ -133,11 +135,48 @@ int OutputImage(char* filename, png* image){
 	return 0;
 }
 
+void DrawLine(png* image, int x1, int y1, int x2, int y2){
+	int y = y1;
+	int x = x1;
+	int delx, dely;
+	int dx, dy;
+	int d, dd;
+	delx = abs(x2 - x1);
+	dely = abs(y2 - y1);
+	dx = x1 < x2 ? 1 : -1;
+	dy = y1 < y2 ? 1 : -1;
+	d = delx - dely;
+	while(1){	
+		printf("x = %d y = %d\n", dx , dy);
+		png_byte* row = image->row_pointers[y];
+		png_byte* ptr = &(row[x*3]);
+		ptr[0] = 0;
+		ptr[1] = 0;
+		ptr[2] = 0;
+		if ((x == x2) || (y == y2)){
+			break;
+		}
+		dd = d*2;
+		
+		if(dd < delx){
+			dd = dd + delx;
+			y =  y + dy;
+		}		
+		
+		if(dd > -dely){
+			dd = dd - dely;
+			x =  x + dx;
+		}
+	} 
+}
+
 
 int main(int argc, char** argv){
-	png* image;
-	image = (png*)malloc(1*sizeof(png));
-	ReadFile(argv[1], image);
-	OutputImage(argv[2], image);		
+	png image;
+	//image = (png*)malloc(1*sizeof(png));
+	ReadFile(argv[1], &image);
+	printf("%d %d\n", image.width, image.height);
+	DrawLine(&image, 0, 0, 599, 399);
+	OutputImage(argv[2], &image);		
 	return 0;
 }
