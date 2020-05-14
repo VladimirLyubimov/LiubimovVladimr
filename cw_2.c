@@ -135,39 +135,56 @@ int OutputImage(char* filename, png* image){
 	return 0;
 }
 
-void DrawLine(png* image, int x1, int y1, int x2, int y2){
-	int y = y1;
-	int x = x1;
-	int delx, dely;
+void PutPixel(int r, int b, int g, png_byte* ptr){
+	ptr[0] = r;
+	ptr[1] = b;
+	ptr[2] = g;
+}
+
+void Swap(int* a, int* b){
+	int c = *a;
+	*a = *b;
+	*b = c;
+}
+
+void DrawLine(png* image, int x1, int y1, int x2, int y2){//алгоритм Брезенхэма
+	int y;
+	int x;
+	int error = 0;
 	int dx, dy;
-	int d, dd;
-	delx = abs(x2 - x1);
-	dely = abs(y2 - y1);
-	dx = x1 < x2 ? 1 : -1;
-	dy = y1 < y2 ? 1 : -1;
-	d = delx - dely;
-	while(1){	
-		printf("x = %d y = %d\n", dx , dy);
+	int deltaerr;
+	dx = abs(x2 - x1);
+	dy = abs(y2 - y1);
+	deltaerr = dy + 1;
+	//int ddy = y2 - y1;
+	int angle = dx - dy;
+	
+	if (angle < 0){
+		swap(&x1, &y1);
+		swap(&x2, &y2);
+	}
+
+	if (x1 > x2){
+		swap(&x1, &x2);
+		swap(&y1, &y2);
+	}
+
+	if (ddy > 0)
+		ddy = 1;
+	if (ddy < 0)
+		ddy = -1;
+	for(x; x <= x2; x++){
+		printf("x = %d y = %d\n", x, y);
 		png_byte* row = image->row_pointers[y];
 		png_byte* ptr = &(row[x*3]);
-		ptr[0] = 0;
-		ptr[1] = 0;
-		ptr[2] = 0;
-		if ((x == x2) || (y == y2)){
-			break;
-		}
-		dd = d*2;
-		
-		if(dd < delx){
-			dd = dd + delx;
-			y =  y + dy;
-		}		
-		
-		if(dd > -dely){
-			dd = dd - dely;
-			x =  x + dx;
-		}
-	} 
+		PutPixel(0, 0, 0, ptr);
+		error = error + deltaerr;
+		if (error >= dx + 1){
+			y = y + ddy;
+			error = error - (dx + 1);
+		}	
+	}	
+	 
 }
 
 
@@ -176,7 +193,7 @@ int main(int argc, char** argv){
 	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	DrawLine(&image, 0, 0, 599, 399);
+	DrawLine(&image, 0, 0, 10, 399);
 	OutputImage(argv[2], &image);		
 	return 0;
 }
