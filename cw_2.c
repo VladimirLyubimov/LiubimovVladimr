@@ -79,10 +79,65 @@ int ReadFile(char *filename, png* image) {
 	return 0;
 }
 
+int OutputImage(char* filename, png* image){
+	FILE* fl = fopen(filename, "wb");
+	if(!fl){
+		fprintf(stderr, "File could not be opened!\n");
+		return 1;
+	}
+
+	image->png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	if(!image->png_ptr){
+		fprintf(stderr, "png_create_write_struct failed!\n");
+		return 1;
+	}
+
+	image->info_ptr = png_create_info_struct(image->png_ptr);
+	if(!image->png_ptr){
+		fprintf(stderr, "png_create_info_struct failed!\n");
+		return 1;
+	}
+
+	if (setjmp(png_jmpbuf(image->png_ptr))){
+	        printf("Error during init_io!\n");
+		return 1;
+    	}
+
+	png_init_io(image->png_ptr, fl);
+
+	if (setjmp(png_jmpbuf(image->png_ptr))){
+	        printf("Error during writing header!\n");
+		return 1;
+    	}
+
+	png_set_IHDR(image->png_ptr, image->info_ptr, image->width, image->height, image->bit_depth, image->color_type, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);	
+	
+	png_write_info(image->png_ptr, image->info_ptr);
+	
+	if (setjmp(png_jmpbuf(image->png_ptr))){
+	        printf("Error during writing image!\n");
+		return 1;
+    	}
+
+	png_write_image(image->png_ptr, image->row_pointers);
+
+	if (setjmp(png_jmpbuf(image->png_ptr))){
+	        printf("Error during the end of writing!\n");
+		return 1;
+    	}
+
+	png_write_end(image->png_ptr, NULL);
+
+	fclose(fl);
+
+	return 0;
+}
+
 
 int main(int argc, char** argv){
 	png* image;
 	image = (png*)malloc(1*sizeof(png));
-	ReadFile(argv[1], image);		
+	ReadFile(argv[1], image);
+	OutputImage(argv[2], image);		
 	return 0;
 }
