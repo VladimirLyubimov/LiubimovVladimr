@@ -141,40 +141,34 @@ void PutPixel(int r, int b, int g, png_byte* ptr){
 	ptr[2] = g;
 }
 
-void swap(int* a, int* b){
-	int c = *a;
-	*a = *b;
-	*b = c;
-}
+void DrawLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b){//алгоритм Брезенхэма
+	int deltax = abs(x2 - x1);
+    	int deltay = abs(y2 - y1);
+    	int dX = x1 < x2 ? 1 : -1;
+    	int dY = y1 < y2 ? 1 : -1;
+    	int error = deltax - deltay;
 
-void DrawLine(png* image, int x1, int y1, int x2, int y2){//алгоритм Брезенхэма
-	int deltaX = abs(x2 - x1);
-    	int deltaY = abs(y2 - y1);
-    	int signX = x1 < x2 ? 1 : -1;
-    	int signY = y1 < y2 ? 1 : -1;
-    //
-    int error = deltaX - deltaY;
-    //
-    //setPixel(x2, y2);
-    while(x1 != x2 || y1 != y2) 
-   {
-        printf("x = %d y = %d\n", x1, y1);
+	png_byte* row = image->row_pointers[y2];
+	png_byte* ptr = &(row[x2*3]);
+	PutPixel(r, g, b, ptr);
+    	
+	while(x1 != x2 || y1 != y2) {
+        	//printf("x = %d y = %d\n", x1, y1);
 		png_byte* row = image->row_pointers[y1];
 		png_byte* ptr = &(row[x1*3]);
-		PutPixel(0, 0, 0, ptr);
-        int error2 = error * 2;
-        //
-        if(error2 > -deltaY) 
-        {
-            error -= deltaY;
-            x1 += signX;
-        }
-        if(error2 < deltaX) 
-        {
-            error += deltaX;
-            y1 += signY;
-        }
-    }
+		PutPixel(r, g, b, ptr);
+        	int error2 = error * 2;
+        	
+	        if(error2 > -deltay){
+            		error -= deltay;
+            		x1 += dX;
+        	}
+	
+        	if(error2 < deltax){
+            		error += deltax;
+            		y1 += dY;
+        	}
+    	}
  
 }
 
@@ -184,7 +178,7 @@ int main(int argc, char** argv){
 	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	DrawLine(&image, 100, 10, 500, 100);
+	DrawLine(&image, 0, 0, 599, 399, 255, 255, 255);
 	OutputImage(argv[2], &image);		
 	return 0;
 }
