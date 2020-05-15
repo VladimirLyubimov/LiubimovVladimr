@@ -321,18 +321,38 @@ void YCollage(png* image, int m){
 
 void XCollage(png* image, int n){
 	//image->row_pointers = realloc(image->row_pointers, n*image->height*sizeof(png_bytep));
-	int i = 0;	
+	int i = 0;
+	png_bytep* row_pointers2;
+	row_pointers2 = (png_bytep*)calloc(sizeof(png_bytep), image->height);	
 	for(i; i < image->height; i++){
-		image->row_pointers[i] = (png_byte*)realloc(image->row_pointers[i], image->width*n*sizeof(png_byte));
+		row_pointers2[i] = (png_byte*)calloc(sizeof(png_byte), n*image->width*3);
 	}
-	image->width *= n;
+	//image->width *= n;
 	i = 0;
-	int j = image->width*3;
+	int k = 0;
+	int j = image->width;
+	png_byte* ptr;
+	png_byte* row;
+	//printf("%lu\n", sizeof(png_byte));
+	for(k; k < n; k++){	
 	for(i; i < image->height; i++){
-		for(j; j < image->width*3; j++){
-			image->row_pointers[i][j] = image->row_pointers[i][j-image->width*3];
+		row = image->row_pointers[i];
+		for(j; j < image->width; j++){
+			//for(k; k < n; k++)
+			ptr = &(row[j*3]);
+			printf("eftwe\n");
+			row_pointers2[i][j*k] = ptr[0];
+			row_pointers2[i][j*k+1] = ptr[1];
+			row_pointers2[i][j*k+2] = ptr[2];
+			//ptr = &(image->row_pointers[i][j*3]);
+			//ptr[0] = 255;
+			//ptr[1] = 255;
+			//ptr[2] = 255;
 		}
-	}	
+	}
+	}
+	//image->width *= n;
+	image->row_pointers = row_pointers2;	
 }
 
 
@@ -343,7 +363,9 @@ int main(int argc, char** argv){
 	printf("%d %d\n", image.width, image.height);
 	//PrintTriangle(&image, 200, 0, 100, 150, 300, 150, 255, 255, 0, 2, 1, 0, 0, 0);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 0, 30);
-	XCollage(&image, 2);
+	//YCollage(&image, 2);
+	XCollage(&image, 3);
+	PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
 	printf("%d %d\n", image.width, image.height);
 	OutputImage(argv[2], &image);		
 	return 0;
