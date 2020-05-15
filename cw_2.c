@@ -175,7 +175,7 @@ void PrintLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b, 
             		y1 += dY;
         	}
     	}
-	*arr = ar;
+	//*arr = ar;
 	//return arr;
  
 }
@@ -293,22 +293,58 @@ void PrintTriangle(png* image, int x1, int y1, int x2, int y2, int x3, int y3, i
 	PrintLineWithGivenThickness(image, x2, y2, x3, y3, r, g, b, th);
 	if (colful == 1){
 		//float dy =
-		int i   
-		int* yarr = malloc(4*abs(x2-x3));
+		int i =  th-1;  
+		int* yarr = malloc(sizeof(int)*image->width);
+		int* arr = malloc(sizeof(int)*image->width);
 		PrintLine(image, x2, y2, x3, y3, r, g, b, &yarr);
-		for
-		//printf("%d\n", yarr[10]);
+		for(i; i < abs(x2-x3); i++){
+			printf("%d %d\n", i, yarr[i]);
+			PrintLine(image, x1, y1, x2+i, yarr[i], 0, g, b, &arr);
+		}
+		free(arr);
+		free(yarr);
+		//printf("%d\n", yarr[34]);
 		//for()
 	}
 	//PrintLineWithGivenThickness(image, x1, y1, x1+th/2, y1+th/2, r, g, b, th);
 }
+
+void YCollage(png* image, int m){
+	image->row_pointers = (png_bytep*)realloc(image->row_pointers, m*image->height*sizeof(png_bytep));
+	int i = image->height;	
+	for(i; i < image->height*m; i++){
+		image->row_pointers[i] = image->row_pointers[i-image->height];
+	}
+	image->height *= m;
+	
+}
+
+void XCollage(png* image, int n){
+	//image->row_pointers = realloc(image->row_pointers, n*image->height*sizeof(png_bytep));
+	int i = 0;	
+	for(i; i < image->height; i++){
+		image->row_pointers[i] = (png_byte*)realloc(image->row_pointers[i], image->width*n*sizeof(png_byte));
+	}
+	image->width *= n;
+	i = 0;
+	int j = image->width*3;
+	for(i; i < image->height; i++){
+		for(j; j < image->width*3; j++){
+			image->row_pointers[i][j] = image->row_pointers[i][j-image->width*3];
+		}
+	}	
+}
+
 
 int main(int argc, char** argv){
 	png image;
 	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	PrintTriangle(&image, 0, 0, 200, 200, 100, 150, 255, 255, 0, 2, 1, 0, 0, 0);
+	//PrintTriangle(&image, 200, 0, 100, 150, 300, 150, 255, 255, 0, 2, 1, 0, 0, 0);
+	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 0, 30);
+	XCollage(&image, 2);
+	printf("%d %d\n", image.width, image.height);
 	OutputImage(argv[2], &image);		
 	return 0;
 }
