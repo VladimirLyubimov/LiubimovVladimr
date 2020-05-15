@@ -225,6 +225,53 @@ void PrintLineWithGivenThickness(png* image, int x1, int y1, int x2, int y2, int
 			PrintLine(image, x1, y1+i, x2, y2+i, r, g, b);
 		}
 	}
+	else{
+		for(i; i < th/2; i++){
+			if(x1 + i < 0){
+				if (y1 - i <= image->height-1){	
+					PrintLine(image, x1, y1-i, x2+i, y2, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					continue;				
+				}
+			}
+			if(x2 + i > image->width-1){
+				if (y2 - i >= 0){	
+					PrintLine(image, x1+i, y1, x2, y2-i, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					continue;
+				}	
+			}
+
+			if(x2 + i < 0){
+				if (y2 - i <= image->height-1){	
+					PrintLine(image, x1+i, y1, x2, y2-i, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					continue;				
+				}
+			}
+			if(x1 + i > image->width-1){
+				if (y1 - i >= 0){	
+					PrintLine(image, x1, y1-i, x2+i, y2, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					continue;
+				}	
+			}
+			//printf("%d\n", i);
+			PrintLine(image, x1+i, y1, x2+i, y2, r, g, b);
+		}
+	}	
 }
 
 int main(int argc, char** argv){
@@ -232,7 +279,7 @@ int main(int argc, char** argv){
 	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	PrintLineWithGivenThickness(&image, 0, 399, 599, 0, 255, 255, 255, 10);
+	PrintLineWithGivenThickness(&image, 0, 0, 200, 399, 255, 255, 255, 10);
 	OutputImage(argv[2], &image);		
 	return 0;
 }
