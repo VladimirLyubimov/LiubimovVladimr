@@ -141,20 +141,26 @@ void PutPixel(int r, int b, int g, png_byte* ptr){
 	ptr[2] = g;
 }
 
-void PrintLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b){//алгоритм Брезенхэма
+void PrintLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b, int** arr){//алгоритм Брезенхэма
 	int deltax = abs(x2 - x1);
     	int deltay = abs(y2 - y1);
     	int dX = x1 < x2 ? 1 : -1;
     	int dY = y1 < y2 ? 1 : -1;
     	int error = deltax - deltay;
+	
+	int* ar = *arr;
+	//int arr[deltax];
+	int i = 0;
 
 	png_byte* row = image->row_pointers[y2];
 	png_byte* ptr = &(row[x2*3]);
-	PutPixel(r, g, b, ptr);
-    	
+	PutPixel(r, g, b, ptr);    	
+
 	while(x1 != x2 || y1 != y2) {
         	//printf("x = %d y = %d\n", x1, y1);
 		png_byte* row = image->row_pointers[y1];
+		ar[i] = y1;
+		i += 1;
 		png_byte* ptr = &(row[x1*3]);
 		PutPixel(r, g, b, ptr);
         	int error2 = error * 2;
@@ -169,6 +175,8 @@ void PrintLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b){
             		y1 += dY;
         	}
     	}
+	*arr = ar;
+	//return arr;
  
 }
 
@@ -177,101 +185,122 @@ void PrintLineWithGivenThickness(png* image, int x1, int y1, int x2, int y2, int
 	int dy = abs(y2 - y1);
 	int dd = dx - dy;
 	int i = -th/2;
+	int* arr = malloc(image->width*4);
+	if(th == 1){
+		PrintLine(image, x1, y1, x2, y2, r, g, b, &arr);	
+	}
 
 	if (dd > 0){
 		for(i; i < th/2; i++){
 			if(y1 + i < 0){
 				if (x1 - i <= image->width-1){	
-					PrintLine(image, x1-i, y1, x2, y2+i, r, g, b);
+					PrintLine(image, x1-i, y1, x2, y2+i, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b, &arr);
 					continue;				
 				}
 			}
 			if(y2 + i > image->height-1){
 				if (x2 - i >= 0){	
-					PrintLine(image, x1, y1+i, x2-i, y2, r, g, b);
+					PrintLine(image, x1, y1+i, x2-i, y2, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b, &arr);
 					continue;
 				}	
 			}
 
 			if(y2 + i < 0){
 				if (x2 - i <= image->width-1){	
-					PrintLine(image, x1, y1+i, x2-i, y2, r, g, b);
+					PrintLine(image, x1, y1+i, x2-i, y2, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b, &arr);
 					continue;				
 				}
 			}
 			if(y1 + i > image->height-1){
 				if (x1 - i >= 0){	
-					PrintLine(image, x1-i, y1, x2, y2+i, r, g, b);
+					PrintLine(image, x1-i, y1, x2, y2+i, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b, &arr);
 					continue;
 				}	
 			}
 			//printf("%d\n", i);
-			PrintLine(image, x1, y1+i, x2, y2+i, r, g, b);
+			PrintLine(image, x1, y1+i, x2, y2+i, r, g, b, &arr);
 		}
 	}
 	else{
 		for(i; i < th/2; i++){
 			if(x1 + i < 0){
 				if (y1 - i <= image->height-1){	
-					PrintLine(image, x1, y1-i, x2+i, y2, r, g, b);
+					PrintLine(image, x1, y1-i, x2+i, y2, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b, &arr);
 					continue;				
 				}
 			}
 			if(x2 + i > image->width-1){
 				if (y2 - i >= 0){	
-					PrintLine(image, x1+i, y1, x2, y2-i, r, g, b);
+					PrintLine(image, x1+i, y1, x2, y2-i, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b, &arr);
 					continue;
 				}	
 			}
 
 			if(x2 + i < 0){
 				if (y2 - i <= image->height-1){	
-					PrintLine(image, x1+i, y1, x2, y2-i, r, g, b);
+					PrintLine(image, x1+i, y1, x2, y2-i, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b, &arr);
 					continue;				
 				}
 			}
 			if(x1 + i > image->width-1){
 				if (y1 - i >= 0){	
-					PrintLine(image, x1, y1-i, x2+i, y2, r, g, b);
+					PrintLine(image, x1, y1-i, x2+i, y2, r, g, b, &arr);
 					continue;
 				}
 				else{
-					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b, &arr);
 					continue;
 				}	
 			}
 			//printf("%d\n", i);
-			PrintLine(image, x1+i, y1, x2+i, y2, r, g, b);
+			PrintLine(image, x1+i, y1, x2+i, y2, r, g, b, &arr);
 		}
-	}	
+	}
+	free(arr);	
+}
+
+void PrintTriangle(png* image, int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b, int th, int colful, int ir, int ig, int ib){
+	PrintLineWithGivenThickness(image, x1, y1, x2, y2, r, g, b, th);
+	PrintLineWithGivenThickness(image, x1, y1, x3, y3, r, g, b, th);
+	PrintLineWithGivenThickness(image, x2, y2, x3, y3, r, g, b, th);
+	if (colful == 1){
+		//float dy =
+		int i   
+		int* yarr = malloc(4*abs(x2-x3));
+		PrintLine(image, x2, y2, x3, y3, r, g, b, &yarr);
+		for
+		//printf("%d\n", yarr[10]);
+		//for()
+	}
+	//PrintLineWithGivenThickness(image, x1, y1, x1+th/2, y1+th/2, r, g, b, th);
 }
 
 int main(int argc, char** argv){
@@ -279,7 +308,7 @@ int main(int argc, char** argv){
 	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	PrintLineWithGivenThickness(&image, 0, 0, 200, 399, 255, 255, 255, 10);
+	PrintTriangle(&image, 0, 0, 200, 200, 100, 150, 255, 255, 0, 2, 1, 0, 0, 0);
 	OutputImage(argv[2], &image);		
 	return 0;
 }
