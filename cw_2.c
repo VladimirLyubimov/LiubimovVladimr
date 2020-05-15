@@ -141,7 +141,7 @@ void PutPixel(int r, int b, int g, png_byte* ptr){
 	ptr[2] = g;
 }
 
-void DrawLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b){//алгоритм Брезенхэма
+void PrintLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b){//алгоритм Брезенхэма
 	int deltax = abs(x2 - x1);
     	int deltay = abs(y2 - y1);
     	int dX = x1 < x2 ? 1 : -1;
@@ -172,13 +172,67 @@ void DrawLine(png* image, int x1, int y1, int x2, int y2, int r, int g, int b){/
  
 }
 
+void PrintLineWithGivenThickness(png* image, int x1, int y1, int x2, int y2, int r, int g, int b, int th){
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int dd = dx - dy;
+	int i = -th/2;
+
+	if (dd > 0){
+		for(i; i < th/2; i++){
+			if(y1 + i < 0){
+				if (x1 - i <= image->width-1){	
+					PrintLine(image, x1-i, y1, x2, y2+i, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					continue;				
+				}
+			}
+			if(y2 + i > image->height-1){
+				if (x2 - i >= 0){	
+					PrintLine(image, x1, y1+i, x2-i, y2, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					continue;
+				}	
+			}
+
+			if(y2 + i < 0){
+				if (x2 - i <= image->width-1){	
+					PrintLine(image, x1, y1+i, x2-i, y2, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1, y1+i, x2+i, y2, r, g, b);
+					continue;				
+				}
+			}
+			if(y1 + i > image->height-1){
+				if (x1 - i >= 0){	
+					PrintLine(image, x1-i, y1, x2, y2+i, r, g, b);
+					continue;
+				}
+				else{
+					PrintLine(image, x1+i, y1, x2, y2+i, r, g, b);
+					continue;
+				}	
+			}
+			//printf("%d\n", i);
+			PrintLine(image, x1, y1+i, x2, y2+i, r, g, b);
+		}
+	}
+}
 
 int main(int argc, char** argv){
 	png image;
 	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	DrawLine(&image, 0, 0, 599, 399, 255, 255, 255);
+	PrintLineWithGivenThickness(&image, 0, 399, 599, 0, 255, 255, 255, 10);
 	OutputImage(argv[2], &image);		
 	return 0;
 }
