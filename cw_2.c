@@ -328,22 +328,24 @@ void XCollage(png* image, int n){
 		row_pointers2[i] = (png_byte*)calloc(sizeof(png_byte), n*image->width*3);
 	}
 	//image->width *= n;
-	i = 0;
+	//i = 0;
 	int k = 0;
 	int j = image->width;
 	png_byte* ptr;
 	png_byte* row;
 	//printf("%lu\n", sizeof(png_byte));
-	for(k; k < n; k++){	
+	for(k; k < n; k++){
+	i  = 0;	
 	for(i; i < image->height; i++){
 		row = image->row_pointers[i];
+		j = 0;
 		for(j; j < image->width; j++){
 			//for(k; k < n; k++)
 			ptr = &(row[j*3]);
-			printf("eftwe\n");
-			row_pointers2[i][j*k] = ptr[0];
-			row_pointers2[i][j*k+1] = ptr[1];
-			row_pointers2[i][j*k+2] = ptr[2];
+			//printf("eftwe\n");
+			row_pointers2[i][(j+image->width*k)*3] = ptr[0];
+			row_pointers2[i][(j+image->width*k)*3+1] = ptr[1];
+			row_pointers2[i][(j+image->width*k)*3+2] = ptr[2];
 			//ptr = &(image->row_pointers[i][j*3]);
 			//ptr[0] = 255;
 			//ptr[1] = 255;
@@ -351,10 +353,33 @@ void XCollage(png* image, int n){
 		}
 	}
 	}
-	//image->width *= n;
+	image->width *= n;
 	image->row_pointers = row_pointers2;	
 }
 
+
+
+
+png_bytep* ChangeSize(png* image, float nx, float ny){
+	float xcom = (nx/image->width);
+	float ycom = (ny/image->height);
+	printf("%f %f\n", xcom, ycom);
+	int x = 0;
+	int y = 0;
+	int i = 0;
+	png_bytep* nrows = malloc(sizeof(png_bytep)*ny);
+	for(y; y<ny; y++){
+		nrows[y] = malloc(nx*3);
+		for (x; x<nx; x++){
+			i = 0;
+			for(i; i<3; i++){
+				printf("%d\n", i);
+				nrows[y][x*3+i] = image->row_pointers[lround(y/ycom)][lround(x/xcom*3+i)];
+			}
+		}
+	}
+	return nrows; 
+}
 
 int main(int argc, char** argv){
 	png image;
@@ -363,9 +388,14 @@ int main(int argc, char** argv){
 	printf("%d %d\n", image.width, image.height);
 	//PrintTriangle(&image, 200, 0, 100, 150, 300, 150, 255, 255, 0, 2, 1, 0, 0, 0);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 0, 30);
-	//YCollage(&image, 2);
+	
 	XCollage(&image, 3);
-	PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
+	YCollage(&image, 2);
+	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
+	//image.row_pointers = ChangeSize(&image, 150, 100);
+	//image.width = 150;
+	//image.height = 100;
+	//PrintLineWithGivenThickness(&image, 0, 0, 100, 50,  0, 0, 255, 30);
 	printf("%d %d\n", image.width, image.height);
 	OutputImage(argv[2], &image);		
 	return 0;
