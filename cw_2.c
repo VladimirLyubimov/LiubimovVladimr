@@ -359,24 +359,83 @@ void Collage(png* image, int n, int m){
 }
 
 typedef struct RecTangle{
-	int xl,yl,xr,yr;
+	int xl;
+	int yl;
+	int xr;
+	int yr;
+	int sq;
 }rec;
 
-void FindRectangle(png* image, int xs, int ys, int xpr, int ypr, int xprpr, int yprpr, int r, int g, int b){
+rec FindRectangle(png* image, int xs, int ys, int r, int g, int b){
 	int xtl = xs;
-	while(ColorCompare(&(image->row_pointers[ys][xs*3]), r, g, b))
+	int ytl = ys;
+	rec outrec;
+	while(ColorCompare(&(image->row_pointers[ys][xs*3]), r, g, b) && xs < image->width)
 		xs += 1;
 	int xtr = xs-1;
+	if(xtr<xtl){
+		PrintLine(image, xtl, ytl, xtl, ys, 0, 0, 0);
+		outrec.xl = xtl;
+		outrec.yl = ytl;
+		outrec.xr = xtl;
+		outrec.yr = ys;
+		outrec.sq = 0;
+		return outrec;
+	}
 	PrintLine(image, xtl, ys, xtr, ys, 0, 0, 0);
 	ys += 1;
 	//xs = xtl;
 	while(ys < image->height-1 && ColorCompare(&(image->row_pointers[ys][xtl*3]), r, g, b) && xtr == xs-1){
-		xtr = xs-1;
+		xtr = xs-1;		
 		xs = xtl;
-		while(ColorCompare(&(image->row_pointers[ys][xs*3]), r, g, b))
+		//printf("in!\n");
+		while(ColorCompare(&(image->row_pointers[ys][xs*3]), r, g, b) && xs < image->width)
 			xs += 1;
 		PrintLine(image, xtl, ys, xs-1, ys, 0, 0, 0);
 		ys += 1;
+	}
+	//printf("%d %d %d %d\n", xtl, ytl, xtr, ys);
+	outrec.xl = xtl;
+	outrec.yl = ytl;
+	outrec.xr = xtr;
+	outrec.yr = ys;
+	outrec.sq = (xtr - xtl)*((ys) - ytl);
+	return outrec;
+	//printf("%d %d %d %d\n", outrec.xl, outrec.yl, outrec.xr, outrec.yr);
+	//printf("%d\n",(xtr - xtl)*((ys) - ytl));
+}
+
+int cmp(const void* el1, const void* el2){
+	rec e1 = *(rec*)el1;
+	rec e2 = *(rec*)el2;
+	if(e1.sq > e2.sq)
+		return 1;
+	if(e1.sq == e2.sq)
+		return 0;
+	if(e1.sq < e2.sq)
+		return -1;
+
+}
+
+void GetAllRecs(png* image, int r, int g, int b){
+	rec* reclist = (rec*)calloc(1,sizeof(rec));
+	//rec myrec;
+	int i = 0;
+	int j;
+	int k = 0;
+	for(i; i < image->height; i++){
+		j = 0;
+		for (j; j < image->width; j++){
+			reclist[k] = FindRectangle(image, j, i, r, g, b);
+			k += 1;
+			reclist = (rec*)realloc(reclist, sizeof(rec)*(k+1));
+		}
+	}
+	qsort(reclist, k, sizeof(rec), cmp);
+	i = reclist[k-1].xl;
+	printf("%d\n", k);
+	for (i; i <= reclist[k-1].xr; i++){
+		PrintLine(image, i, reclist[k-1].yl, i, reclist[k-1].yr, 255, 255, 0);
 	}
 }
 
@@ -385,8 +444,9 @@ int main(int argc, char** argv){
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
 	//PrintTriangle(&image, 0, 0, 0, 150, 300, 150, 255, 255, 0, 2, 1, 100, 0, 0);
-	PrintLineWithGivenThickness(&image, 0, 10, 200, 10, 0, 100, 0, 20);
-	FindRectangle(&image,0, 0, 0, 0, 0, 0, 0, 100, 0);
+	PrintLineWithGivenThickness(&image, 0, 10, 300, 10, 0, 100, 0, 20);
+	PrintLineWithGivenThickness(&image, 0, 100, 200, 100, 0, 100, 0, 20);
+	GetAllRecs(&image, 0, 100, 0);
 	//Collage(&image, 1, 1);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
 	//image.row_pointers = ChangeSize(&image, 150, 100);
