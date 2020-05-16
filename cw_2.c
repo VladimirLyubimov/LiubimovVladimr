@@ -373,8 +373,13 @@ rec FindRectangle(png* image, int xs, int ys, int r, int g, int b){
 	while(ColorCompare(&(image->row_pointers[ys][xs*3]), r, g, b) && xs < image->width)
 		xs += 1;
 	int xtr = xs-1;
+	int mr = 0;
+	int mg = 0;
+	int mb = 0;
+	if(mr == r && mg == g && mb == b)
+		mr = 255;
 	if(xtr<xtl){
-		PrintLine(image, xtl, ytl, xtl, ys, 0, 0, 0);
+		PrintLine(image, xtl, ytl, xtl, ys, mr, mg, mb);
 		outrec.xl = xtl;
 		outrec.yl = ytl;
 		outrec.xr = xtl;
@@ -382,27 +387,22 @@ rec FindRectangle(png* image, int xs, int ys, int r, int g, int b){
 		outrec.sq = 0;
 		return outrec;
 	}
-	PrintLine(image, xtl, ys, xtr, ys, 0, 0, 0);
+	PrintLine(image, xtl, ys, xtr, ys, mr, mg, mb);
 	ys += 1;
-	//xs = xtl;
 	while(ys < image->height-1 && ColorCompare(&(image->row_pointers[ys][xtl*3]), r, g, b) && xtr == xs-1){
 		xtr = xs-1;		
 		xs = xtl;
-		//printf("in!\n");
 		while(ColorCompare(&(image->row_pointers[ys][xs*3]), r, g, b) && xs < image->width)
 			xs += 1;
-		PrintLine(image, xtl, ys, xs-1, ys, 0, 0, 0);
+		PrintLine(image, xtl, ys, xs-1, ys, mr, mg, mb);
 		ys += 1;
 	}
-	//printf("%d %d %d %d\n", xtl, ytl, xtr, ys);
 	outrec.xl = xtl;
 	outrec.yl = ytl;
 	outrec.xr = xtr;
 	outrec.yr = ys;
 	outrec.sq = (xtr - xtl)*((ys) - ytl);
 	return outrec;
-	//printf("%d %d %d %d\n", outrec.xl, outrec.yl, outrec.xr, outrec.yr);
-	//printf("%d\n",(xtr - xtl)*((ys) - ytl));
 }
 
 int cmp(const void* el1, const void* el2){
@@ -417,9 +417,9 @@ int cmp(const void* el1, const void* el2){
 
 }
 
-void GetAllRecs(png* image, int r, int g, int b){
+rec GetAllRecs(png* image, int r, int g, int b){
 	rec* reclist = (rec*)calloc(1,sizeof(rec));
-	//rec myrec;
+	rec outrec;
 	int i = 0;
 	int j;
 	int k = 0;
@@ -432,10 +432,38 @@ void GetAllRecs(png* image, int r, int g, int b){
 		}
 	}
 	qsort(reclist, k, sizeof(rec), cmp);
-	i = reclist[k-1].xl;
-	printf("%d\n", k);
-	for (i; i <= reclist[k-1].xr; i++){
-		PrintLine(image, i, reclist[k-1].yl, i, reclist[k-1].yr, 255, 255, 0);
+	outrec = reclist[k-1];
+	return outrec; 
+}
+
+void Repaint(png* image, int r, int g, int b, int nr, int ng, int nb){
+	int i = 0;
+	png_bytep* row_pointers2;
+	row_pointers2 = (png_bytep*)calloc(sizeof(png_bytep), image->height);	
+	for(i; i < image->height; i++){
+		row_pointers2[i] = (png_byte*)calloc(sizeof(png_byte), image->width*3);
+	}
+	i  = 0;
+	png_byte* ptr;
+	png_byte* row;
+	int j;	
+	for(i; i < image->height; i++){
+		row = image->row_pointers[i];
+		j = 0;
+		for(j; j < image->width; j++){
+			ptr = &(row[j*3]);
+
+			row_pointers2[i][j*3] = ptr[0];
+			row_pointers2[i][j*3+1] = ptr[1];
+			row_pointers2[i][j*3+2] = ptr[2];
+		}
+	}
+	
+	rec myrec = GetAllRecs(image, r, g, b);
+	image->row_pointers = row_pointers2;
+	i = myrec.xl;
+	for (i; i <= myrec.xr; i++){
+		PrintLine(image, i, myrec.yl, i, myrec.yr, nr, ng, nb);
 	}
 }
 
@@ -446,7 +474,8 @@ int main(int argc, char** argv){
 	//PrintTriangle(&image, 0, 0, 0, 150, 300, 150, 255, 255, 0, 2, 1, 100, 0, 0);
 	PrintLineWithGivenThickness(&image, 0, 10, 300, 10, 0, 100, 0, 20);
 	PrintLineWithGivenThickness(&image, 0, 100, 200, 100, 0, 100, 0, 20);
-	GetAllRecs(&image, 0, 100, 0);
+	//GetAllRecs(&image, 0, 100, 0);
+	Repaint(&image, 0, 100, 0, 255, 0, 0);
 	//Collage(&image, 1, 1);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
 	//image.row_pointers = ChangeSize(&image, 150, 100);
