@@ -320,36 +320,28 @@ void YCollage(png* image, int m){
 }
 
 void XCollage(png* image, int n){
-	//image->row_pointers = realloc(image->row_pointers, n*image->height*sizeof(png_bytep));
 	int i = 0;
 	png_bytep* row_pointers2;
 	row_pointers2 = (png_bytep*)calloc(sizeof(png_bytep), image->height);	
 	for(i; i < image->height; i++){
 		row_pointers2[i] = (png_byte*)calloc(sizeof(png_byte), n*image->width*3);
 	}
-	//image->width *= n;
-	//i = 0;
+
 	int k = 0;
 	int j = image->width;
 	png_byte* ptr;
 	png_byte* row;
-	//printf("%lu\n", sizeof(png_byte));
 	for(k; k < n; k++){
 	i  = 0;	
 	for(i; i < image->height; i++){
 		row = image->row_pointers[i];
 		j = 0;
 		for(j; j < image->width; j++){
-			//for(k; k < n; k++)
 			ptr = &(row[j*3]);
-			//printf("eftwe\n");
+
 			row_pointers2[i][(j+image->width*k)*3] = ptr[0];
 			row_pointers2[i][(j+image->width*k)*3+1] = ptr[1];
 			row_pointers2[i][(j+image->width*k)*3+2] = ptr[2];
-			//ptr = &(image->row_pointers[i][j*3]);
-			//ptr[0] = 255;
-			//ptr[1] = 255;
-			//ptr[2] = 255;
 		}
 	}
 	}
@@ -357,40 +349,23 @@ void XCollage(png* image, int n){
 	image->row_pointers = row_pointers2;	
 }
 
-
-
-
-png_bytep* ChangeSize(png* image, float nx, float ny){
-	float xcom = (nx/image->width);
-	float ycom = (ny/image->height);
-	printf("%f %f\n", xcom, ycom);
-	int x = 0;
-	int y = 0;
-	int i = 0;
-	png_bytep* nrows = malloc(sizeof(png_bytep)*ny);
-	for(y; y<ny; y++){
-		nrows[y] = malloc(nx*3);
-		for (x; x<nx; x++){
-			i = 0;
-			for(i; i<3; i++){
-				printf("%d\n", i);
-				nrows[y][x*3+i] = image->row_pointers[lround(y/ycom)][lround(x/xcom*3+i)];
-			}
-		}
+void Collage(png* image, int n, int m){
+	if(n == 1 && m == 1){
+		printf("New size is same with old!\n");
+		return;
 	}
-	return nrows; 
+	XCollage(image, n);
+	YCollage(image, m);	
 }
 
 int main(int argc, char** argv){
 	png image;
-	//image = (png*)malloc(1*sizeof(png));
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
 	//PrintTriangle(&image, 200, 0, 100, 150, 300, 150, 255, 255, 0, 2, 1, 0, 0, 0);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 0, 30);
 	
-	XCollage(&image, 3);
-	YCollage(&image, 2);
+	Collage(&image, 1, 1);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
 	//image.row_pointers = ChangeSize(&image, 150, 100);
 	//image.width = 150;
