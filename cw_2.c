@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <getopt.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -63,8 +65,8 @@ int ReadFile(char *filename, png* image) {
 	image->number_of_passes = png_set_interlace_handling(image->png_ptr);
     	png_read_update_info(image->png_ptr, image->info_ptr);
 
-	//if(image->bit_depth == 16)
-		//png_set_strip_16(image->png_ptr);
+	if(image->bit_depth == 16)
+		png_set_strip_16(image->png_ptr);
 		
 	if (setjmp(png_jmpbuf(image->png_ptr))){
 		fprintf(stderr, "Error during reading image!\n");
@@ -467,22 +469,86 @@ void Repaint(png* image, int r, int g, int b, int nr, int ng, int nb){
 	}
 }
 
+void help(){
+	printf("It's help!\n");
+}
+
+void info(){
+	printf("It's info!\n");
+}
+
+
 int main(int argc, char** argv){
 	png image;
-	ReadFile(argv[1], &image);
-	printf("%d %d\n", image.width, image.height);
+	//opterr = 0;
+
+	char* opts = "s:c:t:r:hi";
+	static struct option longopts[] = {
+		{"help", no_argument, NULL, 'h'},
+		{"save", required_argument, NULL, 's'},
+		{"collage", required_argument, NULL, 'c'},
+		{"triangle", required_argument, NULL, 't'},
+		{"repaint", required_argument, NULL, 'r'},
+		{"info", no_argument, NULL, 'i'},
+		{NULL, 0, NULL, 0}
+	};
+		
+	int opt;
+	char* outfile;
+	//if(argc < 2){
+	//	printf("Incorrect input!\n");
+	//	help();
+	//	return 0;
+	//}
+	//printf("%d\n", argc);
+	//printf("%s\n", argv[0]);
+	while(opt != -1){
+		//printf("%d\n", optind);
+		opt = getopt_long(argc, argv, opts, longopts, &optind);
+		switch(opt){
+			case '?':
+				printf("Wrong argument of option!\n");
+				help();
+				break;
+			case 'h':
+				help();
+				break;
+			case 'i':
+				info();	
+				break;
+			case 's':
+				if (optarg[0] == '-'){
+					printf("Wrong argument of option!\n");
+					help();
+					break;
+				}
+				outfile = malloc(strlen(optarg) + 1);
+				strcpy(outfile, optarg);
+				break;
+			case 't':
+				if (optarg[0] == '-'){
+					printf("Wrong argument of option!\n");
+					help();
+					break;
+				}
+												
+		}
+	}
+
+	//ReadFile(argv[1], &image);
+	//printf("%d %d\n", image.width, image.height);
 	//PrintTriangle(&image, 0, 0, 0, 150, 300, 150, 255, 255, 0, 2, 1, 100, 0, 0);
-	PrintLineWithGivenThickness(&image, 0, 10, 300, 10, 0, 100, 0, 20);
-	PrintLineWithGivenThickness(&image, 0, 100, 200, 100, 0, 100, 0, 20);
+	//PrintLineWithGivenThickness(&image, 0, 10, 300, 10, 0, 100, 0, 20);
+	//PrintLineWithGivenThickness(&image, 0, 100, 200, 100, 0, 100, 0, 20);
 	//GetAllRecs(&image, 0, 100, 0);
-	Repaint(&image, 0, 100, 0, 255, 0, 0);
+	//Repaint(&image, 0, 100, 0, 255, 0, 0);
 	//Collage(&image, 1, 1);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
 	//image.row_pointers = ChangeSize(&image, 150, 100);
 	//image.width = 150;
 	//image.height = 100;
 	//PrintLineWithGivenThickness(&image, 0, 0, 100, 50,  0, 0, 255, 30);
-	printf("%d %d\n", image.width, image.height);
-	OutputImage(argv[2], &image);		
+	//printf("%d %d\n", image.width, image.height);
+	//OutputImage(argv[2], &image);		
 	return 0;
 }
