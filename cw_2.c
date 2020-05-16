@@ -303,7 +303,7 @@ void PrintTriangle(png* image, int x1, int y1, int x2, int y2, int x3, int y3, i
 	PrintLineWithGivenThickness(image, x1, y1, x3, y3, r, g, b, th);
 	PrintLineWithGivenThickness(image, x2, y2, x3, y3, r, g, b, th);
 	if (flood_fill == 1){
-		FloodFill(image, 200, 10, r, g, b, ir, ig, ib);
+		FloodFill(image, (x1+x2+x3)/3, (y1+y2+y3)/3, r, g, b, ir, ig, ib);
 		//float dy =
 	}
 	//PrintLineWithGivenThickness(image, x1, y1, x1+th/2, y1+th/2, r, g, b, th);
@@ -362,7 +362,7 @@ int main(int argc, char** argv){
 	png image;
 	ReadFile(argv[1], &image);
 	printf("%d %d\n", image.width, image.height);
-	PrintTriangle(&image, 200, 0, 100, 150, 300, 150, 255, 255, 0, 2, 1, 0, 0, 0);
+	PrintTriangle(&image, 0, 0, 0, 150, 300, 150, 255, 255, 0, 2, 1, 100, 0, 0);
 	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 0, 30);
 	
 	Collage(&image, 1, 1);
