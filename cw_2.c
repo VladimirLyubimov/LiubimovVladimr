@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <png.h>
 #include <math.h>
+#include <regex.h>
 #define PNG_DEBUG 3
 
 typedef struct png{
@@ -477,15 +478,23 @@ void info(){
 	printf("It's info!\n");
 }
 
+int CheckArgument(const char* pattern, char* argument){
+	regex_t regexp;
+	regcomp(&regexp, pattern, REG_EXTENDED);
+	if (regexec(&regexp, argument, 0, NULL, 0) == 0)
+		return 0;
+	return 1;
+}
 
 int main(int argc, char** argv){
 	png image;
 	//opterr = 0;
 
-	char* opts = "s:c:t:r:hi";
+	char* opts = "n:s:c:t:r:hi";
 	static struct option longopts[] = {
 		{"help", no_argument, NULL, 'h'},
 		{"save", required_argument, NULL, 's'},
+		{"name", required_argument, NULL, 'n'},
 		{"collage", required_argument, NULL, 'c'},
 		{"triangle", required_argument, NULL, 't'},
 		{"repaint", required_argument, NULL, 'r'},
@@ -494,7 +503,12 @@ int main(int argc, char** argv){
 	};
 		
 	int opt;
-	char* outfile;
+	int err = 0;
+	char* outfile = NULL;
+	char* infile = NULL;
+	char* targstr = NULL;
+	char* rargstr = NULL;
+	char* cargstr = NULL;
 	//if(argc < 2){
 	//	printf("Incorrect input!\n");
 	//	help();
@@ -509,6 +523,7 @@ int main(int argc, char** argv){
 			case '?':
 				printf("Wrong argument of option!\n");
 				help();
+				err = 1;
 				break;
 			case 'h':
 				help();
@@ -516,26 +531,100 @@ int main(int argc, char** argv){
 			case 'i':
 				info();	
 				break;
-			case 's':
-				if (optarg[0] == '-'){
+			case 'n':
+				if (CheckArgument("^\\w+\\.png$", optarg) || optarg == NULL){
 					printf("Wrong argument of option!\n");
 					help();
+					err = 1;
+					break;
+				}
+				infile = malloc(strlen(optarg) + 1);
+				strcpy(infile, optarg);
+				break;
+			case 's':
+				if (CheckArgument("^\\w+\\.png$", optarg) || optarg == NULL){
+					printf("Wrong argument of option!\n");
+					help();
+					err = 1;
 					break;
 				}
 				outfile = malloc(strlen(optarg) + 1);
 				strcpy(outfile, optarg);
 				break;
 			case 't':
-				if (optarg[0] == '-'){
+				if (CheckArgument("^[0-9]{1,4},[0-9]{1,4},[0-9]{1,4},[0-9]{1,4},[0-9]{1,4},[0-9]{1,4},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-1](,[0-9]{1,3},[0-9]{1,3},[0-9]{1,3})?$", optarg) || optarg == NULL){
 					printf("Wrong argument of option!\n");
 					help();
+					err = 1;
 					break;
 				}
-												
+				targstr = malloc(strlen(optarg) + 1);
+				strcpy(targstr, optarg);
+				break;
+			case 'r':
+				if (CheckArgument("^[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3},[0-9]{1,3}$", optarg) || optarg == NULL){
+					printf("Wrong argument of option!\n");
+					help();
+					err = 1;
+					break;
+				}
+				rargstr = malloc(strlen(optarg) + 1);
+				strcpy(rargstr, optarg);
+				break;
+			case 'c':
+				if (CheckArgument("^[0-9]{1,3},[0-9]{1,3}$", optarg) || optarg == NULL){
+					printf("Wrong argument of option!\n");
+					help();
+					err = 1;
+					break;
+				}
+				cargstr = malloc(strlen(optarg) + 1);
+				strcpy(cargstr, optarg);
+				break;
 		}
 	}
 
-	//ReadFile(argv[1], &image);
+	if(err == 1){
+		printf("Wrong options or arguments!\nIn order to successful using please read manual higher!\n");
+	}
+	else{
+		int rf = 1;
+		if (infile != NULL){
+			rf = ReadFile(infile, &image);
+			if (rf == 0)
+				printf("Input file successfully opened!\n");
+		}
+		if(rf != 1 && targstr != NULL){
+			int x1,y1,x2,y2,x3,y3,r,g,b,th,flood;
+			int fr = 0;
+			int fg = 0;
+			int fb = 0;
+			char* pst;
+			x1 = atoi(strtok(targstr,","));
+			y1 = atoi(strtok(NULL,","));
+			x2 = atoi(strtok(NULL,","));
+			y2 = atoi(strtok(NULL,","));
+			x3 = atoi(strtok(NULL,","));
+			y3 = atoi(strtok(NULL,","));
+			r = atoi(strtok(NULL,","));
+			g = atoi(strtok(NULL,","));
+			b = atoi(strtok(NULL,","));
+			th = atoi(strtok(NULL,","));
+			flood = atoi(strtok(NULL,","));
+			pst = strtok(NULL,",");
+			if(flood == 1 && pst != NULL){
+				fr = atoi(pst);
+				fg = atoi(strtok(NULL,","));
+				fb = atoi(strtok(NULL,","));
+			}
+			//printf("%s\n",pst);
+			if(x1 >= image.width || x2 >= image.width || x3 >= image.width || y1 >= image.height || y2 >= image.height || y3 >= image.height || r > 255 || g > 255 || b > 255 || fr > 255 || fg > 255 || fb > 255 || (pst == NULL && flood == 1))
+				printf("Value of argument is too big or flood fill color wasn't defined!\n");
+			else{
+				PrintTriangle(&image,x1,y1,x2,y2,x3,y3,r,g,b,th,flood,fr,fg,fb);
+			}			
+		}
+	}
 	//printf("%d %d\n", image.width, image.height);
 	//PrintTriangle(&image, 0, 0, 0, 150, 300, 150, 255, 255, 0, 2, 1, 100, 0, 0);
 	//PrintLineWithGivenThickness(&image, 0, 10, 300, 10, 0, 100, 0, 20);
@@ -549,6 +638,6 @@ int main(int argc, char** argv){
 	//image.height = 100;
 	//PrintLineWithGivenThickness(&image, 0, 0, 100, 50,  0, 0, 255, 30);
 	//printf("%d %d\n", image.width, image.height);
-	//OutputImage(argv[2], &image);		
+	OutputImage("res2.png", &image);		
 	return 0;
 }
