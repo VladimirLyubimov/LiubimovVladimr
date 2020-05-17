@@ -477,8 +477,15 @@ void help(){
 	printf("Этот мануал расскажет вам о том, как пользоваться этой программой.\nДанная прорамма работает только с png-файлами, у которых тип цвета truecolor или RGB, и имеет следующий функционал:\n 1) Для выбора изменяемого файла используйте опцию -n или --name, после которой укажите путь до изменяемого файла с расширением .png\n 2) По умолчанию изображение сохраняется в файл res.png. Для изменения файла сохранения использйте опцию -s или --save, после чего укажите путь до файла.\n 3) Рисование треугольника. Используйте опцию -t или --triangle. Аргументом этой опции является строка вида <x1,y1,x2,y2,x3,y3,red,green,blue,think,flood,red,green,blue>. Сначала идут шесть положительных чисел, меньших 10000 - коордитаны вершин, затем идёт три числа от 0 до 255 - задание цветов в RGB формате для линии, затем толщина линии, затем либо 0, либо 1, определяющая будет ли залит треугольник. Если предыдущие число - 1, то дальше идёт три числа от 0 до 255 - задание цветов в RGB формате для заливки. Числа отделяются друг от друга запятыми, пробелы отсутсвтуют.\n 4) Создание коложа из текущего изображения. Использйте опцию -c  или --collage. Дальше идут два числа, разделённых запятой: количество изображений по оси х и по оси у. Числа должны быть положительными.\n 5) Перекрашивание наибоьшего прямоугольника задного цвета. Используйте опцию -r или --repaint. Далее идёт шесть чисел от 0 до 255, разделённых запятой. Первые три числа - цвет искомого прямоугольника. Вторые - цвет для перекраски. Если прямоугольников нужного цвета нет, то изображенние не изменяется.\n 6) Опция -i  или --info показывает информацию о изображении.\n 7) Опция -h или --help показывает данный мануал.\nMade by Vladimir Lubimov, LETI, 2020\n");
 }
 
-void info(){
-	printf("It's info!\n");
+void info(png* image, int rf){
+	if(rf == 1){
+		printf("Input file wasn't readed correctly!\n");
+		return;
+	}
+	printf("Image width = %d\n", image->width);
+	printf("Image height = %d\n", image->height);
+	printf("Image color type = %d\n", image->color_type);
+	printf("Image bit depth = %d\n", image->bit_depth);
 }
 
 int CheckArgument(const char* pattern, char* argument){
@@ -506,6 +513,8 @@ int main(int argc, char** argv){
 	};
 		
 	int opt;
+	int inf = 0;
+	int rf = 1;
 	int err = 0;
 	char* outfile = NULL;
 	outfile = "res.png";
@@ -533,7 +542,7 @@ int main(int argc, char** argv){
 				help();
 				break;
 			case 'i':
-				info();	
+				inf = 1;	
 				break;
 			case 'n':
 				if (CheckArgument("^.*\\w+\\.png$", optarg) || optarg == NULL){
@@ -587,7 +596,7 @@ int main(int argc, char** argv){
 				break;
 		}
 	}
-	int rf = 1;
+	rf = 1;
 	if(err == 1){
 		printf("Wrong options or arguments! In order to successful using please read manual higher!\n");
 	}
@@ -596,6 +605,9 @@ int main(int argc, char** argv){
 			rf = ReadFile(infile, &image);
 			if (rf == 0)
 				printf("Input file successfully opened!\n");
+		}
+		if (inf == 1){
+			info(&image, rf);
 		}
 		if(rf != 1 && targstr != NULL){
 			int x1,y1,x2,y2,x3,y3,r,g,b,th,flood;
