@@ -632,8 +632,10 @@ int main(int argc, char** argv){
 				fg = atoi(strtok(NULL,","));
 				fb = atoi(strtok(NULL,","));
 			}
-			if(x1 >= image.width || x2 >= image.width || x3 >= image.width || y1 >= image.height || y2 >= image.height || y3 >= image.height || r > 255 || g > 255 || b > 255 || fr > 255 || fg > 255 || fb > 255 || (pst == NULL && flood == 1))
+			if(x1 >= image.width || x2 >= image.width || x3 >= image.width || y1 >= image.height || y2 >= image.height || y3 >= image.height || r > 255 || g > 255 || b > 255 || fr > 255 || fg > 255 || fb > 255 || (pst == NULL && flood == 1)){
 				printf("Value of argument is too big or flood fill color wasn't defined!\n");
+				help();
+			}
 			else{
 				PrintTriangle(&image,x1,y1,x2,y2,x3,y3,r,g,b,th,flood,fr,fg,fb);
 				printf("Triangle successful printed!\n");
@@ -647,8 +649,10 @@ int main(int argc, char** argv){
 			nr = atoi(strtok(NULL,","));
 			ng = atoi(strtok(NULL,","));
 			nb = atoi(strtok(NULL,","));
-			if (r > 255 || g > 255 || b > 255 || nr > 255 || ng > 255 || nb > 255)
+			if (r > 255 || g > 255 || b > 255 || nr > 255 || ng > 255 || nb > 255){
 				printf("This color doesn't exist in RGB!\n");
+				help();
+			}
 			else{
 				Repaint(&image, r, g, b, nr, ng, nb);
 				printf("The biggest rectangle of defined color repainted!\n");
@@ -658,8 +662,10 @@ int main(int argc, char** argv){
 			int n,m;
 			n = atoi(strtok(cargstr,","));
 			m = atoi(strtok(NULL,","));
-			if(n == 0 || m == 0)
+			if(n == 0 || m == 0){
 				printf("Argument has value below 1! It is unacceptable!\n");
+				help();
+			}			
 			else{
 				Collage(&image, n, m);
 				printf("Collage completed!\n");			
@@ -668,6 +674,7 @@ int main(int argc, char** argv){
 	}
 	if(rf == 1 || err == 1){
 		printf("Can't give output because of error in reading input file!\n");
+		help();
 	}
 	else{	
 		OutputImage(outfile, &image);
