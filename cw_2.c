@@ -64,10 +64,13 @@ int ReadFile(char *filename, png* image) {
 	image->bit_depth = png_get_bit_depth(image->png_ptr, image->info_ptr);
 	image->color_type = png_get_color_type(image->png_ptr, image->info_ptr);
 	image->number_of_passes = png_set_interlace_handling(image->png_ptr);
+	if (image->color_type == PNG_COLOR_TYPE_PALETTE)
+	        png_set_palette_to_rgb(image->png_ptr);
     	png_read_update_info(image->png_ptr, image->info_ptr);
 
 	if(image->bit_depth == 16)
 		png_set_strip_16(image->png_ptr);
+	
 		
 	if (setjmp(png_jmpbuf(image->png_ptr))){
 		fprintf(stderr, "Error during reading image!\n");
@@ -354,7 +357,7 @@ void XCollage(png* image, int n){
 
 void Collage(png* image, int n, int m){
 	if(n == 1 && m == 1){
-		printf("New size is same with old!\n");
+		printf("New size is same with old! Nothing changed (:\n");
 		return;
 	}
 	XCollage(image, n);
@@ -505,6 +508,7 @@ int main(int argc, char** argv){
 	int opt;
 	int err = 0;
 	char* outfile = NULL;
+	outfile = "res.png";
 	char* infile = NULL;
 	char* targstr = NULL;
 	char* rargstr = NULL;
@@ -583,12 +587,11 @@ int main(int argc, char** argv){
 				break;
 		}
 	}
-
+	int rf = 1;
 	if(err == 1){
-		printf("Wrong options or arguments!\nIn order to successful using please read manual higher!\n");
+		printf("Wrong options or arguments! In order to successful using please read manual higher!\n");
 	}
 	else{
-		int rf = 1;
 		if (infile != NULL){
 			rf = ReadFile(infile, &image);
 			if (rf == 0)
@@ -617,27 +620,45 @@ int main(int argc, char** argv){
 				fg = atoi(strtok(NULL,","));
 				fb = atoi(strtok(NULL,","));
 			}
-			//printf("%s\n",pst);
 			if(x1 >= image.width || x2 >= image.width || x3 >= image.width || y1 >= image.height || y2 >= image.height || y3 >= image.height || r > 255 || g > 255 || b > 255 || fr > 255 || fg > 255 || fb > 255 || (pst == NULL && flood == 1))
 				printf("Value of argument is too big or flood fill color wasn't defined!\n");
 			else{
 				PrintTriangle(&image,x1,y1,x2,y2,x3,y3,r,g,b,th,flood,fr,fg,fb);
+				printf("Triangle successful printed!\n");
 			}			
 		}
+		if(rargstr != NULL && rf != 1){
+			int r, g, b, nr, ng, nb;
+			r = atoi(strtok(rargstr,","));
+			g = atoi(strtok(NULL,","));
+			b = atoi(strtok(NULL,","));
+			nr = atoi(strtok(NULL,","));
+			ng = atoi(strtok(NULL,","));
+			nb = atoi(strtok(NULL,","));
+			if (r > 255 || g > 255 || b > 255 || nr > 255 || ng > 255 || nb > 255)
+				printf("This color doesn't exist in RGB!\n");
+			else{
+				Repaint(&image, r, g, b, nr, ng, nb);
+				printf("The biggest rectangle of defined color repainted!\n");
+			}
+		}
+		if(cargstr != NULL && rf != 1){
+			int n,m;
+			n = atoi(strtok(cargstr,","));
+			m = atoi(strtok(NULL,","));
+			if(n == 0 || m == 0)
+				printf("Argument has value below 1! It is unacceptable!\n");
+			else{
+				Collage(&image, n, m);
+				printf("Collage completed!\n");			
+			}
+		}
 	}
-	//printf("%d %d\n", image.width, image.height);
-	//PrintTriangle(&image, 0, 0, 0, 150, 300, 150, 255, 255, 0, 2, 1, 100, 0, 0);
-	//PrintLineWithGivenThickness(&image, 0, 10, 300, 10, 0, 100, 0, 20);
-	//PrintLineWithGivenThickness(&image, 0, 100, 200, 100, 0, 100, 0, 20);
-	//GetAllRecs(&image, 0, 100, 0);
-	//Repaint(&image, 0, 100, 0, 255, 0, 0);
-	//Collage(&image, 1, 1);
-	//PrintLineWithGivenThickness(&image, 0, 0, 200, 200,  0, 0, 255, 30);
-	//image.row_pointers = ChangeSize(&image, 150, 100);
-	//image.width = 150;
-	//image.height = 100;
-	//PrintLineWithGivenThickness(&image, 0, 0, 100, 50,  0, 0, 255, 30);
-	//printf("%d %d\n", image.width, image.height);
-	OutputImage("res2.png", &image);		
+	if(rf == 1 || err == 1){
+		printf("Can't give output because of error in reading input file!\n");
+	}
+	else{	
+		OutputImage(outfile, &image);
+	}		
 	return 0;
 }
