@@ -522,15 +522,9 @@ int main(int argc, char** argv){
 	char* targstr = NULL;
 	char* rargstr = NULL;
 	char* cargstr = NULL;
-	//if(argc < 2){
-	//	printf("Incorrect input!\n");
-	//	help();
-	//	return 0;
-	//}
-	//printf("%d\n", argc);
-	//printf("%s\n", argv[0]);
+	
 	while(opt != -1){
-		//printf("%d\n", optind);
+		
 		opt = getopt_long(argc, argv, opts, longopts, &optind);
 		switch(opt){
 			case '?':
