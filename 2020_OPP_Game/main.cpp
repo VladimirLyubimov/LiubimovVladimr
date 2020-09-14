@@ -61,6 +61,7 @@ class CellStack{//стек клеток; необходим для генера�
         
         void Push(MyCell cell){//добавления клетки в стек
             m_data[m_length] = cell;
+            //m_data[m_length].setAttendance();
             m_length++;
         }
     
@@ -96,13 +97,14 @@ class MyMaze{//класс игрового поля-лабиринта
                 for (int j = 0; j < m_width; j++){
                     if ((i%2 == 1) && (j%2 == 1))
                         m_grid[i][j].setData(1, "ground");
-                    m_grid[i][j].print();
+                    //m_grid[i][j].print();
+                    m_grid[i][j].setCoordinates(j,i);
                 }
-                cout << "\n";
+                //cout << "\n";
             }
         }
     
-        int checkNeighbours(int x, int y, int** cells){
+        int checkNeighbours(int x, int y, int* &cells){
             int count = 0;
             int cells_arr[4];
             if ((y-2 >= 0) && (this->m_grid[y-2][x].getAttendance() == 0)){
@@ -125,31 +127,86 @@ class MyMaze{//класс игрового поля-лабиринта
             if (count == 0)
                 return 0;
             
-            *cells = new int[count];
+            cells = new int[count];
             for(int i = 0; i < count; i++)
-                *cells[i] = cells_arr[i];
+                cells[i] = cells_arr[i];
             return count;
         } 
         
         void makeMaze(CellStack &stack){
+            this->print();
+            cout << "\n";
             if(stack.getLength() == 0){
                 stack.~CellStack();
                 return;
             }
             
             MyCell cell = stack.Top();
+            //cell.printData();
             int x = 0;
             int y = 0;
             int* cells;
+            int direction;
             
             cell.getCoordinates(x,y);
-            int check = checkNeighbours(x, y, &cells);
-            if
+            //cout << x << y << "\n";
+            int check = checkNeighbours(x, y, cells);
             
+            if (check == 0){
+                stack.Remove();
+                makeMaze(stack);
+                return;
+            }
+            
+            direction = rand() % check;
+            //cout << direction;
+            switch (cells[direction]){
+                case 1:
+                    this->m_grid[y-1][x].setData(1, "ground");
+                    stack.Push(this->m_grid[y-2][x]);
+                    this->m_grid[y-2][x].setAttendance();
+                    break;
+                case 2:
+                    this->m_grid[y][x+1].setData(1, "ground");
+                    stack.Push(this->m_grid[y][x+2]);
+                    this->m_grid[y][x+2].setAttendance();
+                    break;
+                case 3:
+                    this->m_grid[y+1][x].setData(1, "ground");
+                    stack.Push(this->m_grid[y+2][x]);
+                    this->m_grid[y+2][x].setAttendance();
+                    break;
+                case 4:
+                    this->m_grid[y][x-1].setData(1, "ground");
+                    stack.Push(this->m_grid[y][x-2]);
+                    this->m_grid[y][x-2].setAttendance();
+                    break;
+            }
+            makeMaze(stack);
+            return;
+        }
+    
+        void prepareForMaze(){
+           CellStack stack(25);
+            stack.Push(m_grid[1][1]);
+            makeMaze(stack);
+        }
+    
+        void print(){
+            for (int i = 0; i < m_height; i++){
+                for (int j = 0; j < m_width; j++){
+                    m_grid[i][j].print();
+                }
+                cout << "\n";
+            }
         }
 };
 
 int main()
 {
     MyMaze maze(11,11);
+    maze.prepareForMaze();
+    //maze.checkNeighbours(1, 1, &cells);
+    cout << "\n";
+    maze.print();
 }
