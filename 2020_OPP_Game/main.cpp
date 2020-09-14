@@ -142,14 +142,12 @@ class MyMaze{//класс игрового поля-лабиринта
             }
             
             MyCell cell = stack.Top();
-            //cell.printData();
             int x = 0;
             int y = 0;
             int* cells;
             int direction;
             
             cell.getCoordinates(x,y);
-            //cout << x << y << "\n";
             int check = checkNeighbours(x, y, cells);
             
             if (check == 0){
@@ -159,7 +157,6 @@ class MyMaze{//класс игрового поля-лабиринта
             }
             
             direction = rand() % check;
-            //cout << direction;
             switch (cells[direction]){
                 case 1:
                     this->m_grid[y-1][x].setData(1, "ground");
@@ -187,8 +184,9 @@ class MyMaze{//класс игрового поля-лабиринта
         }
     
         void prepareForMaze(){
-           CellStack stack(25);
+            CellStack stack(25);
             stack.Push(m_grid[1][1]);
+            m_grid[1][1].setAttendance();
             makeMaze(stack);
         }
     
