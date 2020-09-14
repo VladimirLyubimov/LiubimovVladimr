@@ -4,97 +4,147 @@
 
 using namespace std;
 
-class MyCell{
+class MyCell{//класс клетки
     private:
-        int passable;
-        const char* type;
-        int touched;
+        int m_passable;//проходимость клетки
+        const char* m_type;//её вид (стена, обычная клетка и тд.)
+        int m_touched;//посещенали клетка при генерации лабиринта
+        int m_x;
+        int m_y;
     public:
         MyCell(){
-            passable = 0;
-            type = "fence";
-            touched = 0;
+            m_passable = 0;
+            m_type = "fence";
+            m_touched = 0;
         }
-        void setData(int set_passable, const char* set_type){
-            passable = set_passable;
-            type = set_type;
-            return;
+        void setData(int set_passable, const char* set_type){//установка параметров проходимости и типа клетки
+            m_passable = set_passable;
+            m_type = set_type;
+        }
+    
+        void setCoordinates(int set_x, int set_y){
+            m_x = set_x;
+            m_y = set_y;
+        }
+    
+        void getCoordinates(int &get_x, int &get_y){
+            get_x = this->m_x;
+            get_y = this->m_y;
         }
         
         void printData(){
-            std::cout << this->passable << " " << this->type << "\n"; 
+            std::cout << this->m_passable << " " << this->m_type << "\n"; 
         }
         
         void print(){
-            cout << this->passable;
+            cout << this->m_passable;
         }
         
-        void setAttendance(){
-            touched = 1;
+        void setAttendance(){//установка параметра посещённости
+            m_touched = 1;
         }
     
-        int getAttendance(){
-            return this->touched;
+        int getAttendance(){//получение значения параметра посещённости
+            return this->m_touched;
         }
 };
 
-class CellStack{
+class CellStack{//стек клеток; необходим для генерации лабиринта; реализованы только необходимые методы
     private:
-        MyCell* data;
-        int length;
+        MyCell* m_data;
+        int m_length;
     public:
         CellStack(int size){
-            data = new MyCell[size];
-            length = 0;
+            m_data = new MyCell[size];
+            m_length = 0;
         }
         
-        void Add(MyCell cell){
-            data[length] = cell;
-            length++;
+        void Push(MyCell cell){//добавления клетки в стек
+            m_data[m_length] = cell;
+            m_length++;
         }
     
-        MyCell top(){
-            length--;
-            return data[length];
+        MyCell Top(){//получение верхего элемента стека
+            return m_data[m_length-1];
         }
     
-        ~CellStack(){
-            delete[] data;
+        int getLength(){//получение количества элементов в стеке
+            return this->m_length;
+        }
+           
+        void Remove(){//удаление верхнего элемента
+            m_length--;
+        }
+    
+        ~CellStack(){//деструктор; очищает выделенную память
+            delete[] m_data;
         }
 };
 
-class MyMaze{
+class MyMaze{//класс игрового поля-лабиринта
     private:
-        MyCell** grid;
-        int width;
-        int height;
+        MyCell** m_grid;
+        int m_width;
+        int m_height;
     public:
         MyMaze(int set_x, int set_y){
-            width = set_x;
-            height = set_y;
-            grid = new MyCell*[height];
-            for (int i = 0; i < height; i++){
-                grid[i] = new MyCell[width];
-                for (int j = 0; j < width; j++){
+            m_width = set_x;
+            m_height = set_y;
+            m_grid = new MyCell*[m_height];
+            for (int i = 0; i < m_height; i++){
+                m_grid[i] = new MyCell[m_width];
+                for (int j = 0; j < m_width; j++){
                     if ((i%2 == 1) && (j%2 == 1))
-                        grid[i][j].setData(1, "ground");
-                    grid[i][j].print();
+                        m_grid[i][j].setData(1, "ground");
+                    m_grid[i][j].print();
                 }
                 cout << "\n";
             }
         }
     
         int checkNeighbours(int x, int y, int** cells){
-            int res = 0;
             int count = 0;
             int cells_arr[4];
-            if ((y-2 >= 0) && (this->grid[y-2][x].getAttendance() == 0)){
+            if ((y-2 >= 0) && (this->m_grid[y-2][x].getAttendance() == 0)){
                 cells_arr[count] = 1;
                 count ++;
             }
+            if ((x+2 < this->m_width) && (this->m_grid[y][x+2].getAttendance() == 0)){
+                cells_arr[count] = 2;
+                count ++;
+            }
+            if ((y+2 < m_height) && (this->m_grid[y+2][x].getAttendance() == 0)){
+                cells_arr[count] = 3;
+                count ++;
+            }
+            if ((x-2 >= 0) && (this->m_grid[y][x-2].getAttendance() == 0)){
+                cells_arr[count] = 4;
+                count ++;
+            }
+            
+            if (count == 0)
+                return 0;
+            
+            *cells = new int[count];
+            for(int i = 0; i < count; i++)
+                *cells[i] = cells_arr[i];
+            return count;
         } 
         
-        void makeMaze(){
+        void makeMaze(CellStack &stack){
+            if(stack.getLength() == 0){
+                stack.~CellStack();
+                return;
+            }
+            
+            MyCell cell = stack.Top();
+            int x = 0;
+            int y = 0;
+            int* cells;
+            
+            cell.getCoordinates(x,y);
+            int check = checkNeighbours(x, y, &cells);
+            if
             
         }
 };
