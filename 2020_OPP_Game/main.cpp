@@ -8,10 +8,12 @@ class MyCell{
     private:
         int passable;
         const char* type;
+        int touched;
     public:
         MyCell(){
             passable = 0;
             type = "fence";
+            touched = 0;
         }
         void setData(int set_passable, const char* set_type){
             passable = set_passable;
@@ -25,6 +27,39 @@ class MyCell{
         
         void print(){
             cout << this->passable;
+        }
+        
+        void setAttendance(){
+            touched = 1;
+        }
+    
+        int getAttendance(){
+            return this->touched;
+        }
+};
+
+class CellStack{
+    private:
+        MyCell* data;
+        int length;
+    public:
+        CellStack(int size){
+            data = new MyCell[size];
+            length = 0;
+        }
+        
+        void Add(MyCell cell){
+            data[length] = cell;
+            length++;
+        }
+    
+        MyCell top(){
+            length--;
+            return data[length];
+        }
+    
+        ~CellStack(){
+            delete[] data;
         }
 };
 
@@ -49,8 +84,14 @@ class MyMaze{
             }
         }
     
-        int checkNeighbours(int ){
-    
+        int checkNeighbours(int x, int y, int** cells){
+            int res = 0;
+            int count = 0;
+            int cells_arr[4];
+            if ((y-2 >= 0) && (this->grid[y-2][x].getAttendance() == 0)){
+                cells_arr[count] = 1;
+                count ++;
+            }
         } 
         
         void makeMaze(){
