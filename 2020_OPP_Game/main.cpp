@@ -1,6 +1,8 @@
 //g++  7.4.0
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -134,8 +136,8 @@ class MyMaze{//класс игрового поля-лабиринта
         } 
         
         void makeMaze(CellStack &stack){
-            this->print();
-            cout << "\n";
+            //this->print();
+            //cout << "\n";
             if(stack.getLength() == 0){
                 stack.~CellStack();
                 return;
@@ -155,7 +157,9 @@ class MyMaze{//класс игрового поля-лабиринта
                 makeMaze(stack);
                 return;
             }
-            
+            //int a = 1634517381641453*1450+6131333;
+            //srand(time(NULL));
+            //srand(a);
             direction = rand() % check;
             switch (cells[direction]){
                 case 1:
@@ -202,7 +206,7 @@ class MyMaze{//класс игрового поля-лабиринта
 
 int main()
 {
-    MyMaze maze(11,11);
+    MyMaze maze(21,11);
     maze.prepareForMaze();
     //maze.checkNeighbours(1, 1, &cells);
     cout << "\n";
