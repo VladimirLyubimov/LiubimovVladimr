@@ -1,4 +1,4 @@
-//g++  7.4.0
+//Mady by Vladimir Lyubimov, ETU 2020.
 
 #include <iostream>
 #include <cstdlib>
@@ -18,6 +18,7 @@ class MyCell{//класс клетки
             m_passable = 0;
             m_type = "fence";
             m_touched = 0;
+			//cout << "Made!\n";
         }
 
         void setData(int set_passable, const char* set_type){//установка параметров проходимости и типа клетки
@@ -35,12 +36,15 @@ class MyCell{//класс клетки
             get_y = this->m_y;
         }
         
-        void printData(){
-            std::cout << this->m_passable << " " << this->m_type << "\n"; 
-        }
-        
         void print(){
-            cout << this->m_passable;
+			if (m_type == "fence"){
+            	cout << "@";
+				return;
+			}
+			if (m_type == "ground"){
+				cout << " ";
+				return;
+			}
         }
         
         void setAttendance(){//установка параметра посещённости
@@ -52,6 +56,7 @@ class MyCell{//класс клетки
         }
 		
 		~MyCell(){
+			//cout << "Destruction!\n";
 		}
 };
 
@@ -107,6 +112,17 @@ class MyMaze{//класс игрового поля-лабиринта
                 }
             }
         }
+
+		MyMaze(const MyMaze &maze){
+			m_height = maze.m_height;
+			m_width = maze.m_width;
+			m_grid = new MyCell*[m_height];
+			for (int i = 0; i < m_height; i++){
+                m_grid[i] = new MyCell[m_width];
+                for (int j = 0; j < m_width; j++)
+					m_grid[i][j] = maze.m_grid[i][j];
+			}
+		}
     
         int checkNeighbours(int x, int y, int* &cells){//получает координаты клетки и массив для записи возможных направлений из этой клетки. проверяет соседей клетки на поссещённость. Если они непосещены, записывает их направление в массив и увеличивет счётчик направлений на 1. Возвращает количество непосещённых соседей клетки. Соседями называются клетки с индексом отличным только по вертикали или горизонтали от индекса входной клетки на 2.
             int count = 0;
@@ -207,23 +223,31 @@ class MyMaze{//класс игрового поля-лабиринта
 			}
 			delete[] m_grid;
 		}
+};
 
-class MyInterface{
-	private:
-};		
+class MyInterface{//класс реализующий примитивный консольный интерфейс
+	public:		
 		void getStartCoordinates(int &x, int &y){//получает координаты точки старта с консоли
 			cout << "Введите координаты точки старта:\n";
 			cin >> x >> y;
+		}
+		
+		void getMazeSize	
+
+		void printMaze(MyMaze maze){
+			maze.print();
 		}
 };
 
 int main()
 {
-    MyMaze maze(21,21);
+    MyMaze maze(31,31);
 	int x,y;
-	//maze.getStartCoordinates(x, y);
-    maze.prepareForMaze(1, 1);
+	MyInterface interface;
+	interface.getStartCoordinates(x, y);
+    maze.prepareForMaze(x, y);
+	interface.printMaze(maze);
     //maze.checkNeighbours(1, 1, &cells);
     //cout << "\n";
-    maze.print();
+    //maze.print();
 }
