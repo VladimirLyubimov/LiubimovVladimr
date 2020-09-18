@@ -227,12 +227,15 @@ class MyMaze{//класс игрового поля-лабиринта
 
 class MyInterface{//класс реализующий примитивный консольный интерфейс
 	public:		
-		void getStartCoordinates(int &x, int &y){//получает координаты точки старта с консоли
-			cout << "Введите координаты точки старта:\n";
+		void getStartOfGenerationCoordinates(int &x, int &y){//получает координаты точки старта с консоли
+			cout << "Введите координаты точки старта генерации:\n";
 			cin >> x >> y;
 		}
 		
-		void getMazeSize	
+		void getMazeSize(int &x, int &y){
+			cout << "Введите линейнные размеры лабиринта:\n";
+			cin >> x >> y;
+		}	
 
 		void printMaze(MyMaze maze){
 			maze.print();
@@ -241,11 +244,15 @@ class MyInterface{//класс реализующий примитивный к�
 
 int main()
 {
-    MyMaze maze(31,31);
-	int x,y;
+	int x_gs, y_gs, x_ms, y_ms;
 	MyInterface interface;
-	interface.getStartCoordinates(x, y);
-    maze.prepareForMaze(x, y);
+
+	interface.getMazeSize(x_ms, y_ms);
+	interface.getStartOfGenerationCoordinates(x_gs, y_gs);
+
+	MyMaze maze(x_ms,y_ms);
+    maze.prepareForMaze(x_gs, y_gs);
+
 	interface.printMaze(maze);
     //maze.checkNeighbours(1, 1, &cells);
     //cout << "\n";
