@@ -21,6 +21,15 @@ class MyCell{//класс клетки
 			//cout << "Made!\n";
         }
 
+        MyCell(const MyCell &cell){
+            m_passable = cell.m_passable;
+            m_type = cell.m_type;
+            m_touched = cell.m_touched;
+            m_x = cell.m_x;
+            m_y = cell.m_y;
+            //cout << "S_Made!\n";
+        }
+    
         void setData(int set_passable, const char* set_type){//установка параметров проходимости и типа клетки
             m_passable = set_passable;
             m_type = set_type;
@@ -70,13 +79,13 @@ class CellStack{//стек клеток; необходим для генера�
             m_length = 0;
         }
         
-        void Push(MyCell &cell){//добавления клетки в стек            
+        void Push(MyCell cell){//добавления клетки в стек            
 			m_data[m_length] = cell;
             m_length++;
         }
     
-        MyCell* Top(){//получение верхего элемента стека
-            return &(m_data[m_length-1]);
+        MyCell Top(){//получение верхего элемента стека
+            return m_data[m_length-1];
         }
     
         int getLength(){//получение количества элементов в стеке
@@ -159,13 +168,13 @@ class MyMaze{//класс игрового поля-лабиринта
                 return;
             }
             
-            MyCell* cell = stack.Top();
+            MyCell cell = stack.Top();
             int x = 0;
             int y = 0;
             int* cells;//массив направлений
             int direction;
             
-            cell->getCoordinates(x,y);
+            cell.getCoordinates(x,y);
             int check = checkNeighbours(x, y, cells);            
 
             if (check == 0){
@@ -227,16 +236,25 @@ class MyMaze{//класс игрового поля-лабиринта
 
 class MyInterface{//класс реализующий примитивный консольный интерфейс
 	public:		
-		void getStartOfGenerationCoordinates(int &x, int &y){//получает координаты точки старта с консоли
-			cout << "Введите координаты точки старта генерации:\n";
+		void getStartOfGenerationCoordinates(int &x, int &y){//получает координаты точки старта генерации с консоли
+			cout << "Введите координаты точки старта генерации в формате x<пробел>y:\n";
 			cin >> x >> y;
 		}
 		
-		void getMazeSize(int &x, int &y){
-			cout << "Введите линейнные размеры лабиринта:\n";
+		void getMazeSize(int &x, int &y){//получение линейных размеров лабиринта
+			cout << "Введите линейнные размеры лабиринтав формате x<пробел>y:\n";
 			cin >> x >> y;
-		}	
-
+		}
+    
+        	void getStartAndFinish(int &xs, int &ys, int &xf, int &yf){
+            		cout << "Сейчас вам будет предложено ввести координаты точек старта и финиша в формате x<пробел>y. Если\n";
+            		cout << "Введите координаты точки старта:\n";
+			cin >> xs >> ys;
+            
+            		cout << "Введите координаты точки финиша:\n";
+			cin >> xf >> yf;
+        	}
+        
 		void printMaze(MyMaze maze){
 			maze.print();
 		}
@@ -251,7 +269,7 @@ int main()
 	interface.getStartOfGenerationCoordinates(x_gs, y_gs);
 
 	MyMaze maze(x_ms,y_ms);
-    maze.prepareForMaze(x_gs, y_gs);
+    	maze.prepareForMaze(x_gs, y_gs);
 
 	interface.printMaze(maze);
     //maze.checkNeighbours(1, 1, &cells);
