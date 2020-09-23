@@ -106,7 +106,7 @@ class CellStack{//стек клеток; необходим для генера�
     
         ~CellStack(){//деструктор; очищает выделенную память
             delete[] m_data;
-			cout << "The end!\n";
+			//cout << "The end!\n";
         }
 };
 
@@ -141,7 +141,35 @@ class MyMaze{//класс игрового поля-лабиринта
 			}
 		}
     
-        MyMaze& operator= (const MyMaze &maze){//оператор присваивания
+        MyMaze(MyMaze &&maze){//конструктор перемещения
+            m_height = maze.m_height;
+			m_width = maze.m_width;
+            m_grid = maze.m_grid;
+            
+            maze.m_grid = nullptr;
+        }
+    
+        MyMaze& operator= (MyMaze &&maze){//оператор присваивания перемещением
+            if (this == &maze)
+                return *this;
+            
+            if (m_grid){
+                for(int i = 0; i < m_height; i++){
+                    delete[] m_grid[i];
+                }
+                delete[] m_grid;
+            }
+            
+            m_height = maze.m_height;
+			m_width = maze.m_width;
+            m_grid = maze.m_grid;
+            
+            maze.m_grid = nullptr;
+            
+            return *this;
+        }
+    
+        MyMaze& operator= (const MyMaze &maze){//оператор присваивания копированием
             if (this == &maze)
                 return *this;
             
