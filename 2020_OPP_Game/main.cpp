@@ -6,17 +6,19 @@
 
 using namespace std;
 
+enum State {STATE_GROUND, STATE_WALL, STATE_START, STATE_FINISH};
+
 class MyCell{//класс клетки
     private:
         int m_passable;//проходимость клетки
-        const char* m_type;//её вид (стена, обычная клетка и тд.)
+        State m_type;//её вид (стена, обычная клетка и тд.)
         int m_touched;//посещенали клетка при генерации лабиринта
         int m_x;
         int m_y;
     public:
         MyCell(){
             m_passable = 0;
-            m_type = "fence";
+            m_type = STATE_WALL;
             m_touched = 0;
 			//cout << "Made!\n";
         }
@@ -30,7 +32,7 @@ class MyCell{//класс клетки
             //cout << "S_Made!\n";
         }
     
-        void setData(int set_passable, const char* set_type){//установка параметров проходимости и типа клетки
+        void setData(int set_passable, State set_type){//установка параметров проходимости и типа клетки
             m_passable = set_passable;
             m_type = set_type;
         }
@@ -46,19 +48,19 @@ class MyCell{//класс клетки
         }
         
         void print(){
-			if (m_type == "fence"){
+			if (m_type == STATE_WALL){
             	cout << "@";
 				return;
 			}
-			if (m_type == "ground"){
+			if (m_type == STATE_GROUND){
 				cout << " ";
 				return;
 			}
-            if (m_type == "start"){
+            if (m_type == STATE_START){
 				cout << "S";
 				return;
 			}
-            if (m_type == "finish"){
+            if (m_type == STATE_FINISH){
 				cout << "F";
 				return;
 			}
@@ -124,7 +126,7 @@ class MyMaze{//класс игрового поля-лабиринта
                 m_grid[i] = new MyCell[m_width];
                 for (int j = 0; j < m_width; j++){
                     if ((i%2 == 1) && (j%2 == 1))
-                        m_grid[i][j].setData(1, "ground");
+                        m_grid[i][j].setData(1, STATE_GROUND);
                     m_grid[i][j].setCoordinates(j,i);
                 }
             }
@@ -246,22 +248,22 @@ class MyMaze{//класс игрового поля-лабиринта
             direction = rand() % check;//генерация случайного направления
             switch (cells[direction]){
                 case 1:
-                    this->m_grid[y-1][x].setData(1, "ground");
+                    this->m_grid[y-1][x].setData(1, STATE_GROUND);
                     stack.Push(this->m_grid[y-2][x]);
                     this->m_grid[y-2][x].setAttendance();
                     break;
                 case 2:
-                    this->m_grid[y][x+1].setData(1, "ground");
+                    this->m_grid[y][x+1].setData(1, STATE_GROUND);
                     stack.Push(this->m_grid[y][x+2]);
                     this->m_grid[y][x+2].setAttendance();
                     break;
                 case 3:
-                    this->m_grid[y+1][x].setData(1, "ground");
+                    this->m_grid[y+1][x].setData(1, STATE_GROUND);
                     stack.Push(this->m_grid[y+2][x]);
                     this->m_grid[y+2][x].setAttendance();
                     break;
                 case 4:
-                    this->m_grid[y][x-1].setData(1, "ground");
+                    this->m_grid[y][x-1].setData(1, STATE_GROUND);
                     stack.Push(this->m_grid[y][x-2]);
                     this->m_grid[y][x-2].setAttendance();
                     break;
@@ -272,8 +274,8 @@ class MyMaze{//класс игрового поля-лабиринта
         }
     
         void setStartFinish(int xs, int ys, int xf, int yf){//устанавливает точеи старта и финиша
-            m_grid[ys][xs].setData(1,"start");
-            m_grid[yf][xf].setData(1,"finish");
+            m_grid[ys][xs].setData(1,STATE_START);
+            m_grid[yf][xf].setData(1,STATE_FINISH);
         }
     
         void prepareForMaze(int x, int y, int xs, int ys, int xf, int yf){//получает координаты стартовой клетки помещает её в стек, отмечая её помеченной и запускает рекурсивную функцию генерации лабиринта.
