@@ -3,6 +3,7 @@
 #include "CellStack.hpp"
 #include "MyMaze.hpp"
 #include "MyInterface.hpp"
+#include "MyPlayer.hpp"
 
 using namespace std;
 
@@ -20,4 +21,3 @@ int main()
 
 	interface.printMaze(maze);
 }
-
