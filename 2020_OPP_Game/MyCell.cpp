@@ -55,6 +55,13 @@
     int MyCell::getAttendance(){//получение значения параметра посещённости
         return this->m_touched;
     }
-		
+    
+    bool MyCell::checkType(State type){
+    	if(m_type == type)
+    		return true;
+    	return false;
+    }
+    
 	MyCell::~MyCell(){
 	}
+		
