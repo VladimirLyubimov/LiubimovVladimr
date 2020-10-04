@@ -21,6 +21,7 @@ class MyCell{//класс клетки
     	void print();
     	void setAttendance();
     	int getAttendance();
-    	bool checkType(State type);
+    	int getPassable();
+    	State getType();
     	~MyCell();
 };
