@@ -69,7 +69,9 @@ MyMaze &MyMaze::operator=(const MyMaze &maze) {//оператор присваи
         }
         delete[] m_grid;
     }
-
+	
+	int x = 0;
+	int y = 0;
     m_height = maze.m_height;
     m_width = maze.m_width;
     m_grid = new MyCell *[m_height];
@@ -83,6 +85,15 @@ MyMaze &MyMaze::operator=(const MyMaze &maze) {//оператор присваи
     }
 
     return *this;
+}
+
+MyMaze* MyMaze::m_maze = nullptr;
+
+MyMaze& MyMaze::getInstance(int x, int y){//метод для реализации паттерна синглтон
+	 if(m_maze)
+	 	return *m_maze;
+	 m_maze = new MyMaze(x, y);
+	 return *m_maze;
 }
 
 int MyMaze::checkNeighbours(int x, int y,
