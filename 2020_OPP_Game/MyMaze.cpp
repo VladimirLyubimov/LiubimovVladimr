@@ -184,8 +184,8 @@ void MyMaze::setStartFinish(int xs, int ys, int xf, int yf) {//устанавл�
 void MyMaze::prepareForMaze(int x, int y, int xs, int ys, int xf,
                             int yf) {//получает координаты стартовой клетки помещает её в стек, отмечая её помеченной и запускает рекурсивную функцию генерации лабиринта.
     CellStack stack(m_width * m_height / 2);
-    stack.Push(m_grid[y][x]);
     m_grid[y][x].setAttendance();
+    stack.Push(m_grid[y][x]);
     makeMaze(stack);
     setStartFinish(xs, ys, xf, yf);
 }
