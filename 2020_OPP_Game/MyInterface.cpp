@@ -19,6 +19,6 @@ void MyInterface::getStartAndFinish(int &xs, int &ys, int &xf, int &yf){//пол
 	cin >> xf >> yf;
 }
         
-void MyInterface::printMaze(MyMaze maze){
+void MyInterface::printMaze(MyMaze &maze){
 	maze.print();
 }
