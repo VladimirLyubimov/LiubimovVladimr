@@ -19,4 +19,4 @@ MyInterface.o: MyInterface.cpp
 	g++ -c MyInterface.cpp
 	
 clean:
-	rm -rf *. maze
+	rm -rf *.o maze
