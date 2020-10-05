@@ -1,2 +1,22 @@
-all:
-	g++ MyCell.cpp CellStack.cpp MyMaze.cpp MyInterface.cpp MyPlayer.cpp PNGInterface.cpp main.cpp -lpng -o maze.out
+all: maze
+
+maze: MyCell.o CellStack.o MyMaze.o MyInterface.o main.o
+	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o main.o -o maze
+	
+main.o: main.cpp
+	g++ -c main.cpp
+
+MyCell.o: MyCell.cpp
+	g++ -c MyCell.cpp
+	
+CellStack.o: CellStack.cpp
+	g++ -c CellStack.cpp
+	
+MyMaze.o: MyMaze.cpp
+	g++ -c MyMaze.cpp
+
+MyInterface.o: MyInterface.cpp
+	g++ -c MyInterface.cpp
+	
+clean:
+	rm -rf *. maze
