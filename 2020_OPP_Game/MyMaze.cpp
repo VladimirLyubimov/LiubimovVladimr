@@ -190,14 +190,23 @@ void MyMaze::prepareForMaze(int x, int y, int xs, int ys, int xf,
     setStartFinish(xs, ys, xf, yf);
 }
 
-void MyMaze::print() {//выводит лабиринт
+void MyMaze::getPrintMatrix(char** &matrix) {//возвращает массив символов для вывода лабиринта
     for (int i = 0; i < m_height; i++) {
         for (int j = 0; j < m_width; j++) {
-            m_grid[i][j].print();
+            matrix[i][j] = m_grid[i][j].getPrintChar();
         }
         cout << "\n";
     }
 }
+
+int MyMaze::getWidth(){
+    return m_width;
+}
+
+int MyMaze::getHeight(){
+    return m_height;
+}
+
 
 MyMaze::~MyMaze() {
     for (int i = 0; i < m_height; i++) {
