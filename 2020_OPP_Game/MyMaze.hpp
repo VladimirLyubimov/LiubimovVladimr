@@ -25,6 +25,8 @@ class MyMaze{//класс игрового поля-лабиринта
     public:
     	static MyMaze& getInstance(int x, int y);//метод для реализации паттерна синглтон   	
     	void prepareForMaze(int x, int y, int xs, int ys, int xf, int yf);//получает координаты стартовой клетки помещает её в стек, отмечая её помеченной и запускает рекурсивную функцию генерации лабиринта.
-    	void print();//выводит лабиринт
+    	void getPrintMatrix(char** &matrix);//возвращает массив символов для вывода лабиринта
+    	int getWidth();
+    	int getHeight();
     	~MyMaze();
 };
