@@ -18,7 +18,7 @@ class MyCell{//класс клетки
     	void setData(int set_passable, State set_type);
     	void setCoordinates(int set_x, int set_y);
     	void getCoordinates(int &get_x, int &get_y);
-    	void print();
+    	char getPrintChar();
     	void setAttendance();
     	int getAttendance();
     	int getPassable();
