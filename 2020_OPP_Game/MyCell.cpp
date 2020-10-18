@@ -29,23 +29,20 @@ void MyCell::getCoordinates(int &get_x, int &get_y) {
     get_y = this->m_y;
 }
 
-void MyCell::print() {
+char MyCell::getPrintChar(){
     if (m_type == STATE_WALL) {
-        cout << "@";
-        return;
+        return '@';
     }
     if (m_type == STATE_GROUND) {
-        cout << " ";
-        return;
+        return ' ';
     }
     if (m_type == STATE_START) {
-        cout << "S";
-        return;
+        return 'S';
     }
     if (m_type == STATE_FINISH) {
-        cout << "F";
-        return;
+        return 'F';
     }
+    return '!';
 }
 
 void MyCell::setAttendance() {//установка параметра посещённости
