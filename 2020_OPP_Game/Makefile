@@ -1,7 +1,7 @@
 all: maze
 
-maze: MyCell.o CellStack.o MyMaze.o MyInterface.o main.o
-	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o main.o -o maze
+maze: MyCell.o CellStack.o MyMaze.o MyInterface.o main.o MyHuman.o MyPlayer.o
+	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o main.o MyHuman.o MyPlayer.o -o maze
 	
 main.o: main.cpp
 	g++ -c main.cpp
@@ -17,6 +17,12 @@ MyMaze.o: MyMaze.cpp
 
 MyInterface.o: MyInterface.cpp
 	g++ -c MyInterface.cpp
+
+MyHuman.o:	MyHuman.cpp
+	g++ -c MyHuman.cpp
+	
+MyPlayer.o: MyPlayer.cpp
+	g++ -c MyPlayer.cpp
 	
 clean:
 	rm -rf *.o maze
