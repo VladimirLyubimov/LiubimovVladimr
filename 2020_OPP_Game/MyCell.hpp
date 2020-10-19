@@ -3,7 +3,7 @@
 
 using namespace std;
 
-enum State {STATE_GROUND, STATE_WALL, STATE_START, STATE_FINISH};
+enum State {STATE_GROUND, STATE_WALL, STATE_START, STATE_FINISH, STATE_DYNAMITE, STATE_BONUS, STATE_AIM, STATE_UNDEFOBJ};
 
 class MyCell{//класс клетки
     private:
