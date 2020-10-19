@@ -41,6 +41,15 @@ char MyCell::getPrintChar(){
     }
     if (m_type == STATE_FINISH) {
         return 'F';
+    }    
+    if (m_type == STATE_DYNAMITE) {
+        return '/';
+    }
+    if (m_type == STATE_BONUS) {
+        return 'F';
+    }
+    if (m_type == STATE_AIM) {
+        return 'F';
     }
     return '!';
 }
