@@ -4,6 +4,7 @@ MyCell::MyCell() {
     m_passable = 0;
     m_type = STATE_WALL;
     m_touched = 0;
+    m_ActObj = nullptr;
 }
 
 MyCell::MyCell(const MyCell &cell) {//конструктор копирования
@@ -12,6 +13,7 @@ MyCell::MyCell(const MyCell &cell) {//конструктор копирован�
     m_touched = cell.m_touched;
     m_x = cell.m_x;
     m_y = cell.m_y;
+    m_ActObj = cell.m_ActObj;
 }
 
 void MyCell::setData(int set_passable, State set_type) {//установка параметров проходимости и типа клетки
@@ -43,13 +45,13 @@ char MyCell::getPrintChar(){
         return 'F';
     }    
     if (m_type == STATE_DYNAMITE) {
-        return '/';
+        return 'D';
     }
     if (m_type == STATE_BONUS) {
-        return 'F';
+        return 'B';
     }
     if (m_type == STATE_AIM) {
-        return 'F';
+        return 'A';
     }
     return '!';
 }
@@ -68,6 +70,13 @@ int MyCell::getPassable(){
 
 State MyCell::getType(){
     return m_type;
+}
+
+void MyCell::setActObj(MyObject* Obj){
+	m_ActObj = Obj;
+}
+MyObject* MyCell::getActObj(){
+	return m_ActObj; 
 }
 
 MyCell::~MyCell() {

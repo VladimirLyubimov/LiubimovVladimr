@@ -176,18 +176,19 @@ void MyMaze::makeMaze(
     return;
 }
 
-void MyMaze::setStartFinish(int xs, int ys, int xf, int yf) {//устанавливает точеи старта и финиша
+void MyMaze::setStartFinish(int xs, int ys, int xf, int yf, MyObject* finish) {//устанавливает точеи старта и финиша
     m_grid[ys][xs].setData(1, STATE_START);
     m_grid[yf][xf].setData(1, STATE_FINISH);
+    m_grid[yf][xf].setActObj(finish);
 }
 
 void MyMaze::prepareForMaze(int x, int y, int xs, int ys, int xf,
-                            int yf) {//получает координаты стартовой клетки помещает её в стек, отмечая её помеченной и запускает рекурсивную функцию генерации лабиринта.
+                            int yf, MyObject* finish) {//получает координаты стартовой клетки помещает её в стек, отмечая её помеченной и запускает рекурсивную функцию генерации лабиринта.
     CellStack stack(m_width * m_height / 2);
     m_grid[y][x].setAttendance();
     stack.Push(m_grid[y][x]);
     makeMaze(stack);
-    setStartFinish(xs, ys, xf, yf);
+    setStartFinish(xs, ys, xf, yf, finish);
 }
 
 void MyMaze::getPrintMatrix(char** &matrix) {//возвращает массив символов для вывода лабиринта
@@ -207,6 +208,29 @@ int MyMaze::getHeight(){
     return m_height;
 }
 
+void MyMaze::SetObjects(MyObject* bomb, MyObject* aim, MyObject* bonus){
+	m_grid[m_height/2][m_width/2].setData(1, STATE_AIM);
+    m_grid[m_height/2][m_width/2].setActObj(aim);
+    
+    m_grid[m_height/2][1].setData(1, STATE_BONUS);
+    m_grid[m_height/2][1].setActObj(bonus);
+    m_grid[m_height/2][m_width-1].setData(1, STATE_BONUS);
+    m_grid[m_height/2][m_width-1].setActObj(bonus);
+    
+    for (int i = 1; i < m_height-1; i++) {
+        for (int j = 1; j < m_width-1; j++) {
+        	//srand(time(NULL));
+        	if (!m_grid[i][j].getPassable() && !(rand() % 100)){
+    			m_grid[i][j].setData(1, STATE_DYNAMITE);
+    			m_grid[i][j].setActObj(bomb);
+    		}
+    	}
+    }
+}
+
+MyCell* MyMaze::getCell(int x, int y){
+	return &m_grid[y][x];
+}
 
 MyMaze::~MyMaze() {
     for (int i = 0; i < m_height; i++) {

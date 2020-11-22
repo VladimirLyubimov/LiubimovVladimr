@@ -43,3 +43,12 @@ void MyHuman::levelup(){
 	takeDamage((-1)*m_health);
 	changeArmor(m_armor);
 }
+
+void MyHuman::getCoord(int &x, int &y){
+	x = m_x;
+	y = m_y;
+};
+
+int MyHuman::getHealth(){
+	return m_health;
+}
