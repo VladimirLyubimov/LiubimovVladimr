@@ -19,3 +19,11 @@ void MyPlayer::levelup(){
 char MyPlayer::print(){
 	return 'H';
 };
+
+/*void MyPlayer::setPosition(MyMaze &maze){
+	m_position = maze.getCell(m_x, m_y);
+};
+
+MyCell* MyPlayer::getPosition(){
+	return m_position;
+};*/

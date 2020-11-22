@@ -207,6 +207,9 @@ int MyMaze::getHeight(){
     return m_height;
 }
 
+MyCell* MyMaze::getCell(int x, int y){
+	return &m_grid[y][x];
+}
 
 MyMaze::~MyMaze() {
     for (int i = 0; i < m_height; i++) {

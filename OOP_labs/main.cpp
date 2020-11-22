@@ -5,6 +5,9 @@
 #include "MyInterface.hpp"
 #include "MyPlayer.hpp"
 #include "MyGUI.hpp"
+#include "ControlPlayer.hpp"
+//#include "./ActiveObjects/MyObject.hpp"
+#include "./ActiveObjects/MyDynamite.hpp"
 
 using namespace std;
 
@@ -21,12 +24,18 @@ int main()
 	interface.getStartOfGenerationCoordinates(x_gs, y_gs);
     interface.getStartAndFinish(xs, ys, xf, yf);
 
-	MyGUI gui(x_ms*50, y_ms*50);
+	//MyGUI gui(x_ms*50, y_ms*50);
 
 	MyMaze &maze = MyMaze::getInstance(x_ms,y_ms);
     maze.prepareForMaze(x_gs, y_gs, xs, ys, xf, yf);
     
-    gui.Execute(maze);
+    ControlPlayer hero(1, 1, maze);
+    MyDynamite Dynamite(1,1);
+    maze.getCell(1,1)->setActObj(&Dynamite);
+    cout << hero.m_hero->m_health << "\n";
+    hero += maze;
+    cout << hero.m_hero->m_health << "\n";
+    //gui.Execute(maze);
 	//interface.printMaze(maze);
 	return 0; 
 }

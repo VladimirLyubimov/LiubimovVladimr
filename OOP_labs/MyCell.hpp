@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "./ActiveObjects/MyObject.hpp"
 
 using namespace std;
 
@@ -9,6 +10,7 @@ class MyCell{//класс клетки
     private:
         int m_passable;//проходимость клетки
         State m_type;//её вид (стена, обычная клетка и тд.)
+        MyObject* m_ActObj;
         int m_touched;//посещенали клетка при генерации лабиринта
         int m_x;
         int m_y;
@@ -23,5 +25,7 @@ class MyCell{//класс клетки
     	int getAttendance();
     	int getPassable();
     	State getType();
+    	void setActObj(MyObject* Obj);
+    	MyObject* getActObj();
     	~MyCell();
 };

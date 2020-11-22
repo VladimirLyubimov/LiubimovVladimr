@@ -2,7 +2,7 @@
 #include <cmath>
 
 class MyHuman{
-	protected:
+	public:
 		int m_health;
 		int m_damage;
 		int m_x;
@@ -20,6 +20,7 @@ class MyHuman{
 		void changeLevel(int dlevel);
 		void changeMovepoints(int dmovepoints);
 		void changeArmor(int darmor);
+		void getCoord(int &x, int &y);
 		virtual char print() = 0;
 		virtual void levelup();
 };

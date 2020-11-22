@@ -28,5 +28,6 @@ class MyMaze{//класс игрового поля-лабиринта
     	void getPrintMatrix(char** &matrix);//возвращает массив символов для вывода лабиринта
     	int getWidth();
     	int getHeight();
+    	MyCell* getCell(int x, int y);
     	~MyMaze();
 };
