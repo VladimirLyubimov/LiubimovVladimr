@@ -196,7 +196,6 @@ void MyMaze::getPrintMatrix(char** &matrix) {//возвращает массив
         for (int j = 0; j < m_width; j++) {
             matrix[i][j] = m_grid[i][j].getPrintChar();
         }
-        cout << "\n";
     }
 }
 
@@ -214,13 +213,13 @@ void MyMaze::SetObjects(MyObject* bomb, MyObject* aim, MyObject* bonus){
     
     m_grid[m_height/2][1].setData(1, STATE_BONUS);
     m_grid[m_height/2][1].setActObj(bonus);
-    m_grid[m_height/2][m_width-1].setData(1, STATE_BONUS);
-    m_grid[m_height/2][m_width-1].setActObj(bonus);
+    m_grid[m_height/2][m_width-2].setData(1, STATE_BONUS);
+    m_grid[m_height/2][m_width-2].setActObj(bonus);
     
     for (int i = 1; i < m_height-1; i++) {
         for (int j = 1; j < m_width-1; j++) {
         	//srand(time(NULL));
-        	if (!m_grid[i][j].getPassable() && !(rand() % 100)){
+        	if (!m_grid[i][j].getPassable() && !(rand() % 5)){
     			m_grid[i][j].setData(1, STATE_DYNAMITE);
     			m_grid[i][j].setActObj(bomb);
     		}

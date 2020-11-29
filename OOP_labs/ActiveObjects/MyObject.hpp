@@ -10,4 +10,5 @@ class MyObject{
 	public:
 		virtual void Action(MyPlayer* player) = 0;
 		virtual ~MyObject();
+		MyObject& operator +=(MyPlayer* player);
 };

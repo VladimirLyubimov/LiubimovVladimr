@@ -25,7 +25,8 @@ bool MyPlayer::getCoollected(){
 };
 
 void MyPlayer::setExit(){
-	m_exit =  true;
+	if (m_collected)
+		m_exit =  true;
 };
 
 bool MyPlayer::getExit(){
