@@ -12,8 +12,10 @@ void MyPlayer::setCollected(){
 };
 
 void MyPlayer::levelup(){
-	MyHuman::levelup();
-	addExp(-100);
+	if(m_exp >= 100){
+		MyHuman::levelup();
+		addExp(-100);
+	}
 };
 
 char MyPlayer::print(){
@@ -32,3 +34,7 @@ void MyPlayer::setExit(){
 bool MyPlayer::getExit(){
 	return m_exit;
 };
+
+int MyPlayer::getExp(){
+	return m_exp;
+}

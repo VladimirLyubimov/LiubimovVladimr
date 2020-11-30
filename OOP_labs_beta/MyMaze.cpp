@@ -89,11 +89,11 @@ MyMaze &MyMaze::operator=(const MyMaze &maze) {//оператор присваи
 
 MyMaze* MyMaze::m_maze = nullptr;
 
-MyMaze& MyMaze::getInstance(int x, int y){//метод для реализации паттерна синглтон
+MyMaze* MyMaze::getInstance(int x, int y){//метод для реализации паттерна синглтон
 	 if(m_maze)
-	 	return *m_maze;
+	 	return m_maze;
 	 m_maze = new MyMaze(x, y);
-	 return *m_maze;
+	 return m_maze;
 }
 
 int MyMaze::checkNeighbours(int x, int y,
@@ -236,4 +236,6 @@ MyMaze::~MyMaze() {
         delete[] m_grid[i];
     }
     delete[] m_grid;
+    
+    delete m_maze;
 }

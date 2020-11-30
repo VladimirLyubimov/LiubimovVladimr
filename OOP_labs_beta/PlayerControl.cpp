@@ -17,7 +17,9 @@ PlayerControl:: ~PlayerControl(){
 }
 
 void PlayerControl::showStats(){
-	cout << m_hero->getHealth() << "\n";
+	cout << "Health = " << m_hero->getHealth() << "\n";
+	cout << "Level = " << m_hero->getLevel() << "\n";
+	cout << "Experience = " << m_hero->getExp() << "\n";
 }
 
 MyPlayer* PlayerControl::getPlayer(){
@@ -37,16 +39,15 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy){
 		if (m_position->getActObj()){
 			if(*(m_position->getActObj()) += m_hero){
 				cout << "interacted\n";
-				showStats();
 				m_position->setData(1, STATE_GROUND);
 				m_position->setActObj(nullptr);
 			}
 		}
-		
 		if (m_hero->getExit()){
 			cout << "Level completed!\n";
 			return 2;
 		}
+		showStats();
 		return 1;
 	}
 	return 0;

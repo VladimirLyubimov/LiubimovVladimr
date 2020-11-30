@@ -1,7 +1,7 @@
 all: maze
 
-maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyGUI.o MyExit.o
-	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyGUI.o MyExit.o -o maze -lsfml-graphics -lsfml-window -lsfml-system
+maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o GameControl.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyGUI.o MyExit.o
+	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o GameControl.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyGUI.o MyExit.o -o maze -lsfml-graphics -lsfml-window -lsfml-system
 	
 main.o: main.cpp
 	g++ -c main.cpp
@@ -44,6 +44,9 @@ MyExit.o: ./ActiveObjects/MyExit.cpp
 
 MyGUI: MyGUI.cpp
 	g++ -c MyGUI.cpp -lsfml-graphics -lsfml-window -lsfml-system
+	
+GameControl.o: GameControl.cpp
+	g++ -c GameControl.cpp
 	
 clean:
 	rm -rf *.o maze

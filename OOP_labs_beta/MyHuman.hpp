@@ -23,6 +23,7 @@ class MyHuman{
 		void getCoord(int &x, int &y);
 		void setCoord(int x, int y);
 		int getHealth();
+		int getLevel();
 		virtual char print() = 0;
 		virtual void levelup();
 };
