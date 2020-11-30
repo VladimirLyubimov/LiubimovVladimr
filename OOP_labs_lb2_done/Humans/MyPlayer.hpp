@@ -7,7 +7,7 @@ class MyPlayer : public MyHuman{
 		bool m_collected;
 		bool m_exit;
 	public:
-		MyPlayer(int x, int y, int health = 1000, int damage = 10, int level = 1, int movepoints = 5, int armor = 0, int exp = 0, bool collected = false);
+		MyPlayer(int x, int y, int health = 1000, int damage = 10, int level = 1, int exp = 0, bool collected = false);
 		void addExp(int exp);
 		void setCollected();
 		bool getCoollected();
