@@ -3,10 +3,10 @@
 MyBonus::MyBonus(): MyObject(){
 };
 
-bool MyBonus::Action(MyPlayer* player){
+bool MyBonus::operator +=(MyPlayer* player){
 	player->addExp(50);
 	player->levelup();
 	return true;
-};
+}
 
 MyBonus::~MyBonus(){};

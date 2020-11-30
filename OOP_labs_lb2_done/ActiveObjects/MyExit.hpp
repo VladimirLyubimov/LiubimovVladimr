@@ -4,6 +4,6 @@
 class MyExit : public MyObject{
 	public:
 		MyExit();
-		virtual bool Action(MyPlayer* player);
+		virtual bool operator +=(MyPlayer* player);
 		virtual ~MyExit();
 };

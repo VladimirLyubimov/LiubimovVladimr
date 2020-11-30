@@ -3,12 +3,11 @@
 MyExit::MyExit(): MyObject(){
 };
 
-bool MyExit::Action(MyPlayer* player){
+bool MyExit::operator +=(MyPlayer* player){
 	if (player->getCoollected()){
 		player->setExit();
 		return true;
 	}
 	return false;
-};
-
+}
 MyExit::~MyExit(){};

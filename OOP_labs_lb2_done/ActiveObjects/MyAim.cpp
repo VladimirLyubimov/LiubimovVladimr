@@ -3,9 +3,9 @@
 MyAim::MyAim(): MyObject(){
 };
 
-bool MyAim::Action(MyPlayer* player){
+bool MyAim::operator +=(MyPlayer* player){
 	player->setCollected();
 	return true;
-};
+}
 
 MyAim::~MyAim(){};

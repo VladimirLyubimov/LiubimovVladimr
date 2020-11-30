@@ -4,6 +4,6 @@
 class MyDynamite : public MyObject{
 	public:
 		MyDynamite();
-		virtual bool Action(MyPlayer* player);
+		virtual bool operator +=(MyPlayer* player);
 		virtual ~MyDynamite();
 };

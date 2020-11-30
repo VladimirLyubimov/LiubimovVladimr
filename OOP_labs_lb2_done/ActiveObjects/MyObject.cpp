@@ -3,9 +3,9 @@
 MyObject::MyObject(){
 };
 
-bool MyObject::operator +=(MyPlayer* player){
+/*bool MyObject::operator +=(MyPlayer* player){
 	bool success = this->Action(player);
 	return success;
-}
+}*/
 
 MyObject::~MyObject(){};

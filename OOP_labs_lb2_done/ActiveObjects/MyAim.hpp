@@ -4,6 +4,6 @@
 class MyAim : public MyObject{
 	public:
 		MyAim();
-		virtual bool Action(MyPlayer* player);
+		virtual bool operator +=(MyPlayer* player);
 		virtual ~MyAim();
 };
