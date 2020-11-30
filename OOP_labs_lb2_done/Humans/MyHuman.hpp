@@ -2,7 +2,7 @@
 #include <cmath>
 
 class MyHuman{
-	public:
+	protected:
 		int m_health;
 		int m_damage;
 		int m_x;
