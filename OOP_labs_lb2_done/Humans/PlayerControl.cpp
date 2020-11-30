@@ -43,6 +43,10 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy){
 				m_position->setActObj(nullptr);
 			}
 		}
+		if (m_hero->getHealth() <= 0){
+			cout << "YOU DIED\n";
+			return 2;
+		}
 		if (m_hero->getExit()){
 			cout << "Level completed!\n";
 			return 2;
