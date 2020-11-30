@@ -16,6 +16,7 @@ GameControl::GameControl(){
     m_maze->SetObjects(m_dynamite, m_aim, m_bonus);
 	
 	m_hero = new PlayerControl(ys, ys, *m_maze);
+	fin.close();
 }
 
 GameControl::~GameControl(){
