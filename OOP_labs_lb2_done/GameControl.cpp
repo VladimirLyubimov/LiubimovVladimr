@@ -16,6 +16,7 @@ GameControl::GameControl(){
     m_maze->SetObjects(m_dynamite, m_aim, m_bonus);
 	
 	m_hero = new PlayerControl(ys, ys, *m_maze);
+	
 	fin.close();
 }
 
@@ -30,10 +31,15 @@ GameControl::~GameControl(){
 void GameControl::Execute(){
 	int dx = 0;
 	int dy = 0;
+	
+	FileLog* file = new FileLog("ObjectLog.txt");
+	ConsolLog* consol = new ConsolLog();
+	LogInterface Log(file, consol);
+	
 	m_interface.printMaze(*m_maze, m_hero->getPlayer());
     while(1){
     	m_interface.getMove(dx, dy);
-    	if (m_hero->Move(*m_maze, dx, dy) == 2){
+    	if (m_hero->Move(*m_maze, dx, dy, Log) == 2){
     		cout << "The end!\n";
     		break;
     	}

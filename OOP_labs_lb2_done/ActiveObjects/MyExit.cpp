@@ -10,4 +10,10 @@ bool MyExit::operator +=(MyPlayer* player){
 	}
 	return false;
 }
+
+LogInterface& MyExit::operator <<(LogInterface& log){
+	log.writeLog("Exit has been reached. Game has been overed.\n");
+	return log;
+}
+
 MyExit::~MyExit(){};

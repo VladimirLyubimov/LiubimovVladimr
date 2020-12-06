@@ -3,6 +3,7 @@
 #include "../Maze/MyMaze.hpp"
 #include "../ActiveObjects/MyObject.hpp"
 #include "iostream"
+#include "../Logs/LogInterface.hpp"
 
 class PlayerControl{
 	private:
@@ -14,5 +15,5 @@ class PlayerControl{
 		MyPlayer* getPlayer();
 		void showStats();
 		void setPosition(MyMaze &maze);
-		int Move(MyMaze& maze, int dx, int dy);
+		int Move(MyMaze& maze, int dx, int dy, LogInterface& MazeLog);
 };

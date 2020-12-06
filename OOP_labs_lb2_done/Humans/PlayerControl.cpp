@@ -26,9 +26,10 @@ MyPlayer* PlayerControl::getPlayer(){
 	return m_hero;
 }
 
-int PlayerControl::Move(MyMaze& maze, int dx, int dy){
+int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface &MazeLog){
 	int x = 0;
 	int y = 0;
+	
 	bool success = false;
 	m_hero->getCoord(x, y);
 	if (maze.getCell(x+dx, y+dy)->getPassable()){
@@ -41,6 +42,8 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy){
 				cout << "interacted\n";
 				m_position->setData(1, STATE_GROUND);
 				m_position->setActObj(nullptr);
+				//MazeLog << m_position->getActObj();
+				//MazeLog.writeLog("hey\n");
 			}
 		}
 		if (m_hero->getHealth() <= 0){

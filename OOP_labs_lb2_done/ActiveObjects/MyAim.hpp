@@ -6,4 +6,5 @@ class MyAim : public MyObject{
 		MyAim();
 		virtual bool operator +=(MyPlayer* player);
 		virtual ~MyAim();
+		virtual LogInterface& operator <<(LogInterface& log);
 };

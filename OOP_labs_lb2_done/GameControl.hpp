@@ -11,6 +11,9 @@
 #include "./ActiveObjects/MyExit.hpp"
 #include "./ActiveObjects/MyBonus.hpp"
 #include "./ActiveObjects/MyAim.hpp"
+#include "./Logs/LogInterface.hpp"
+#include "./Logs/FileLog.hpp"
+#include "./Logs/ConsolLog.hpp"
 
 using namespace std;
 
@@ -19,10 +22,10 @@ class GameControl{
 		MyMaze* m_maze;
 		MyInterface m_interface;
 		PlayerControl* m_hero;
-		MyExit* m_finish;
-		MyBonus* m_bonus;
-		MyAim* m_aim;
-		MyDynamite* m_dynamite;
+		MyObject* m_finish;
+		MyObject* m_bonus;
+		MyObject* m_aim;
+		MyObject* m_dynamite;
 
 	public:
 		GameControl();

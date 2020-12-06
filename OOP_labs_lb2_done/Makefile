@@ -1,7 +1,8 @@
 all: maze
 
-maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o GameControl.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o
-	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o GameControl.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o -o maze
+maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o GameControl.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o
+	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o GameControl.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o -o maze
+	
 main.o: main.cpp
 	g++ -c main.cpp
 
@@ -43,6 +44,18 @@ MyExit.o: ./ActiveObjects/MyExit.cpp
 	
 GameControl.o: GameControl.cpp
 	g++ -c GameControl.cpp
+	
+MyLog.o: ./Logs/MyLog.cpp
+	g++ -c ./Logs/MyLog.cpp
+
+FileLog.o: ./Logs/FileLog.cpp
+	g++ -c ./Logs/FileLog.cpp
+
+ConsolLog.o: ./Logs/ConsolLog.cpp
+	g++ -c ./Logs/ConsolLog.cpp	
+
+LogInterface.o: ./Logs/LogInterface.cpp
+	g++ -c ./Logs/LogInterface.cpp	
 	
 clean:
 	rm -rf *.o maze

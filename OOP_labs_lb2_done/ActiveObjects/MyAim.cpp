@@ -8,4 +8,9 @@ bool MyAim::operator +=(MyPlayer* player){
 	return true;
 }
 
+LogInterface& MyAim::operator <<(LogInterface& log){
+	log.writeLog("Aim has been successfully collected.\n");
+	return log;
+}
+
 MyAim::~MyAim(){};
