@@ -5,6 +5,6 @@ class MyDynamite : public MyObject{
 	public:
 		MyDynamite();
 		virtual bool operator +=(MyPlayer* player);
-		virtual LogInterface& operator <<(LogInterface& log);
+		virtual const char* getLogData();
 		virtual ~MyDynamite();
 };

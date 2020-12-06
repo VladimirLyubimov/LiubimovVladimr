@@ -1,6 +1,7 @@
 #pragma once
 #include "MyLog.hpp"
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 

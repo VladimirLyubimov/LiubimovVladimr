@@ -8,9 +8,8 @@ bool MyDynamite::operator +=(MyPlayer* player){
 	return true;
 }
 
-LogInterface& MyDynamite::operator <<(LogInterface& log){
-	log.writeLog("Dynamite has explpoded. Hero has take 200 damage.\n");
-	return log;
+const char* MyDynamite::getLogData(){
+	return "Dynamite has explpoded. Hero has take 200 damage.\n";
 }
 
 MyDynamite::~MyDynamite(){};

@@ -39,10 +39,10 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface &MazeLog){
 		m_position = maze.getCell(x, y);
 		if (m_position->getActObj()){
 			if(*(m_position->getActObj()) += m_hero){
-				cout << "interacted\n";
+				//cout << "interacted\n";
+				MazeLog << m_position->getActObj();
 				m_position->setData(1, STATE_GROUND);
 				m_position->setActObj(nullptr);
-				//MazeLog << m_position->getActObj();
 				//MazeLog.writeLog("hey\n");
 			}
 		}

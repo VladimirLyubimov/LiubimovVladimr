@@ -11,6 +11,6 @@ FileLog::~FileLog(){
 }
 
 void FileLog::write(const char* data){
-	if(m_file)
+	if(m_file->is_open())
 		*m_file << data;
 }

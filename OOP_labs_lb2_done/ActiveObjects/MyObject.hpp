@@ -11,4 +11,4 @@ class MyObject{
 		virtual const char* getLogData() = 0;
 };
 
-LogInterface& operator <<(LogInterface& log, MyObject& obj);
+LogInterface& operator <<(LogInterface& log, MyObject* obj);

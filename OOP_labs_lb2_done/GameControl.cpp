@@ -48,4 +48,7 @@ void GameControl::Execute(){
     	m_interface.printMaze(*m_maze, m_hero->getPlayer());
     }
     m_interface.printMaze(*m_maze, m_hero->getPlayer());
+    
+    delete file;
+    delete consol;
 }
