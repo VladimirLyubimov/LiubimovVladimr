@@ -6,5 +6,5 @@ class MyAim : public MyObject{
 		MyAim();
 		virtual bool operator +=(MyPlayer* player);
 		virtual ~MyAim();
-		virtual const char* getLogData();
+		virtual std::string getLogData();
 };

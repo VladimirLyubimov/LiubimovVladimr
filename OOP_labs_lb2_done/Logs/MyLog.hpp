@@ -1,9 +1,10 @@
 #pragma once
+#include <string>
 
 class MyLog{
 	protected:
 		MyLog();
 		virtual ~MyLog();
 	public:
-		virtual void write(const char* data) = 0;
+		virtual void write(std::string data) = 0;
 };

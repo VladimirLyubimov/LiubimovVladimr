@@ -1,5 +1,7 @@
 #pragma once
 #include "MyHuman.hpp"
+#include "../Logs/LogInterface.hpp"
+#include <string>
 
 class MyPlayer : public MyHuman{
 	private:
@@ -14,6 +16,9 @@ class MyPlayer : public MyHuman{
 		void setExit();
 		bool getExit();
 		int getExp();
+		std::string getLogData(); 
 		virtual void levelup();
 		virtual char print();
 };
+
+LogInterface& operator <<(LogInterface& log, MyPlayer* player);

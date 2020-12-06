@@ -9,5 +9,5 @@ class LogInterface{
 	public:
 		LogInterface(FileLog* file, ConsolLog* consol);
 		~LogInterface();
-		void writeLog(const char* data);
+		void writeLog(string data);
 };

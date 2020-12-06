@@ -11,7 +11,7 @@ bool MyExit::operator +=(MyPlayer* player){
 	return false;
 }
 
-const char* MyExit::getLogData(){
+std::string MyExit::getLogData(){
 	return "Exit has been reached. Game has been overed.\n";
 }
 

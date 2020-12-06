@@ -6,6 +6,6 @@ ConsolLog::ConsolLog(){
 ConsolLog::~ConsolLog(){
 }
 
-void ConsolLog::write(const char* data){
+void ConsolLog::write(string data){
 	cout << data;
 }

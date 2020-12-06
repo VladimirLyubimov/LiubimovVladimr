@@ -9,7 +9,7 @@ bool MyBonus::operator +=(MyPlayer* player){
 	return true;
 }
 
-const char* MyBonus::getLogData(){
+std::string MyBonus::getLogData(){
 	return "Bonus has been successfully collected. Hero has been given 50 experience.\n";
 }
 

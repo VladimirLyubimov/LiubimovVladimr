@@ -6,7 +6,7 @@ LogInterface::LogInterface(FileLog* file, ConsolLog* consol): m_filelog(file), m
 LogInterface::~LogInterface(){
 }
 
-void LogInterface::writeLog(const char* data){
+void LogInterface::writeLog(string data){
 	if(m_filelog)
 		m_filelog->write(data);
 	if(m_consollog)

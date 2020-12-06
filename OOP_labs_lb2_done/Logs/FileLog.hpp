@@ -11,5 +11,5 @@ class FileLog: public MyLog{
 	public:
 		FileLog(const char* filename);
 		~FileLog();
-		virtual void write(const char* data);
+		virtual void write(string data);
 };

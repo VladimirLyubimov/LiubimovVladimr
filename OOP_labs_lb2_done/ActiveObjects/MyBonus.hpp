@@ -5,6 +5,6 @@ class MyBonus : public MyObject{
 	public:
 		MyBonus();
 		virtual bool operator +=(MyPlayer* player);
-		virtual const char* getLogData();
+		virtual std::string getLogData();
 		virtual ~MyBonus();
 };

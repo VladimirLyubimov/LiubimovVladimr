@@ -8,7 +8,7 @@ bool MyAim::operator +=(MyPlayer* player){
 	return true;
 }
 
-const char* MyAim::getLogData(){
+std::string MyAim::getLogData(){
 	return "Aim has been succssefully collected. Exit has been unlocked.\n";
 }
 

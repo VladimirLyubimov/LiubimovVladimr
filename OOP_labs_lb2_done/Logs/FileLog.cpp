@@ -10,7 +10,7 @@ FileLog::~FileLog(){
 	delete m_file;
 }
 
-void FileLog::write(const char* data){
+void FileLog::write(string data){
 	if(m_file->is_open())
 		*m_file << data;
 }

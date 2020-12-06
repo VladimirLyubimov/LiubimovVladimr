@@ -38,3 +38,22 @@ bool MyPlayer::getExit(){
 int MyPlayer::getExp(){
 	return m_exp;
 }
+
+std::string MyPlayer::getLogData(){
+	std::string data("Position is (");
+	int x = 0;
+	int y = 0;
+	this->getCoord(x,y);
+	data += std::to_string(x) + ";" + std::to_string(y) + "). ";
+	data += "Health = " + std::to_string(this->getHealth()) + ". ";
+	data += "Level = " + std::to_string(this->getLevel()) + ". ";
+	data += "Experience = " + std::to_string(this->getExp()) + ".\n";
+	return data;	
+}
+
+LogInterface& operator <<(LogInterface& log, MyPlayer* player){
+	int x = 0;
+	int y = 0;
+	log.writeLog(player->getLogData());
+	return log;
+}

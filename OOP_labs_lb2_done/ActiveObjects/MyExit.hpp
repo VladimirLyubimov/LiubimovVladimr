@@ -5,6 +5,6 @@ class MyExit : public MyObject{
 	public:
 		MyExit();
 		virtual bool operator +=(MyPlayer* player);
-		virtual const char* getLogData();
+		virtual std::string getLogData();
 		virtual ~MyExit();
 };

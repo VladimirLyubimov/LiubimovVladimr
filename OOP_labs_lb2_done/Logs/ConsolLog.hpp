@@ -8,5 +8,5 @@ class ConsolLog: public MyLog{
 	public:
 		ConsolLog();
 		~ConsolLog();
-		virtual void write(const char* data);
+		virtual void write(string data);
 };

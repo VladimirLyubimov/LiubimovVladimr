@@ -35,17 +35,16 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface &MazeLog){
 	if (maze.getCell(x+dx, y+dy)->getPassable()){
 		m_hero->Move(dx, dy);
 		m_hero->getCoord(x, y);
-		cout << x << " " << y << "\n";
+		//cout << x << " " << y << "\n";
 		m_position = maze.getCell(x, y);
 		if (m_position->getActObj()){
 			if(*(m_position->getActObj()) += m_hero){
-				//cout << "interacted\n";
 				MazeLog << m_position->getActObj();
 				m_position->setData(1, STATE_GROUND);
 				m_position->setActObj(nullptr);
-				//MazeLog.writeLog("hey\n");
 			}
 		}
+		MazeLog << m_hero;
 		if (m_hero->getHealth() <= 0){
 			cout << "YOU DIED\n";
 			return 2;
@@ -54,8 +53,9 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface &MazeLog){
 			cout << "Level completed!\n";
 			return 2;
 		}
-		showStats();
+		//showStats();
 		return 1;
 	}
+	MazeLog << m_hero;
 	return 0;
 }

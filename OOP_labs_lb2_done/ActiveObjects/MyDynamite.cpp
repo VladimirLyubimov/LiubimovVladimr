@@ -8,7 +8,7 @@ bool MyDynamite::operator +=(MyPlayer* player){
 	return true;
 }
 
-const char* MyDynamite::getLogData(){
+std::string MyDynamite::getLogData(){
 	return "Dynamite has explpoded. Hero has take 200 damage.\n";
 }
 

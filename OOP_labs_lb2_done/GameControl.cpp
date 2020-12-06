@@ -32,9 +32,9 @@ void GameControl::Execute(){
 	int dx = 0;
 	int dy = 0;
 	
-	FileLog* file = new FileLog("ObjectLog.txt");
+	FileLog* Logfile = new FileLog("LogFile.txt");
 	ConsolLog* consol = new ConsolLog();
-	LogInterface Log(file, consol);
+	LogInterface Log(Logfile, consol);
 	
 	m_interface.printMaze(*m_maze, m_hero->getPlayer());
     while(1){
@@ -49,6 +49,6 @@ void GameControl::Execute(){
     }
     m_interface.printMaze(*m_maze, m_hero->getPlayer());
     
-    delete file;
+    delete Logfile;
     delete consol;
 }
