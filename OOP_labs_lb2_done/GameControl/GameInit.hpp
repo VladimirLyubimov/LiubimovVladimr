@@ -1,0 +1,15 @@
+#pragma once
+#include "iostream"
+#include "fstream"
+#include "../Maze/MyMaze.hpp"
+#include "../ActiveObjects/MyDynamite.hpp"
+#include "../ActiveObjects/MyExit.hpp"
+#include "../ActiveObjects/MyBonus.hpp"
+#include "../ActiveObjects/MyAim.hpp"
+#include "PlayGroundStruct.hpp"
+
+class GameInit{
+	public:
+		static void InitGame(PlayGround& field);
+		static void EndGame(PlayGround& field);
+};

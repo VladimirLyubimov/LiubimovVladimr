@@ -1,8 +1,8 @@
 //Mady by Vladimir Lyubimov, ETU 2020.
-#include "GameControl.hpp"
+#include "./GameControl/GameFacade.hpp"
 
 int main(){
-	GameControl game;
+	GameFacade game;
 	game.Execute();
 	return 0; 
 }

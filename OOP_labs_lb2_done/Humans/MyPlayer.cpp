@@ -48,6 +48,8 @@ std::string MyPlayer::getLogData(){
 	data += "Health = " + std::to_string(this->getHealth()) + ". ";
 	data += "Level = " + std::to_string(this->getLevel()) + ". ";
 	data += "Experience = " + std::to_string(this->getExp()) + ".\n";
+	if(this->getHealth() <= 0)
+		data += "Health isn't under 0. Game over!\n";
 	return data;	
 }
 
