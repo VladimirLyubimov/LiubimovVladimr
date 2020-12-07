@@ -4,10 +4,9 @@
 
 class LogInterface{
 	private:
-		FileLog* m_filelog;
-		ConsolLog* m_consollog;
+		MyLog* m_log;
 	public:
-		LogInterface(FileLog* file, ConsolLog* consol);
+		LogInterface(MyLog* log);
 		~LogInterface();
 		void writeLog(string data);
 };

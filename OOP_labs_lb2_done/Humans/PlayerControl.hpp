@@ -15,5 +15,7 @@ class PlayerControl{
 		MyPlayer* getPlayer();
 		void showStats();
 		void setPosition(MyMaze &maze);
-		int Move(MyMaze& maze, int dx, int dy, LogInterface& MazeLog);
+		int Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInterface* CLog);
+		template <class T>
+		void MakeLog(LogInterface* FLog, LogInterface* CLog, T* LogObj);
 };

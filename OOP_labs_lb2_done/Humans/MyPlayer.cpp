@@ -52,8 +52,6 @@ std::string MyPlayer::getLogData(){
 }
 
 LogInterface& operator <<(LogInterface& log, MyPlayer* player){
-	int x = 0;
-	int y = 0;
 	log.writeLog(player->getLogData());
 	return log;
 }

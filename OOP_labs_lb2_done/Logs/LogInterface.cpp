@@ -1,14 +1,12 @@
 #include "LogInterface.hpp"
 
-LogInterface::LogInterface(FileLog* file, ConsolLog* consol): m_filelog(file), m_consollog(consol){
+LogInterface::LogInterface(MyLog* log): m_log(log){
 }
 
 LogInterface::~LogInterface(){
 }
 
 void LogInterface::writeLog(string data){
-	if(m_filelog)
-		m_filelog->write(data);
-	if(m_consollog)
-		m_consollog->write(data);
+	if(m_log)
+		m_log->write(data);
 }

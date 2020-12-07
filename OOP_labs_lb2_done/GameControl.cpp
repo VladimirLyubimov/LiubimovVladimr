@@ -34,12 +34,13 @@ void GameControl::Execute(){
 	
 	FileLog* Logfile = new FileLog("LogFile.txt");
 	ConsolLog* consol = new ConsolLog();
-	LogInterface Log(Logfile, consol);
+	LogInterface* FLog = new LogInterface(Logfile);
+	LogInterface* CLog = new LogInterface(consol);
 	
 	m_interface.printMaze(*m_maze, m_hero->getPlayer());
     while(1){
     	m_interface.getMove(dx, dy);
-    	if (m_hero->Move(*m_maze, dx, dy, Log) == 2){
+    	if (m_hero->Move(*m_maze, dx, dy, FLog, CLog) == 2){
     		cout << "The end!\n";
     		break;
     	}
@@ -51,4 +52,6 @@ void GameControl::Execute(){
     
     delete Logfile;
     delete consol;
+    delete FLog;
+    delete CLog;
 }
