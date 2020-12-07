@@ -10,6 +10,7 @@ void GameExecutor::Play(PlayGround& field){
 	LogInterface* CLog = new LogInterface(consol);
 	
 	MyInterface interface;
+	field.m_hero->MakeLog(FLog, CLog, field.m_hero->getPlayer());
 	interface.printMaze(*(field.m_maze), field.m_hero->getPlayer());
 	
     while(1){

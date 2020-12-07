@@ -1,8 +1,7 @@
 #include "FileLog.hpp"
 
 FileLog::FileLog(const char* filename){
-	m_file = new ofstream();
-	m_file->open(filename);
+	m_file = new ofstream(filename);
 }
 
 FileLog::~FileLog(){
