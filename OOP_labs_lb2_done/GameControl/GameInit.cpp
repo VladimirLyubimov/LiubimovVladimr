@@ -26,4 +26,10 @@ void GameInit::EndGame(PlayGround& field){
 	delete field.m_bonus;
 	delete field.m_dynamite;
 	delete field.m_hero;
+	field.m_maze->Clear();
+	field.m_finish = nullptr;
+	field.m_aim = nullptr;
+	field.m_bonus = nullptr;
+	field.m_dynamite = nullptr;
+	field.m_hero = nullptr;
 }

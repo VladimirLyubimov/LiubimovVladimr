@@ -10,6 +10,7 @@
 
 class GameInit{
 	public:
+		//void NewGameFromOld
 		static void InitGame(PlayGround& field);
 		static void EndGame(PlayGround& field);
 };

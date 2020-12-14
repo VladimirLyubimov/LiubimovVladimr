@@ -3,44 +3,28 @@ MyInterface::MyInterface(){
 	m_matrix = nullptr;
 }
 
-void MyInterface::getStartOfGenerationCoordinates(int &x, int &y){//получает координаты точки старта генерации с консоли
-	cout << "Введите координаты точки старта генерации в формате x<пробел>y:\n";
-	cin >> x >> y;
-}
-		
-void MyInterface::getMazeSize(int &x, int &y){//получение линейных размеров лабиринта
-	cout << "Введите линейнные размеры лабиринтав формате x<пробел>y:\n";
-	cin >> x >> y;
-}
-    
-void MyInterface::getStartAndFinish(int &xs, int &ys, int &xf, int &yf){//получает точки старта и финиша
-    cout << "Сейчас вам будет предложено ввести координаты точек старта и финиша в формате x<пробел>y. Если\n";
-    cout << "Введите координаты точки старта:\n";
-	cin >> xs >> ys;
-            
-    cout << "Введите координаты точки финиша:\n";
-	cin >> xf >> yf;
-}
-
-void MyInterface::getMove(int &dx, int &dy){
+int MyInterface::getGameCommand(int &dx, int &dy){
 	char ch;
 	cin >> ch;
-	if (ch == 'w'){
-		dy = -1;
-		return;
+	switch(ch){
+		case 'n':
+			return 1;
+		case 'e':
+			return 2;
+		case 'w':
+			dy = -1;
+			return 0;
+		case 's':
+			dy = 1;
+			return 0;
+		case 'a':
+			dx = -1;
+			return 0;
+		case 'd':
+			dx = 1;
+			return 0;
 	}
-	if (ch == 's'){
-		dy = 1;
-		return;
-	}
-	if (ch == 'a'){
-		dx = -1;
-		return;
-	}
-	if (ch == 'd'){
-		dx = 1;
-		return;
-	}
+	return 0;
 }
         
 void MyInterface::printMaze(MyMaze &maze, MyPlayer* player){

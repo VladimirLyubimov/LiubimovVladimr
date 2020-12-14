@@ -40,9 +40,11 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 	
 	m_hero->getCoord(x, y);
 	if (maze.getCell(x+dx, y+dy)->getPassable()){
+		m_position->setIsHuman(false);
 		m_hero->Move(dx, dy);
 		m_hero->getCoord(x, y);
 		m_position = maze.getCell(x, y);
+		m_position->setIsHuman(true);
 		if (m_position->getActObj()){
 			if(*(m_position->getActObj()) += m_hero){
 				MakeLog(FLog, CLog, m_position->getActObj());
@@ -52,9 +54,11 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 		}
 		MakeLog(FLog, CLog, m_hero);
 		if (m_hero->getHealth() <= 0){
+			m_position->setIsHuman(false);
 			return 2;
 		}
 		if (m_hero->getExit()){
+			m_position->setIsHuman(false);
 			return 2;
 		}
 		return 1;

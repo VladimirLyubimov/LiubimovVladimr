@@ -14,6 +14,7 @@ class MyCell{//класс клетки
         int m_touched;//посещенали клетка при генерации лабиринта
         int m_x;
         int m_y;
+        bool m_isHuman;
     public:
     	MyCell();
     	MyCell(const MyCell &cell);
@@ -27,5 +28,7 @@ class MyCell{//класс клетки
     	State getType();
     	void setActObj(MyObject* Obj);
     	MyObject* getActObj();
+    	void setIsHuman(bool val);
+    	bool getIsHuman();
     	~MyCell();
 };

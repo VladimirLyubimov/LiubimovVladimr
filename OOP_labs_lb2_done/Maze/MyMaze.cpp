@@ -178,6 +178,7 @@ void MyMaze::makeMaze(
 
 void MyMaze::setStartFinish(int xs, int ys, int xf, int yf, MyObject* finish) {//устанавливает точеи старта и финиша
     m_grid[ys][xs].setData(1, STATE_START);
+    m_grid[ys][xs].setIsHuman(true);
     m_grid[yf][xf].setData(1, STATE_FINISH);
     m_grid[yf][xf].setActObj(finish);
 }
@@ -229,6 +230,15 @@ void MyMaze::SetObjects(MyObject* bomb, MyObject* aim, MyObject* bonus){
 
 MyCell* MyMaze::getCell(int x, int y){
 	return &m_grid[y][x];
+}
+
+void MyMaze::Clear(){
+	for (int i = 0; i < m_height; i++) {
+        delete[] m_maze->m_grid[i];
+    }
+    delete[] m_maze->m_grid;
+    
+    m_maze = nullptr;
 }
 
 MyMaze::~MyMaze() {

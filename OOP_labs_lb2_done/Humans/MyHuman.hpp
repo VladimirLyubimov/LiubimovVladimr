@@ -9,6 +9,7 @@ class MyHuman{
 		int m_x;
 		int m_y;
 		int m_level;
+		bool m_alive;
 	protected:
 		MyHuman(int x, int y, int health, int damage, int level);
 	public:
@@ -21,6 +22,9 @@ class MyHuman{
 		void setCoord(int x, int y);
 		int getHealth();
 		int getLevel();
+		int getBaseHealth();
+		bool getAlive();
 		virtual char print() = 0;
 		virtual void levelup();
+		void operator +=(MyHuman* human);
 };

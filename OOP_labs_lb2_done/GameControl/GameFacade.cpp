@@ -2,7 +2,11 @@
 
 void GameFacade::Execute(){
 	PlayGround field;
+	
 	GameInit::InitGame(field);
-	GameExecutor::Play(field);
+	while (GameExecutor::Play(field)){
+		GameInit::EndGame(field);
+		GameInit::InitGame(field);
+	}
 	GameInit::EndGame(field);
 }

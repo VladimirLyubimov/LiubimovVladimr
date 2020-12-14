@@ -1,6 +1,6 @@
 #include "MyHuman.hpp"
 
-MyHuman::MyHuman(int x, int y, int health, int damage, int level): m_x(x), m_y(y), m_health(health), m_base_health(health), m_damage(damage), m_level(level){
+MyHuman::MyHuman(int x, int y, int health, int damage, int level): m_x(x), m_y(y), m_health(health), m_base_health(health), m_damage(damage), m_level(level), m_alive(true){
 };
 
 void MyHuman::Move(int dx, int dy){
@@ -49,6 +49,20 @@ int MyHuman::getHealth(){
 	return m_health;
 }
 
+int MyHuman::getBaseHealth(){
+	return m_base_health;
+}
+
 int MyHuman::getLevel(){
 	return m_level;
+}
+
+bool MyHuman::getAlive(){
+	return m_alive;
+}
+
+void MyHuman::operator +=(MyHuman* human){
+	int damage;
+	damage = this->CalcDamage(human->getLevel(), human->getBaseHealth());
+	human->takeDamage(damage);
 }

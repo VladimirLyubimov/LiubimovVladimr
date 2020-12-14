@@ -5,6 +5,7 @@ MyCell::MyCell() {
     m_type = STATE_WALL;
     m_touched = 0;
     m_ActObj = nullptr;
+    m_isHuman = false;
 }
 
 MyCell::MyCell(const MyCell &cell) {//конструктор копирования
@@ -14,6 +15,7 @@ MyCell::MyCell(const MyCell &cell) {//конструктор копирован�
     m_x = cell.m_x;
     m_y = cell.m_y;
     m_ActObj = cell.m_ActObj;
+    m_isHuman = cell.m_isHuman;
 }
 
 void MyCell::setData(int set_passable, State set_type) {//установка параметров проходимости и типа клетки
@@ -77,6 +79,14 @@ void MyCell::setActObj(MyObject* Obj){
 }
 MyObject* MyCell::getActObj(){
 	return m_ActObj; 
+}
+
+void MyCell::setIsHuman(bool val) {
+    m_isHuman = val;
+}
+
+bool MyCell::getIsHuman() {
+    return m_isHuman;
 }
 
 MyCell::~MyCell() {

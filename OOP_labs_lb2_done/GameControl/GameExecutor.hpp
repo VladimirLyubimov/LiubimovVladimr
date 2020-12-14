@@ -7,5 +7,7 @@
 
 class GameExecutor{
 	public:
-		static void Play(PlayGround& field);
+		static bool Play(PlayGround& field);
+	private:
+		static void MyClear(FileLog* Logfile, ConsolLog* consol, LogInterface* FLog, LogInterface* CLog);
 };
