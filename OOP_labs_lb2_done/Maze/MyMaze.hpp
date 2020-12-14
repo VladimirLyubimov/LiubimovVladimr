@@ -32,6 +32,6 @@ class MyMaze{//класс игрового поля-лабиринта
     	int getHeight();
     	void SetObjects(MyObject* bomb, MyObject* aim, MyObject* bonus);
     	MyCell* getCell(int x, int y);
-    	void Clear();
+    	static void Clear();
     	~MyMaze();
 };

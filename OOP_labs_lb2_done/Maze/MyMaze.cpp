@@ -233,12 +233,10 @@ MyCell* MyMaze::getCell(int x, int y){
 }
 
 void MyMaze::Clear(){
-	for (int i = 0; i < m_height; i++) {
-        delete[] m_maze->m_grid[i];
+    if(m_maze){
+    	delete m_maze;
+    	m_maze = nullptr;
     }
-    delete[] m_maze->m_grid;
-    
-    m_maze = nullptr;
 }
 
 MyMaze::~MyMaze() {
@@ -246,6 +244,4 @@ MyMaze::~MyMaze() {
         delete[] m_grid[i];
     }
     delete[] m_grid;
-    
-    delete m_maze;
 }
