@@ -19,7 +19,6 @@ class EnemyControl{
 	public:
 		EnemyControl(int x, int y, MyMaze& maze);
 		~EnemyControl();
-		Enemy<Behavior>* getPlayer();
 		Enemy<Behavior>* getEnemy();
 		void MakeLog(LogInterface* FLog, LogInterface* CLog, Enemy<Behavior>* LogObj);
 		bool getAlive();
