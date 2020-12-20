@@ -34,6 +34,13 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 	
 	m_hero->getCoord(x, y);
 	if (maze.getCell(x+dx, y+dy)->getPassable()){
+		MyHuman* aim;
+		aim = maze.getCell(x+dx, y+dy)->getIsHuman();
+		if(aim){
+			cout << "Hit\n";
+			*m_hero += aim;
+			return 1;
+		}
 		m_position->setIsHuman(nullptr);
 		m_hero->Move(dx, dy);
 		m_hero->getCoord(x, y);

@@ -10,7 +10,7 @@ class Enemy: public MyHuman{
 		Enemy(int x, int y, int health, int damage, int level, T* behavior);
 		~Enemy();
 		void setBehavior(T* behavior);
-		void makeTurn(MyHuman* first, MyHuman* second, int dx, int dy);
+		void makeTurn(MyHuman* first, int dx, int dy);
 		virtual char print(); 
 };
 
@@ -28,8 +28,8 @@ void Enemy<T>::setBehavior(T* behavior){
 }
 
 template <class T>
-void Enemy<T>::makeTurn(MyHuman* first, MyHuman* second, int dx, int dy){
-	m_behavior->Action(first, second, dx, dy);
+void Enemy<T>::makeTurn(MyHuman* first, int dx, int dy){
+	m_behavior->Action(first, this, dx, dy);
 }
 
 template <class T>

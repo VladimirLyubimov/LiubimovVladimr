@@ -27,7 +27,7 @@ int MyInterface::getGameCommand(int &dx, int &dy){
 	return 0;
 }
         
-void MyInterface::printMaze(MyMaze &maze, MyPlayer* player){
+void MyInterface::printMaze(MyMaze &maze, MyPlayer* player, EnemyControl* enemy){
 	int i ,j, px, py;
 	int x = maze.getWidth();
 	int y = maze.getHeight();
@@ -38,6 +38,9 @@ void MyInterface::printMaze(MyMaze &maze, MyPlayer* player){
 		
 	player->getCoord(px, py);
 	m_matrix[py][px] = '!';
+	
+	enemy->m_enemy->getCoord(px, py);
+	m_matrix[py][px] = 'E';
 	
 	for(i = 0; i < y; i++){
 		j = 0;
