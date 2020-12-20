@@ -5,7 +5,7 @@ MyCell::MyCell() {
     m_type = STATE_WALL;
     m_touched = 0;
     m_ActObj = nullptr;
-    m_isHuman = false;
+    m_isHuman = nullptr;
 }
 
 MyCell::MyCell(const MyCell &cell) {//конструктор копирования
@@ -81,11 +81,11 @@ MyObject* MyCell::getActObj(){
 	return m_ActObj; 
 }
 
-void MyCell::setIsHuman(bool val) {
-    m_isHuman = val;
+void MyCell::setIsHuman(MyHuman* human) {
+    m_isHuman = human;
 }
 
-bool MyCell::getIsHuman() {
+MyHuman* MyCell::getIsHuman() {
     return m_isHuman;
 }
 

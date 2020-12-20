@@ -16,12 +16,6 @@ PlayerControl:: ~PlayerControl(){
 	delete m_hero;
 }
 
-void PlayerControl::showStats(){
-	cout << "Health = " << m_hero->getHealth() << "\n";
-	cout << "Level = " << m_hero->getLevel() << "\n";
-	cout << "Experience = " << m_hero->getExp() << "\n";
-}
-
 MyPlayer* PlayerControl::getPlayer(){
 	return m_hero;
 }
@@ -40,11 +34,11 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 	
 	m_hero->getCoord(x, y);
 	if (maze.getCell(x+dx, y+dy)->getPassable()){
-		m_position->setIsHuman(false);
+		m_position->setIsHuman(nullptr);
 		m_hero->Move(dx, dy);
 		m_hero->getCoord(x, y);
 		m_position = maze.getCell(x, y);
-		m_position->setIsHuman(true);
+		m_position->setIsHuman(m_hero);
 		if (m_position->getActObj()){
 			if(*(m_position->getActObj()) += m_hero){
 				MakeLog(FLog, CLog, m_position->getActObj());
@@ -54,11 +48,11 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 		}
 		MakeLog(FLog, CLog, m_hero);
 		if (m_hero->getHealth() <= 0){
-			m_position->setIsHuman(false);
+			m_position->setIsHuman(nullptr);
 			return 2;
 		}
 		if (m_hero->getExit()){
-			m_position->setIsHuman(false);
+			m_position->setIsHuman(nullptr);
 			return 2;
 		}
 		return 1;

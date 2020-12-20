@@ -13,7 +13,6 @@ class PlayerControl{
 		PlayerControl(int x, int y, MyMaze& maze);
 		~PlayerControl();
 		MyPlayer* getPlayer();
-		void showStats();
 		void setPosition(MyMaze &maze);
 		int Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInterface* CLog);
 		template <class T>

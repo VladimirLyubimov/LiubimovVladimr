@@ -61,8 +61,11 @@ bool MyHuman::getAlive(){
 	return m_alive;
 }
 
-void MyHuman::operator +=(MyHuman* human){
+MyHuman& MyHuman::operator +=(MyHuman* human){
 	int damage;
 	damage = this->CalcDamage(human->getLevel(), human->getBaseHealth());
 	human->takeDamage(damage);
+	if(human->m_health <= 0)
+		human->m_alive = false;
+	return *this;
 }

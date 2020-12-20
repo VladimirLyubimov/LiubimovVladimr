@@ -26,5 +26,5 @@ class MyHuman{
 		bool getAlive();
 		virtual char print() = 0;
 		virtual void levelup();
-		void operator +=(MyHuman* human);
+		MyHuman& operator +=(MyHuman* human);
 };

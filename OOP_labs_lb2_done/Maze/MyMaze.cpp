@@ -178,7 +178,6 @@ void MyMaze::makeMaze(
 
 void MyMaze::setStartFinish(int xs, int ys, int xf, int yf, MyObject* finish) {//устанавливает точеи старта и финиша
     m_grid[ys][xs].setData(1, STATE_START);
-    m_grid[ys][xs].setIsHuman(true);
     m_grid[yf][xf].setData(1, STATE_FINISH);
     m_grid[yf][xf].setActObj(finish);
 }

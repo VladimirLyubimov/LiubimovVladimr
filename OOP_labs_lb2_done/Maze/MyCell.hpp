@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "../ActiveObjects/MyObject.hpp"
+#include "../Humans/MyHuman.hpp"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ class MyCell{//класс клетки
         int m_touched;//посещенали клетка при генерации лабиринта
         int m_x;
         int m_y;
-        bool m_isHuman;
+        MyHuman* m_isHuman;
     public:
     	MyCell();
     	MyCell(const MyCell &cell);
@@ -28,7 +29,7 @@ class MyCell{//класс клетки
     	State getType();
     	void setActObj(MyObject* Obj);
     	MyObject* getActObj();
-    	void setIsHuman(bool val);
-    	bool getIsHuman();
+    	void setIsHuman(MyHuman* human);
+    	MyHuman* getIsHuman();
     	~MyCell();
 };
