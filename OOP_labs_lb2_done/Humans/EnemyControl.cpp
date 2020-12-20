@@ -12,10 +12,6 @@ EnemyControl::~EnemyControl(){
 	delete m_beh;
 }
 
-Enemy<Behavior>* EnemyControl::getPlayer(){
-	return m_enemy;
-}
-
 void EnemyControl::setPosition(MyMaze &maze){
 	int x = 0;
 	int y = 0;
