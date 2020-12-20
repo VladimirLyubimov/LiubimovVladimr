@@ -58,7 +58,7 @@ std::string MyPlayer::getLogData(){
 		m_kill = false;
 	}
 	if(this->getHealth() <= 0)
-		data += " Health isn't under 0. Game over!";
+		data += " Health isn't below 0. Game over!";
 	data += "\n";
 	return data;	
 }

@@ -61,7 +61,7 @@ std::string Enemy<T>::getLogData(){
 			m_kill = false;
 		}
 		if(this->getHealth() <= 0)
-			data += " Health isn't under 0. Died!";
+			data += " Health isn't below 0. Died!";
 		data += "\n";
 		return data;
 	}

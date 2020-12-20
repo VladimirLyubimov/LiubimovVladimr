@@ -70,5 +70,9 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 		return 1;
 	}
 	MakeLog(FLog, CLog, m_hero);
+	if (m_hero->getHealth() <= 0){
+		m_position->setIsHuman(nullptr);
+		return 2;
+	}
 	return 0;
 }
