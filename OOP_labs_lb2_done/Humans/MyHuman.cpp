@@ -65,7 +65,10 @@ MyHuman& MyHuman::operator +=(MyHuman* human){
 	int damage;
 	damage = this->CalcDamage(human->getLevel(), human->getBaseHealth());
 	human->takeDamage(damage);
-	if(human->m_health <= 0)
+	this->m_hit = true;
+	if(human->m_health <= 0){
 		human->m_alive = false;
+		this->m_kill = true;
+	}
 	return *this;
 }

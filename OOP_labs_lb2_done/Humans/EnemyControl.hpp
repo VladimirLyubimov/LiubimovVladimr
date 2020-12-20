@@ -10,7 +10,7 @@
 #include <cstdlib>
 
 class EnemyControl{
-	public:
+	private:
 		Enemy<Behavior>* m_enemy;
 		MyCell* m_position;
 		Behavior* m_beh;
@@ -20,6 +20,9 @@ class EnemyControl{
 		EnemyControl(int x, int y, MyMaze& maze);
 		~EnemyControl();
 		Enemy<Behavior>* getPlayer();
+		Enemy<Behavior>* getEnemy();
+		void MakeLog(LogInterface* FLog, LogInterface* CLog, Enemy<Behavior>* LogObj);
+		bool getAlive();
 		void setPosition(MyMaze &maze);
 		void makeTurn(MyMaze& maze);
 };

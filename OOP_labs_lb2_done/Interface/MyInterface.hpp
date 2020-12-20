@@ -8,6 +8,6 @@ class MyInterface{//класс реализующий примитивный к�
 		char** m_matrix;
 	public:
 		MyInterface();
-		void printMaze(MyMaze &maze, MyPlayer* player, EnemyControl* enemy);
+		void printMaze(MyMaze &maze, MyPlayer* player, EnemyControl** enemies, int len);
 		int getGameCommand(int &dx, int &dy);
 };		

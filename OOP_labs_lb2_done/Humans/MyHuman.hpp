@@ -10,6 +10,8 @@ class MyHuman{
 		int m_y;
 		int m_level;
 		bool m_alive;
+		bool m_hit = false;
+		bool m_kill = false;
 	protected:
 		MyHuman(int x, int y, int health, int damage, int level);
 	public:

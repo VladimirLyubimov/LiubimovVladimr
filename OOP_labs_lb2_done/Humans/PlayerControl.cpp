@@ -37,8 +37,13 @@ int PlayerControl::Move(MyMaze& maze, int dx, int dy, LogInterface* FLog, LogInt
 		MyHuman* aim;
 		aim = maze.getCell(x+dx, y+dy)->getIsHuman();
 		if(aim){
-			cout << "Hit\n";
 			*m_hero += aim;
+			
+			MakeLog(FLog, CLog, m_hero);
+			if (m_hero->getHealth() <= 0){
+				m_position->setIsHuman(nullptr);
+				return 2;
+			}
 			return 1;
 		}
 		m_position->setIsHuman(nullptr);

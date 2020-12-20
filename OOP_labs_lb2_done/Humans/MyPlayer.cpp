@@ -40,16 +40,26 @@ int MyPlayer::getExp(){
 }
 
 std::string MyPlayer::getLogData(){
-	std::string data("Position is (");
+	std::string data("Player position is (");
 	int x = 0;
 	int y = 0;
 	this->getCoord(x,y);
 	data += std::to_string(x) + ";" + std::to_string(y) + "). ";
 	data += "Health = " + std::to_string(this->getHealth()) + ". ";
 	data += "Level = " + std::to_string(this->getLevel()) + ". ";
-	data += "Experience = " + std::to_string(this->getExp()) + ".\n";
+	data += "Experience = " + std::to_string(this->getExp()) + ".";
+	
+	if(this->m_hit){
+		data += " Attack has completed!";
+		m_hit = false;
+	}
+	if(this->m_kill){
+		data += " Target has been destroyed!";
+		m_kill = false;
+	}
 	if(this->getHealth() <= 0)
-		data += "Health isn't under 0. Game over!\n";
+		data += " Health isn't under 0. Game over!";
+	data += "\n";
 	return data;	
 }
 

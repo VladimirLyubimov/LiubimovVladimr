@@ -16,6 +16,12 @@ void GameInit::InitGame(PlayGround& field){
     field.m_maze->SetObjects(field.m_dynamite, field.m_aim, field.m_bonus);
     
     field.m_hero = new PlayerControl(ys, ys, *(field.m_maze));
+    
+    field.enemy_amount = 5;
+    field.m_enemies = new EnemyControl*[field.enemy_amount];
+    for(int i = 0; i < field.enemy_amount; i++){
+    	field.m_enemies[i] = new EnemyControl(i*2+1, field.m_maze->getHeight() - 2, *(field.m_maze));
+    }
 	
 	fin.close();
 }
@@ -32,4 +38,10 @@ void GameInit::EndGame(PlayGround& field){
 	field.m_bonus = nullptr;
 	field.m_dynamite = nullptr;
 	field.m_hero = nullptr;
+	
+	for (int i = 0; i < field.enemy_amount; i++){
+		delete field.m_enemies[i];
+	}
+	delete field.m_enemies;
+	field.m_enemies = nullptr;
 }

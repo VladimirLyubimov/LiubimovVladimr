@@ -5,6 +5,7 @@
 #include "../ActiveObjects/MyBonus.hpp"
 #include "../ActiveObjects/MyAim.hpp"
 #include "../Humans/PlayerControl.hpp"
+#include "../Humans/EnemyControl.hpp"
 
 struct PlayGround{
 	MyMaze* m_maze = nullptr;
@@ -13,4 +14,6 @@ struct PlayGround{
 	MyObject* m_aim = nullptr;
 	MyObject* m_dynamite = nullptr;
 	PlayerControl* m_hero = nullptr;
+	EnemyControl** m_enemies = nullptr;
+	int enemy_amount = 0;
 };

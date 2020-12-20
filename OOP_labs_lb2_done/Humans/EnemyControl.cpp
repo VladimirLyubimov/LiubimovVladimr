@@ -23,6 +23,21 @@ void EnemyControl::setPosition(MyMaze &maze){
 	m_position = maze.getCell(x, y);
 }
 
+Enemy<Behavior>* EnemyControl::getEnemy(){
+	return m_enemy;
+}
+
+bool EnemyControl::getAlive(){
+	return m_enemy->getAlive();
+}
+
+void EnemyControl::MakeLog(LogInterface* FLog, LogInterface* CLog, Enemy<Behavior>* LogObj){
+	if(FLog)
+		*FLog << LogObj;
+	if(CLog)
+		*CLog << LogObj;
+}
+
 MyHuman* EnemyControl::checkSurround(MyHuman* aim, MyMaze& maze){
 	int x = 0;
 	int y = 0;
@@ -47,6 +62,14 @@ MyHuman* EnemyControl::checkSurround(MyHuman* aim, MyMaze& maze){
 }
 
 void EnemyControl::makeTurn(MyMaze& maze){
+	if(!m_enemy->getAlive()){
+		int x = 0;
+		int y = 0;
+		m_enemy->getCoord(x, y);
+		maze.getCell(x,y)->setIsHuman(nullptr);
+		m_enemy->setCoord(0,0);
+		return;
+	}
 	Behavior* abeh = new BAttack();
 	Behavior* mbeh = new BMove();
 	Behavior* wbeh = new BWait();
@@ -62,17 +85,7 @@ void EnemyControl::makeTurn(MyMaze& maze){
 	srand(time(NULL));
 	int a = rand() % 2;
 	
-	int x = 0;
-	int y = 0;
-	m_enemy->getCoord(x, y);
-	maze.getCell(x,y)->setIsHuman(nullptr);
-	cout << "a\n";
-	//m_enemy->makeTurn(aim, -1, 0);
-	m_enemy->Move(-1,0);
-	maze.getCell(x-1,y)->setIsHuman(m_enemy);
-	return;
-	
-	/*switch(a){
+	switch(a){
 		case 0:
 			m_enemy->setBehavior(wbeh);
 			m_enemy->makeTurn(aim, 0, 0);
@@ -89,7 +102,6 @@ void EnemyControl::makeTurn(MyMaze& maze){
 				case 0:
 					if(maze.getCell(x+1,y)->getPassable()){
 						maze.getCell(x,y)->setIsHuman(nullptr);
-						//cout << "d\n";
 						m_enemy->makeTurn(aim, 1, 0);
 						maze.getCell(x+1,y)->setIsHuman(m_enemy);
 						return;
@@ -98,7 +110,6 @@ void EnemyControl::makeTurn(MyMaze& maze){
 				case 1:
 					if(maze.getCell(x,y+1)->getPassable()){
 						maze.getCell(x,y)->setIsHuman(nullptr);
-						//cout << "s\n";
 						m_enemy->makeTurn(aim, 0, 1);
 						maze.getCell(x,y+1)->setIsHuman(m_enemy);
 						return;
@@ -107,7 +118,6 @@ void EnemyControl::makeTurn(MyMaze& maze){
 				case 2:
 					if(maze.getCell(x-1,y)->getPassable()){
 						maze.getCell(x,y)->setIsHuman(nullptr);
-						//cout << "a\n";
 						m_enemy->makeTurn(aim, -1, 0);
 						maze.getCell(x-1,y)->setIsHuman(m_enemy);
 						return;
@@ -116,19 +126,18 @@ void EnemyControl::makeTurn(MyMaze& maze){
 				case 3:
 					if(maze.getCell(x,y-1)->getPassable()){
 						maze.getCell(x,y)->setIsHuman(nullptr);
-						//cout << "w\n";
 						m_enemy->makeTurn(aim, 0, -1);
 						maze.getCell(x,y-1)->setIsHuman(m_enemy);
 						return;
 					}
+					
+				default:							
+					m_enemy->setBehavior(wbeh);
+					m_enemy->makeTurn(aim, 0, 0);
+					return;
 
 			}
-			
-			cout << "nope\n";
-			m_enemy->setBehavior(wbeh);
-			m_enemy->makeTurn(aim, 0, 0);
-			return;
-	}*/
+	}
 	
 	delete abeh;
 	delete mbeh;

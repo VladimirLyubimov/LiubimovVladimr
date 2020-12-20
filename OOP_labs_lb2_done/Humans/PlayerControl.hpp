@@ -2,7 +2,6 @@
 #include "MyPlayer.hpp"
 #include "../Maze/MyMaze.hpp"
 #include "../ActiveObjects/MyObject.hpp"
-#include "iostream"
 #include "../Logs/LogInterface.hpp"
 
 class PlayerControl{
