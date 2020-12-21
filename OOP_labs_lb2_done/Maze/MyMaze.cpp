@@ -207,6 +207,102 @@ int MyMaze::getHeight(){
     return m_height;
 }
 
+void MyMaze::checkMaze(CellStack &stack){
+	if (stack.getLength() == 0) {
+        return;
+    }
+    
+    MyCell cell = stack.Top();
+    int x = 0;
+    int y = 0;
+    cell.getCoordinates(x, y);
+    if(!m_grid[y][x+1].getAttendance() && m_grid[y][x+1].getPassable()){
+        cout << "1\n";
+    	m_grid[y][x+1].setAttendance();
+    	stack.Push(m_grid[y][x+1]);
+    	checkMaze(stack);
+    }
+    if(!m_grid[y][x-1].getAttendance() && m_grid[y][x-1].getPassable()){
+    	cout << "2\n";
+    	m_grid[y][x-1].setAttendance();
+    	stack.Push(m_grid[y][x-1]);
+    	checkMaze(stack);
+    }
+    if(!m_grid[y+1][x].getAttendance() && m_grid[y+1][x].getPassable()){
+    	cout << "3\n";
+    	m_grid[y+1][x].setAttendance();
+    	stack.Push(m_grid[y+1][x]);
+    	checkMaze(stack);
+    }
+    if(!m_grid[y-1][x].getAttendance() && m_grid[y-1][x].getPassable()){
+    	cout << "4\n";
+    	m_grid[y-1][x].setAttendance();
+    	stack.Push(m_grid[y-1][x]);
+    	checkMaze(stack);
+    }
+    stack.Remove();
+    checkMaze(stack);
+    return;
+}
+
+bool MyMaze::startCheck(){
+	int s = 0;
+	CellStack stack(m_height*m_width);
+	for (int i = 1; i < m_height-1; i++) {
+        for (int j = 1; j < m_width-1; j++){
+        	if(m_grid[i][j].getPassable()){
+        		cout << i << j << "\n";
+        		m_grid[i][j].setAttendance();
+        		stack.Push(m_grid[i][j]);
+        		checkMaze(stack);
+        		s = 1;
+        		break;
+        	}
+        }
+        if(s)
+        	break;
+    }
+    for (int i = 0; i < m_height; i++)
+        for (int j = 0; j < m_width; j++)
+    		if(!m_grid[i][j].getAttendance() && m_grid[i][j].getPassable())
+    			return false;
+    return true;
+}
+
+void MyMaze::BuildFromMatrix(char** matrix, int x, int y, MyObject* bomb, MyObject* aim, MyObject* bonus, MyObject* finish){
+	for(int i = 0; i < y; i++){
+		for(int j = 0; j < x; j++){
+			switch(matrix[i][j]){
+				case '@':
+					m_grid[i][j].setData(0, STATE_WALL);
+					break;
+				case '1':
+					m_grid[i][j].setData(1, STATE_GROUND);
+					break;
+				case 'S':
+					m_grid[i][j].setData(1, STATE_START);
+					break;
+				case 'A':
+					m_grid[i][j].setData(1, STATE_AIM);
+					m_grid[i][j].setActObj(aim);
+					break;
+				case 'D':
+					m_grid[i][j].setData(1, STATE_DYNAMITE);
+					m_grid[i][j].setActObj(bomb);
+					break;
+				case 'B':
+					m_grid[i][j].setData(1, STATE_BONUS);
+					m_grid[i][j].setActObj(bonus);
+					break;	
+				case 'F':
+					m_grid[i][j].setData(1, STATE_FINISH);
+					m_grid[i][j].setActObj(finish);
+					break;
+			}
+		}
+	}
+}
+
 void MyMaze::SetObjects(MyObject* bomb, MyObject* aim, MyObject* bonus){
 	m_grid[m_height/2][m_width/2].setData(1, STATE_AIM);
     m_grid[m_height/2][m_width/2].setActObj(aim);
@@ -218,7 +314,6 @@ void MyMaze::SetObjects(MyObject* bomb, MyObject* aim, MyObject* bonus){
     
     for (int i = 1; i < m_height-1; i++) {
         for (int j = 1; j < m_width-1; j++) {
-        	//srand(time(NULL));
         	if (!m_grid[i][j].getPassable() && !(rand() % 5)){
     			m_grid[i][j].setData(1, STATE_DYNAMITE);
     			m_grid[i][j].setActObj(bomb);
