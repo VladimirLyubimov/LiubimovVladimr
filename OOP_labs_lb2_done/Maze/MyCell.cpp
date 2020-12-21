@@ -38,7 +38,7 @@ char MyCell::getPrintChar(){
         return '@';
     }
     if (m_type == STATE_GROUND) {
-        return ' ';
+        return '1';
     }
     if (m_type == STATE_START) {
         return 'S';

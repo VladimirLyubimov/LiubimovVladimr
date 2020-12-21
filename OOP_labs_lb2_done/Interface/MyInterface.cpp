@@ -49,7 +49,10 @@ void MyInterface::printMaze(MyMaze &maze, MyPlayer* player, SuperEnemy** enemies
 	for(i = 0; i < y; i++){
 		j = 0;
 		for(j; j < x; j++)
-			cout << m_matrix[i][j];
+			if(m_matrix[i][j] == '1'){
+				cout << ' ';
+			}else
+				cout << m_matrix[i][j];
 		cout << "\n";
 	}
 	
