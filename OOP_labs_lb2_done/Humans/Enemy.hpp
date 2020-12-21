@@ -14,7 +14,7 @@ class Enemy: public MyHuman{
 		void setBehavior(T* behavior);
 		void makeTurn(MyHuman* first, int dx, int dy);
 		virtual char print();
-		//LogInterface& operator <<(LogInterface& log);
+
 		std::string getLogData();
 };
 
@@ -34,6 +34,8 @@ void Enemy<T>::setBehavior(T* behavior){
 template <class T>
 void Enemy<T>::makeTurn(MyHuman* first, int dx, int dy){
 	m_behavior->Action(first, this, dx, dy);
+	if(m_health <= 0)
+		m_alive = false;
 }
 
 template <class T>
