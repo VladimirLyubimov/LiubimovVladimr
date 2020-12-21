@@ -48,10 +48,11 @@ std::string MyPlayer::getLogData(){
 	data += "Health = " + std::to_string(this->getHealth()) + ". ";
 	data += "Level = " + std::to_string(this->getLevel()) + ". ";
 	data += "Experience = " + std::to_string(this->getExp()) + ".";
+	data += "Damage = " + std::to_string(this->getDamage()) + ".";
 	
-	if(this->m_hit){
-		data += " Attack has completed!";
-		m_hit = false;
+	if(this->m_inter){
+		data += " Interaction has been completed!";
+		m_inter = false;
 	}
 	if(this->m_kill){
 		data += " Target has been destroyed!";

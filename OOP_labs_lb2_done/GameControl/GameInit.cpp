@@ -17,10 +17,12 @@ void GameInit::InitGame(PlayGround& field){
     
     field.m_hero = new PlayerControl(ys, ys, *(field.m_maze));
     
-    field.enemy_amount = 5;
-    field.m_enemies = new EnemyControl*[field.enemy_amount];
-    for(int i = 0; i < field.enemy_amount; i++){
-    	field.m_enemies[i] = new EnemyControl(i*2+1, field.m_maze->getHeight()/2 - 2, *(field.m_maze));
+    field.enemy_amount = 6;
+    field.m_enemies = new SuperEnemy*[field.enemy_amount];
+    for(int i = 0; i < field.enemy_amount; i += 3){
+    	field.m_enemies[i] = new Enemy<BAttack>(i*2+1, field.m_maze->getHeight()/2 - 3, 800, 8, 1, *(field.m_maze));
+    	field.m_enemies[i+1] = new Enemy<BDamage>((i+1)*2+1, field.m_maze->getHeight()/2 - 3, 800, 8, 1, *(field.m_maze));
+    	field.m_enemies[i+2] = new Enemy<BLevel>((i+2)*2+1, field.m_maze->getHeight()/2 - 3, 800, 8, 1, *(field.m_maze));
     }
 	
 	fin.close();

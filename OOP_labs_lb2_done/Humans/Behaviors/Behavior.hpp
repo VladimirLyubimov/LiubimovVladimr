@@ -3,5 +3,5 @@
 
 class Behavior{
 	public:
-		virtual void Action(MyHuman* first, MyHuman* second, int dx, int dy) = 0;
+		virtual void Action(MyHuman* attacker, MyHuman* aim) = 0;
 };

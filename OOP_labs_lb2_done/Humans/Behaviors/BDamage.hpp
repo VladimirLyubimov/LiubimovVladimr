@@ -1,7 +1,7 @@
 #pragma once
 #include "Behavior.hpp"
 
-class BAttack: public Behavior{
+class BDamage: public Behavior{
 	public:
 		virtual void Action(MyHuman* attacker, MyHuman* aim);
 };

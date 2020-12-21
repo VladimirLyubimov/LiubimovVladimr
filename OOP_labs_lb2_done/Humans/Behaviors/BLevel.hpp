@@ -1,7 +1,9 @@
 #pragma once
 #include "Behavior.hpp"
+#include <ctime>
+#include <cstdlib>
 
-class BAttack: public Behavior{
+class BLevel: public Behavior{
 	public:
 		virtual void Action(MyHuman* attacker, MyHuman* aim);
 };

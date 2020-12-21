@@ -10,13 +10,14 @@ class MyHuman{
 		int m_y;
 		int m_level;
 		bool m_alive;
-		bool m_hit = false;
+		bool m_inter = false;
 		bool m_kill = false;
-	protected:
+	public:
 		MyHuman(int x, int y, int health, int damage, int level);
 	public:
 		void Move(int dx, int dy);
 		void takeDamage(int damage);
+		int getDamage();
 		int CalcDamage(int target_level, int target_health);
 		void changeDamage(int ddamage);
 		void changeLevel(int dlevel);
@@ -29,4 +30,6 @@ class MyHuman{
 		virtual char print() = 0;
 		virtual void levelup();
 		MyHuman& operator +=(MyHuman* human);
+		MyHuman& operator -=(MyHuman* human);
+		MyHuman& operator *=(MyHuman* human);
 };

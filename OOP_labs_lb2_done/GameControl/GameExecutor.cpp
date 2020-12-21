@@ -19,7 +19,7 @@ bool GameExecutor::Play(PlayGround& field){
 	MyInterface interface;
 	field.m_hero->MakeLog(FLog, CLog, field.m_hero->getPlayer());
 	for(int i = 0; i< field.enemy_amount; i++){
-		field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]->getEnemy());
+		field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]);
 	}
 	interface.printMaze(*(field.m_maze), field.m_hero->getPlayer(), field.m_enemies, field.enemy_amount);
 	
@@ -41,7 +41,7 @@ bool GameExecutor::Play(PlayGround& field){
 				}
 				for(int i = 0; i< field.enemy_amount; i++){
 					field.m_enemies[i]->makeTurn(*(field.m_maze));
-					field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]->getEnemy());
+					field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]);
 				}
 				dx = 0;
 				dy = 0;

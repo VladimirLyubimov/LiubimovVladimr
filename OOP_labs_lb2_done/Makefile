@@ -1,7 +1,7 @@
 all: maze
 
-maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BMove.o BWait.o EnemyControl.o
-	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BMove.o BWait.o EnemyControl.o -o maze
+maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BDamage.o BLevel.o SuperEnemy.o
+	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BDamage.o BLevel.o SuperEnemy.o -o maze
 	
 main.o: main.cpp
 	g++ -c main.cpp
@@ -26,6 +26,9 @@ MyHuman.o:	./Humans/MyHuman.cpp
 	
 MyPlayer.o: ./Humans/MyPlayer.cpp
 	g++ -c ./Humans/MyPlayer.cpp
+	
+SuperEnemy.o: ./Humans/SuperEnemy.cpp
+	g++ -c ./Humans/SuperEnemy.cpp
 	
 MyObject.o: ./ActiveObjects/MyObject.cpp
 	g++ -c ./ActiveObjects/MyObject.cpp
@@ -66,14 +69,11 @@ LogInterface.o: ./Logs/LogInterface.cpp
 BAttack.o: ./Humans/Behaviors/BAttack.cpp
 	g++ -c ./Humans/Behaviors/BAttack.cpp
 
-BMove.o: ./Humans/Behaviors/BMove.cpp
-	g++ -c ./Humans/Behaviors/BMove.cpp
+BDamage.o: ./Humans/Behaviors/BDamage.cpp
+	g++ -c ./Humans/Behaviors/BDamage.cpp
 	
-BWait.o: ./Humans/Behaviors/BWait.cpp
-	g++ -c ./Humans/Behaviors/BWait.cpp
-
-EnemyControl.o: ./Humans/EnemyControl.cpp
-	g++ -c ./Humans/EnemyControl.cpp
-	
+BLevel.o: ./Humans/Behaviors/BLevel.cpp
+	g++ -c ./Humans/Behaviors/BLevel.cpp
+		
 clean:
 	rm -rf *.o maze

@@ -1,5 +1,5 @@
 #include "BAttack.hpp"
 
-void BAttack::Action(MyHuman* first, MyHuman* second, int dx, int dy){
-	*second += first;
+void BAttack::Action(MyHuman* attacker, MyHuman* aim){
+	*attacker += aim;
 }

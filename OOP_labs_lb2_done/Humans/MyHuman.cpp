@@ -61,14 +61,34 @@ bool MyHuman::getAlive(){
 	return m_alive;
 }
 
+int MyHuman::getDamage(){
+	return m_damage;
+}
+
 MyHuman& MyHuman::operator +=(MyHuman* human){
 	int damage;
 	damage = this->CalcDamage(human->getLevel(), human->getBaseHealth());
 	human->takeDamage(damage);
-	this->m_hit = true;
+	this->m_inter = true;
 	if(human->m_health <= 0){
 		human->m_alive = false;
 		this->m_kill = true;
+	}
+	return *this;
+}
+
+MyHuman& MyHuman::operator -=(MyHuman* human){
+	if(human->getDamage() > 5){
+		human->changeDamage(-1);
+		this->m_inter = true;
+	}
+	return *this;
+}
+
+MyHuman& MyHuman::operator *=(MyHuman* human){
+	if(human->getLevel() > 1){
+		human->changeLevel(-1);
+		this->m_inter = true;
 	}
 	return *this;
 }

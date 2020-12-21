@@ -5,7 +5,11 @@
 #include "../ActiveObjects/MyBonus.hpp"
 #include "../ActiveObjects/MyAim.hpp"
 #include "../Humans/PlayerControl.hpp"
-#include "../Humans/EnemyControl.hpp"
+#include "../Humans/Enemy.hpp"
+#include "../Humans/Behaviors/Behavior.hpp"
+#include "../Humans/Behaviors/BAttack.hpp"
+#include "../Humans/Behaviors/BDamage.hpp"
+#include "../Humans/Behaviors/BLevel.hpp"
 
 struct PlayGround{
 	MyMaze* m_maze = nullptr;
@@ -14,6 +18,6 @@ struct PlayGround{
 	MyObject* m_aim = nullptr;
 	MyObject* m_dynamite = nullptr;
 	PlayerControl* m_hero = nullptr;
-	EnemyControl** m_enemies = nullptr;
+	SuperEnemy** m_enemies = nullptr;
 	int enemy_amount = 0;
 };
