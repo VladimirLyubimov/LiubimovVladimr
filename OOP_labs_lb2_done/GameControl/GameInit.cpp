@@ -31,8 +31,8 @@ void GameInit::InitGame(PlayGround& field){
 void GameInit::EndGame(PlayGround& field){
 	//Save s("Save.txt");
 	//s.makeSave(field);
-	Load l("Save.txt");
-	l.makeLoad(field);
+	//Load l("Save.txt");
+	//l.makeLoad(field);
 	delete field.m_finish;
 	delete field.m_aim;
 	delete field.m_bonus;
