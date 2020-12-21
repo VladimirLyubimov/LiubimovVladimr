@@ -1,7 +1,7 @@
 all: maze
 
-maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BDamage.o BLevel.o SuperEnemy.o
-	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BDamage.o BLevel.o SuperEnemy.o -o maze
+maze: MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BDamage.o BLevel.o SuperEnemy.o Save.o Load.o
+	g++ MyCell.o CellStack.o MyMaze.o MyInterface.o PlayerControl.o main.o MyHuman.o MyPlayer.o MyObject.o MyDynamite.o MyBonus.o MyAim.o MyExit.o FileLog.o MyLog.o ConsolLog.o LogInterface.o GameInit.o GameFacade.o GameExecutor.o BAttack.o BDamage.o BLevel.o SuperEnemy.o Save.o Load.o -o maze
 	
 main.o: main.cpp
 	g++ -c main.cpp
@@ -53,6 +53,12 @@ GameFacade.o: ./GameControl/GameFacade.cpp
 
 GameExecutor.o: ./GameControl/GameExecutor.cpp
 	g++ -c ./GameControl/GameExecutor.cpp
+
+Save.o: ./GameControl/Save.cpp
+	g++ -c ./GameControl/Save.cpp
+
+Load.o: ./GameControl/Load.cpp
+	g++ -c ./GameControl/Load.cpp
 
 MyLog.o: ./Logs/MyLog.cpp
 	g++ -c ./Logs/MyLog.cpp

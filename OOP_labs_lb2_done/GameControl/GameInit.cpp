@@ -29,6 +29,10 @@ void GameInit::InitGame(PlayGround& field){
 }
 
 void GameInit::EndGame(PlayGround& field){
+	Save s("Save.txt");
+	s.makeSave(field);
+	Load l("Save.txt");
+	l.makeLoad(field);
 	delete field.m_finish;
 	delete field.m_aim;
 	delete field.m_bonus;
@@ -44,6 +48,6 @@ void GameInit::EndGame(PlayGround& field){
 	for (int i = 0; i < field.enemy_amount; i++){
 		delete field.m_enemies[i];
 	}
-	delete field.m_enemies;
+	delete[] field.m_enemies;
 	field.m_enemies = nullptr;
 }
