@@ -10,6 +10,8 @@ void GameExecutor::MyClear(FileLog* Logfile, ConsolLog* consol, LogInterface* FL
 bool GameExecutor::Play(PlayGround& field){
 	int dx = 0;
 	int dy = 0;
+	char ch;
+	SaveLoad sv;
 			
 	FileLog* Logfile = new FileLog("LogFile.txt");
 	ConsolLog* consol = new ConsolLog();
@@ -27,11 +29,27 @@ bool GameExecutor::Play(PlayGround& field){
     	switch(interface.getGameCommand(dx, dy)){
     		case 1:
     			MyClear(Logfile, consol, FLog, CLog);
-    			cout << "Start a new game!\n";
+    			cout << "Start a new game! Do yo want to save it?(y/n)\n";
+    			cin >> ch;
+    			switch(ch){
+					case 'y':
+						sv.makeSave(field);
+						break;
+					default:
+						break;
+				}
     			return true;
     		case 2:
     			MyClear(Logfile, consol, FLog, CLog);
-    			cout << "End game by player command!\n";
+    			cout << "End game by player command! Do yo want to save it?(y/n)\n";
+    			cin >> ch;
+    			switch(ch){
+					case 'y':
+						sv.makeSave(field);
+						break;
+					default:
+						break;
+				}
     			return false;
     		case 0:
 				if (field.m_hero->Move(*(field.m_maze), dx, dy, FLog, CLog) == 2){

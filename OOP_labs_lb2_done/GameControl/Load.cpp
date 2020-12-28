@@ -105,8 +105,6 @@ int Load::makeLoad(PlayGround& field){
 	field.m_maze->BuildFromMatrix(matrix, width, height, field.m_dynamite, field.m_aim, field.m_bonus, field.m_finish);
 	if(!field.m_maze->startCheck())
 		return 1;
-	MyInterface interface;
-	interface.printMaze(*(field.m_maze), nullptr, nullptr, 0);
 	
 	for(int i = 0; i < height; i++)
 		delete[] matrix[i];

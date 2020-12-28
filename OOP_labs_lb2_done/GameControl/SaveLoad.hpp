@@ -1,10 +1,12 @@
 #pragma once
 #include "Save.hpp"
 #include "Load.hpp"
-#include "../GameControl/CameInit.hpp"
+#include "iostream"
+#include "../GameControl/GameInit.hpp"
 #include "../GameControl/PlayGroundStruct.hpp"
 #include "../Interface/MyInterface.hpp"
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -21,4 +23,4 @@ class SaveLoad{
 		void makeLoad(PlayGround& field);
 		void makeSave(PlayGround& field);
 		
-}
+};

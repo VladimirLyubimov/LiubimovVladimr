@@ -63,3 +63,10 @@ void MyInterface::printMaze(MyMaze &maze, MyPlayer* player, SuperEnemy** enemies
 		delete[] m_matrix[i];
 	delete[] m_matrix; 
 }
+
+std::string MyInterface::getFilename(){
+	std::string filename;
+	cout << "Input filename as <name>.txt\n";
+	cin >> filename;
+	return filename;
+}

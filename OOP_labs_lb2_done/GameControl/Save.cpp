@@ -2,12 +2,19 @@
 
 Save::Save(const char* filename){
 	m_file = new ofstream(filename, fstream::trunc | fstream::out);
+	m_fname = new std::string(filename);
 }
 
 Save::~Save(){
-	if(m_file->is_open())
+	if(m_file->is_open()){
 		m_file->close();
+	}	
 	delete m_file;
+	delete m_fname;
+}
+
+const char* Save::getFilename(){
+	return m_fname->data();
 }
 
 int Save::makeSave(PlayGround& field){
@@ -15,6 +22,8 @@ int Save::makeSave(PlayGround& field){
 		return 1;
 		
 	//write maze
+	if(!field.m_maze)
+		return 1;
 	char** matrix;
 	int x = field.m_maze->getWidth();
 	int y = field.m_maze->getHeight();
@@ -35,11 +44,15 @@ int Save::makeSave(PlayGround& field){
 	delete[] matrix;
 	
 	//write player
+	if(!field.m_hero)
+		return 1;
 	MyPlayer* hero = field.m_hero->getPlayer();
 	hero->getCoord(x, y);
 	*m_file << x << " " << y << " " << hero->getHealth() << " " << hero->getDamage() << " "<< hero->getLevel() << " " << hero->getExp() << " " << hero->getCoollected() << "\n";
 	
 	//write enemies
+	if(!field.m_enemies)
+		return 1;
 	for(int i = 0; i < field.enemy_amount; i++){
 		if(field.m_enemies[i]->getAlive()){
 			field.m_enemies[i]->getCoord(x, y);

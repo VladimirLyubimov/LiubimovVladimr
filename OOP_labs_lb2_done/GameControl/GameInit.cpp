@@ -17,7 +17,7 @@ void GameInit::InitGame(PlayGround& field){
     
     field.m_hero = new PlayerControl(ys, ys, *(field.m_maze));
     
-    field.enemy_amount = 0;
+    field.enemy_amount = 3*(field.m_maze->getWidth()/2)/3;
     field.m_enemies = new SuperEnemy*[field.enemy_amount];
     for(int i = 0; i < field.enemy_amount; i += 3){
     	field.m_enemies[i] = new Enemy<BAttack>(i*2+1, field.m_maze->getHeight()/2 - 3, 800, 8, 1, *(field.m_maze));
@@ -29,8 +29,6 @@ void GameInit::InitGame(PlayGround& field){
 }
 
 void GameInit::EndGame(PlayGround& field){
-	Save s("Save.txt");
-	s.makeSave(field);
 	if(field.m_finish)
 		delete field.m_finish;
 	if(field.m_aim)
@@ -43,15 +41,13 @@ void GameInit::EndGame(PlayGround& field){
 		delete field.m_hero;
 	if(field.m_maze)
 		field.m_maze->Clear();
-
+		
+	field.m_maze = nullptr;
 	field.m_finish = nullptr;
 	field.m_aim = nullptr;
 	field.m_bonus = nullptr;
 	field.m_dynamite = nullptr;
-	field.m_hero = nullptr;
-	
-	Load l("Save.txt");
-	l.makeLoad(field);
+	field.m_hero = nullptr;	
 	
 	if(field.m_enemies){
 		for (int i = 0; i < field.enemy_amount; i++){
