@@ -36,15 +36,18 @@ void MyInterface::printMaze(MyMaze &maze, MyPlayer* player, SuperEnemy** enemies
 		m_matrix[i] = new char[x];
 	maze.getPrintMatrix(m_matrix);
 		
-	player->getCoord(px, py);
-	m_matrix[py][px] = '!';
-	
-	for(i = 0; i < len; i++){
-		if(enemies[i]->getAlive()){
-			enemies[i]->getCoord(px, py);
-			m_matrix[py][px] = 'E';
-		}
+	if(player){
+		player->getCoord(px, py);
+		m_matrix[py][px] = '!';
 	}
+	
+	if(enemies)
+		for(i = 0; i < len; i++){
+			if(enemies[i]->getAlive()){
+				enemies[i]->getCoord(px, py);
+				m_matrix[py][px] = 'E';
+			}
+		}
 	
 	for(i = 0; i < y; i++){
 		j = 0;

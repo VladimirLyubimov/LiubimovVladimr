@@ -103,10 +103,10 @@ int Load::makeLoad(PlayGround& field){
 	field.m_aim = new MyAim();
 	field.m_dynamite = new MyDynamite();
 	field.m_maze->BuildFromMatrix(matrix, width, height, field.m_dynamite, field.m_aim, field.m_bonus, field.m_finish);
-	//if(!field.m_maze->startCheck())
-		//return 1;
-	MyInterface interface();
-	interface.printMaze()
+	if(!field.m_maze->startCheck())
+		return 1;
+	MyInterface interface;
+	interface.printMaze(*(field.m_maze), nullptr, nullptr, 0);
 	
 	for(int i = 0; i < height; i++)
 		delete[] matrix[i];
@@ -127,7 +127,6 @@ int Load::makeLoad(PlayGround& field){
 			return 1;
 		if(m_file->eof())
 			break;
-		//cout << num << x << y << health << damage << lev << "\n";
 	}
 	return 0;
 }

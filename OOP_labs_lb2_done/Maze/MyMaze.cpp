@@ -208,7 +208,7 @@ int MyMaze::getHeight(){
 }
 
 void MyMaze::checkMaze(CellStack &stack){
-	if (stack.getLength() == 0) {
+	if(stack.getLength() == 0){
         return;
     }
     
@@ -217,29 +217,30 @@ void MyMaze::checkMaze(CellStack &stack){
     int y = 0;
     cell.getCoordinates(x, y);
     if(!m_grid[y][x+1].getAttendance() && m_grid[y][x+1].getPassable()){
-        cout << "1\n";
-    	m_grid[y][x+1].setAttendance();
     	stack.Push(m_grid[y][x+1]);
+    	m_grid[y][x+1].setAttendance();
     	checkMaze(stack);
     }
     if(!m_grid[y][x-1].getAttendance() && m_grid[y][x-1].getPassable()){
-    	cout << "2\n";
-    	m_grid[y][x-1].setAttendance();
     	stack.Push(m_grid[y][x-1]);
+    	m_grid[y][x-1].setAttendance();
     	checkMaze(stack);
     }
     if(!m_grid[y+1][x].getAttendance() && m_grid[y+1][x].getPassable()){
-    	cout << "3\n";
-    	m_grid[y+1][x].setAttendance();
     	stack.Push(m_grid[y+1][x]);
+    	m_grid[y+1][x].setAttendance();
     	checkMaze(stack);
     }
     if(!m_grid[y-1][x].getAttendance() && m_grid[y-1][x].getPassable()){
-    	cout << "4\n";
-    	m_grid[y-1][x].setAttendance();
     	stack.Push(m_grid[y-1][x]);
+    	m_grid[y-1][x].setAttendance();   	
     	checkMaze(stack);
     }
+    
+    if(stack.getLength() == 0){
+        return;
+    }
+    
     stack.Remove();
     checkMaze(stack);
     return;
@@ -251,7 +252,6 @@ bool MyMaze::startCheck(){
 	for (int i = 1; i < m_height-1; i++) {
         for (int j = 1; j < m_width-1; j++){
         	if(m_grid[i][j].getPassable()){
-        		cout << i << j << "\n";
         		m_grid[i][j].setAttendance();
         		stack.Push(m_grid[i][j]);
         		checkMaze(stack);

@@ -17,7 +17,7 @@ void GameInit::InitGame(PlayGround& field){
     
     field.m_hero = new PlayerControl(ys, ys, *(field.m_maze));
     
-    field.enemy_amount = 6;
+    field.enemy_amount = 0;
     field.m_enemies = new SuperEnemy*[field.enemy_amount];
     for(int i = 0; i < field.enemy_amount; i += 3){
     	field.m_enemies[i] = new Enemy<BAttack>(i*2+1, field.m_maze->getHeight()/2 - 3, 800, 8, 1, *(field.m_maze));
@@ -29,25 +29,35 @@ void GameInit::InitGame(PlayGround& field){
 }
 
 void GameInit::EndGame(PlayGround& field){
-	//Save s("Save.txt");
-	//s.makeSave(field);
-	//Load l("Save.txt");
-	//l.makeLoad(field);
-	delete field.m_finish;
-	delete field.m_aim;
-	delete field.m_bonus;
-	delete field.m_dynamite;
-	delete field.m_hero;
-	field.m_maze->Clear();
+	Save s("Save.txt");
+	s.makeSave(field);
+	if(field.m_finish)
+		delete field.m_finish;
+	if(field.m_aim)
+		delete field.m_aim;
+	if(field.m_bonus)
+		delete field.m_bonus;
+	if(field.m_dynamite)
+		delete field.m_dynamite;
+	if(field.m_hero)
+		delete field.m_hero;
+	if(field.m_maze)
+		field.m_maze->Clear();
+
 	field.m_finish = nullptr;
 	field.m_aim = nullptr;
 	field.m_bonus = nullptr;
 	field.m_dynamite = nullptr;
 	field.m_hero = nullptr;
 	
-	for (int i = 0; i < field.enemy_amount; i++){
-		delete field.m_enemies[i];
+	Load l("Save.txt");
+	l.makeLoad(field);
+	
+	if(field.m_enemies){
+		for (int i = 0; i < field.enemy_amount; i++){
+			delete field.m_enemies[i];
+		}
+		delete[] field.m_enemies;
 	}
-	delete[] field.m_enemies;
 	field.m_enemies = nullptr;
 }

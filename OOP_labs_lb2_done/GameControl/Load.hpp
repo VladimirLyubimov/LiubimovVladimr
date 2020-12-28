@@ -1,5 +1,6 @@
 #pragma once
 #include "PlayGroundStruct.hpp"
+#include "../Interface/MyInterface.hpp"
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
