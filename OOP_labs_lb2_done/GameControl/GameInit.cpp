@@ -15,7 +15,7 @@ void GameInit::InitGame(PlayGround& field){
     field.m_maze->prepareForMaze(x_gs, y_gs, xs, ys, xf, yf, field.m_finish);
     field.m_maze->SetObjects(field.m_dynamite, field.m_aim, field.m_bonus);
     
-    field.m_hero = new PlayerControl(ys, ys, *(field.m_maze));
+    field.m_hero = new PlayerControl(xs, ys, *(field.m_maze));
     
     field.enemy_amount = 3*(field.m_maze->getWidth()/2)/3;
     field.m_enemies = new SuperEnemy*[field.enemy_amount];
@@ -51,7 +51,8 @@ void GameInit::EndGame(PlayGround& field){
 	
 	if(field.m_enemies){
 		for (int i = 0; i < field.enemy_amount; i++){
-			delete field.m_enemies[i];
+			if(field.m_enemies[i])
+				delete field.m_enemies[i];
 		}
 		delete[] field.m_enemies;
 	}

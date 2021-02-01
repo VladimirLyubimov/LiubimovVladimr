@@ -58,8 +58,10 @@ bool GameExecutor::Play(PlayGround& field){
 					return false;
 				}
 				for(int i = 0; i< field.enemy_amount; i++){
-					field.m_enemies[i]->makeTurn(*(field.m_maze));
-					field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]);
+					if(field.m_enemies[i]){
+						field.m_enemies[i]->makeTurn(*(field.m_maze));
+						field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]);
+					}
 				}
 				dx = 0;
 				dy = 0;

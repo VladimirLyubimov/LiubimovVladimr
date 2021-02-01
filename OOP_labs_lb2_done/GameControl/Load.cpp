@@ -133,11 +133,19 @@ int Load::makeLoad(PlayGround& field){
 	exp = atoi(strtok(NULL, " "));
 	collect = atoi(strtok(NULL, " "));
 	delete[] c_st;	
+	
 	if(!checkPlayer(x, y, health, damage, lev, width, height))
 		return 1;
-	
+		
+	field.m_hero = new PlayerControl(x, y, *(field.m_maze), health, damage, lev, collect);
 	//read enemies
 	int num;
+	int i = 0;
+	field.enemy_amount = 3*(field.m_maze->getWidth()/2)/3;
+    field.m_enemies = new SuperEnemy*[field.enemy_amount];
+    for(i; i < field.enemy_amount; i++)
+		field.m_enemies[i] = nullptr;
+	i = 0;
 	while(1){
 		if(!getline(*m_file, st)){
 			break;
@@ -157,6 +165,22 @@ int Load::makeLoad(PlayGround& field){
 		delete[] c_st;
 		if(!checkEnemy(num, x, y, health, damage, lev, width, height)){
 			return 1;
+		}
+		if(num > field.enemy_amount)
+			return 1;
+		switch (num % 3){
+			case 0:
+				field.m_enemies[i] = new Enemy<BAttack>(x, y, health, damage, lev, *(field.m_maze));
+				i += 1;
+				break;
+			case 1:
+				field.m_enemies[i] = new Enemy<BDamage>(x, y, health, damage, lev, *(field.m_maze));
+				i += 1;
+				break;
+			case 2:
+				field.m_enemies[i] = new Enemy<BLevel>(x, y, health, damage, lev, *(field.m_maze));
+				i += 1;
+				break;
 		}
 	}
 	

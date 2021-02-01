@@ -9,7 +9,7 @@ class PlayerControl{
 		MyPlayer* m_hero;
 		MyCell* m_position;
 	public:
-		PlayerControl(int x, int y, MyMaze& maze);
+		PlayerControl(int x, int y, MyMaze& maze, int health = 1000, int damage = 10, int level = 1, int exp = 0, bool collected = false);
 		~PlayerControl();
 		MyPlayer* getPlayer();
 		void setPosition(MyMaze &maze);

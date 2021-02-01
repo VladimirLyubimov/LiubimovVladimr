@@ -1,7 +1,7 @@
 #include "PlayerControl.hpp"
 
-PlayerControl::PlayerControl(int x, int y, MyMaze& maze){
-	m_hero = new MyPlayer(x, y);
+PlayerControl::PlayerControl(int x, int y, MyMaze& maze, int health, int damage , int level, int exp, bool collected){
+	m_hero = new MyPlayer(x, y, health, damage, level, exp, collected);
 	m_position = maze.getCell(x,y);
 }
 
