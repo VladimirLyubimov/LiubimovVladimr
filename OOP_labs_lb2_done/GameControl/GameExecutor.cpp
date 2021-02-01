@@ -21,10 +21,12 @@ bool GameExecutor::Play(PlayGround& field){
 	MyInterface interface;
 	field.m_hero->MakeLog(FLog, CLog, field.m_hero->getPlayer());
 	for(int i = 0; i< field.enemy_amount; i++){
-		field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]);
+		if(field.m_enemies[i])
+			field.m_enemies[i]->MakeLog(FLog, CLog, field.m_enemies[i]);
 	}
-	interface.printMaze(*(field.m_maze), field.m_hero->getPlayer(), field.m_enemies, field.enemy_amount);
 	
+	interface.printMaze(*(field.m_maze), field.m_hero->getPlayer(), field.m_enemies, field.enemy_amount);
+
     while(1){
     	switch(interface.getGameCommand(dx, dy)){
     		case 1:

@@ -5,16 +5,16 @@ void GameFacade::Execute(){
 	SaveLoad sv;
 	
 	char ch;
-	//cout << "Do you want to load game?(y/n)\n";
-	//cin >> ch;
-	//switch(ch){
-		//case 'y':
+	cout << "Do you want to load game?(y/n)\n";
+	cin >> ch;
+	switch(ch){
+		case 'y':
 			sv.makeLoad(field);
-			//break;
-		//default:
-			//GameInit::InitGame(field);
-			//break;
-	//}
+			break;
+		default:
+			GameInit::InitGame(field);
+			break;
+	}
 
 	while (GameExecutor::Play(field)){
 		GameInit::EndGame(field);

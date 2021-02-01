@@ -23,18 +23,31 @@ void SaveLoad::makeSave(PlayGround& field){
 }
 
 void SaveLoad::makeLoad(PlayGround& field){
-	//getLoadFileName();
-	Load l("save.txt");
+	getLoadFileName();
+	Load l(m_Lfile.data());
 	try{
 		int a = l.makeLoad(field);
 		cout << a << "\n";
-		if(a == 1)
-			throw 1;	
+		if(a)
+			throw a;	
 	}
 	
-	catch(int){
+	catch(int err){
 		GameInit::EndGame(field);
-		std::cerr << "Error in loading. File with name doen't exist or data is corrupted!\n";
+		switch (err){
+			case 1:
+				std::cerr << "Error in loading. File with name doesn't exist or corrupted!\n";
+				break;
+			case 2:
+				std::cerr << "Error in loading. Maze data corrupted!\n";
+				break;
+			case 3:
+				std::cerr << "Error in loading. Player data corrupted!\n";
+				break;
+			case 4:
+				std::cerr << "Error in loading. Enemies data corrupted!\n";
+				break;
+		}
 		exit(0);
 	}
 }

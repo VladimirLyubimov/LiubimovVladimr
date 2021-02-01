@@ -43,9 +43,11 @@ void MyInterface::printMaze(MyMaze &maze, MyPlayer* player, SuperEnemy** enemies
 	
 	if(enemies)
 		for(i = 0; i < len; i++){
-			if(enemies[i]->getAlive()){
-				enemies[i]->getCoord(px, py);
-				m_matrix[py][px] = 'E';
+			if(enemies[i]){
+				if(enemies[i]->getAlive()){
+					enemies[i]->getCoord(px, py);
+					m_matrix[py][px] = 'E';
+				}
 			}
 		}
 	
