@@ -34,49 +34,24 @@ bool Load::checkMatrix(char** matrix, int x, int y){
 		if(matrix[i][0] != '@' || matrix[i][x-1] != '@')
 			return false;
 	}
-	
-	//check content	
-	for(int i = 0; i < y; i++){
-		for(int j = 0; j < x; j++){
-			switch(matrix[i][j]){
-				case '@':
-					break;
-				case '1':
-					break;
-				case 'S':
-					break;
-				case 'A':
-					break;
-				case 'D':
-					break;
-				case 'B':
-					break;	
-				case 'F':
-					break;
-				default:
-					return false;	
-			}
-		}
-	}
-	
 	return true;
 }
 
-bool Load::checkPlayer(int x, int y, int health, int damage, int lev, int exp, int collect){
+bool Load::checkPlayer(int x, int y, int health, int damage, int lev, int width, int height){
 	//check coord
-	if(x < 1 || y < 1)
+	if(x < 1 || y < 1 || x >= width - 1 || y >= height - 1)
 		return false;
 		
 	//check stats
-	if(health <= 0 || damage <= 0 || lev <= 0 || exp < 0 || collect < 0 || collect > 1)
+	if(health <= 0 || damage <= 0 || lev <= 0)
 		return false;
 	
 	return true;
 }
 
-bool Load::checkEnemy(int num, int x, int y, int health, int damage, int lev){
+bool Load::checkEnemy(int num, int x, int y, int health, int damage, int lev, int width, int height){
 	//check coord
-	if(x < 1 || y < 1)
+	if(x < 1 || y < 1 || x >= width - 1 || y >= height - 1)
 		return false;
 	
 	//check stats	
@@ -106,6 +81,7 @@ int Load::makeLoad(PlayGround& field){
 	width = atoi(pch);
 	pch = strtok(NULL, " ");
 	height = atoi(pch);
+	delete[] c_st;
 	if(width % 2 != 1 || height % 2 != 1)
 		return 1;
 	
@@ -116,8 +92,13 @@ int Load::makeLoad(PlayGround& field){
 		matrix[i] = new char[width];
 	
 	for(int i = 0; i < height; i++){
-		for(int j = 0; j < width; j++)
-			*m_file >> matrix[i][j];
+		getline(*m_file, st);
+		if(!checkData(st, "^@[1@SFDBA]+@$") || st.size() != width){
+			return 1;
+		}
+		for(int j = 0; j < width; j++){
+			matrix[i][j] = st[j];
+		}
 	}
 	
 	if(!checkMatrix(matrix, width, height))
@@ -138,19 +119,46 @@ int Load::makeLoad(PlayGround& field){
 		
 	//read player
 	int x, y, health, damage, lev, exp, collect;
-	*m_file >> x >> y >> health >> damage >> lev >> exp >> collect;
-	
-	if(!checkPlayer(x, y, health, damage, lev, exp, collect))
+	getline(*m_file, st);
+	if(!checkData(st, "^[0-9]+\\s[0-9]+\\s[0-9]+\\s[0-9]+\\s[0-9]+\\s[0-9]+\\s[01]$")){
 		return 1;
-		
+	}
+	c_st = new char[st.size() + 1];
+	strcpy(c_st, st.data());
+	x = atoi(strtok(c_st, " "));
+	y = atoi(strtok(NULL, " "));
+	health = atoi(strtok(NULL, " "));
+	damage = atoi(strtok(NULL, " "));
+	lev = atoi(strtok(NULL, " "));
+	exp = atoi(strtok(NULL, " "));
+	collect = atoi(strtok(NULL, " "));
+	delete[] c_st;	
+	if(!checkPlayer(x, y, health, damage, lev, width, height))
+		return 1;
+	
 	//read enemies
 	int num;
 	while(1){
-		*m_file >> num >> x >> y >> health >> damage >> lev;
-		if(!checkEnemy(num, x, y, health, damage, lev))
-			return 1;
-		if(m_file->eof())
+		if(!getline(*m_file, st)){
 			break;
-	}*/
+		}
+		if(!checkData(st, "^[0-9]+\\s[0-9]+\\s[0-9]+\\s[0-9]+\\s[0-9]+\\s[0-9]+$")){
+			return 1;
+		}
+		cout << st.data() << "\n";
+		c_st = new char[st.size() + 1];
+		strcpy(c_st, st.data());
+		num = atoi(strtok(c_st, " "));
+		x = atoi(strtok(NULL, " "));
+		y = atoi(strtok(NULL, " "));
+		health = atoi(strtok(NULL, " "));
+		damage = atoi(strtok(NULL, " "));
+		lev = atoi(strtok(NULL, " "));
+		delete[] c_st;
+		if(!checkEnemy(num, x, y, health, damage, lev, width, height)){
+			return 1;
+		}
+	}
+	
 	return 0;
 }
