@@ -23,10 +23,12 @@ void SaveLoad::makeSave(PlayGround& field){
 }
 
 void SaveLoad::makeLoad(PlayGround& field){
-	getLoadFileName();
-	Load l(m_Lfile.data());
+	//getLoadFileName();
+	Load l("save.txt");
 	try{
-		if(l.makeLoad(field) == 1)
+		int a = l.makeLoad(field);
+		cout << a << "\n";
+		if(a == 1)
 			throw 1;	
 	}
 	

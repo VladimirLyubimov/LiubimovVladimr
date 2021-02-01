@@ -10,6 +10,19 @@ Load::~Load(){
 	delete m_file;
 }
 
+bool Load::checkData(string& data, const char* pattern){
+	regex_t rexp;
+	regmatch_t pm;
+	regcomp(&rexp, pattern, REG_EXTENDED);
+	if(!regexec(&rexp, data.data(), 0, &pm, 0)){
+		regfree(&rexp);
+		return true;
+	}
+	
+	regfree(&rexp);
+	return false;	
+}
+
 bool Load::checkMatrix(char** matrix, int x, int y){
 	//check out walls
 	for(int i = 0; i < x; i++){
@@ -49,9 +62,9 @@ bool Load::checkMatrix(char** matrix, int x, int y){
 	return true;
 }
 
-bool Load::checkPlayer(int x, int y, int health, int damage, int lev, int exp, int collect, int width, int height){
+bool Load::checkPlayer(int x, int y, int health, int damage, int lev, int exp, int collect){
 	//check coord
-	if(x < 1 || y < 1 || x >= width - 2 || y >= height - 2)
+	if(x < 1 || y < 1)
 		return false;
 		
 	//check stats
@@ -61,9 +74,9 @@ bool Load::checkPlayer(int x, int y, int health, int damage, int lev, int exp, i
 	return true;
 }
 
-bool Load::checkEnemy(int num, int x, int y, int health, int damage, int lev, int width, int height){
+bool Load::checkEnemy(int num, int x, int y, int health, int damage, int lev){
 	//check coord
-	if(x < 1 || y < 1 || x >= width - 2 || y >= height - 2)
+	if(x < 1 || y < 1)
 		return false;
 	
 	//check stats	
@@ -76,14 +89,27 @@ bool Load::checkEnemy(int num, int x, int y, int health, int damage, int lev, in
 int Load::makeLoad(PlayGround& field){
 	if(!m_file->is_open())
 		return 1;
-		
-	//read maze
-	int height, width;
-	*m_file >> width >> height;
 	
+	string st;
+	
+	//read maze
+	//read maze size
+	getline(*m_file, st);
+	if(!checkData(st, "^[0-9]+\\s[0-9]+$"))
+		return 1;
+
+	int height, width;
+	char* c_st = new char[st.size() + 1];
+	strcpy(c_st, st.data());
+	char* pch;
+	pch = strtok(c_st, " ");
+	width = atoi(pch);
+	pch = strtok(NULL, " ");
+	height = atoi(pch);
 	if(width % 2 != 1 || height % 2 != 1)
 		return 1;
 	
+	//read maze grid
 	char** matrix;
 	matrix = new char*[height];
 	for(int i = 0; i < height; i++)
@@ -114,17 +140,17 @@ int Load::makeLoad(PlayGround& field){
 	int x, y, health, damage, lev, exp, collect;
 	*m_file >> x >> y >> health >> damage >> lev >> exp >> collect;
 	
-	if(!checkPlayer(x, y, health, damage, lev, exp, collect, width, height))
+	if(!checkPlayer(x, y, health, damage, lev, exp, collect))
 		return 1;
 		
 	//read enemies
 	int num;
 	while(1){
 		*m_file >> num >> x >> y >> health >> damage >> lev;
-		if(!checkEnemy(num, x, y, health, damage, lev, width, height))
+		if(!checkEnemy(num, x, y, health, damage, lev))
 			return 1;
 		if(m_file->eof())
 			break;
-	}
+	}*/
 	return 0;
 }
