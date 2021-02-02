@@ -7,8 +7,6 @@
 #include "../ActiveObjects/MyBonus.hpp"
 #include "../ActiveObjects/MyAim.hpp"
 #include "PlayGroundStruct.hpp"
-#include "Save.hpp"
-#include "Load.hpp"
 
 class GameInit{
 	public:

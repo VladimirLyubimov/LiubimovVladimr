@@ -54,11 +54,11 @@ GameFacade.o: ./GameControl/GameFacade.cpp
 GameExecutor.o: ./GameControl/GameExecutor.cpp
 	g++ -c ./GameControl/GameExecutor.cpp
 
-Save.o: ./GameControl/Save.cpp
-	g++ -c ./GameControl/Save.cpp
+Save.o: ./SaveLoad/Save.cpp
+	g++ -c ./SaveLoad/Save.cpp
 
-Load.o: ./GameControl/Load.cpp
-	g++ -c ./GameControl/Load.cpp
+Load.o: ./SaveLoad/Load.cpp
+	g++ -c ./SaveLoad/Load.cpp
 
 MyLog.o: ./Logs/MyLog.cpp
 	g++ -c ./Logs/MyLog.cpp
@@ -81,8 +81,8 @@ BDamage.o: ./Humans/Behaviors/BDamage.cpp
 BLevel.o: ./Humans/Behaviors/BLevel.cpp
 	g++ -c ./Humans/Behaviors/BLevel.cpp
 
-SaveLoad.o: ./GameControl/SaveLoad.cpp
-	g++ -c ./GameControl/SaveLoad.cpp
+SaveLoad.o: ./SaveLoad/SaveLoad.cpp
+	g++ -c ./SaveLoad/SaveLoad.cpp
 		
 clean:
 	rm -rf *.o maze
