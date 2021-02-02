@@ -27,7 +27,6 @@ void SaveLoad::makeLoad(PlayGround& field){
 	Load l(m_Lfile.data());
 	try{
 		int a = l.makeLoad(field);
-		cout << a << "\n";
 		if(a)
 			throw a;	
 	}
