@@ -109,6 +109,13 @@ void stringToIntArray(string& data, long int* &line, int size){
 	delete[] c_st;
 }
 
+void clearSpace(long int** &matrix, int size){
+	for(int j = 0; j < size-1; j++){
+			delete[] matrix[j];
+		}
+		delete[] matrix;
+}
+
 int main(){
 	cout << "Input the path to data file:\n";
 	string fname;
@@ -149,6 +156,7 @@ int main(){
 		writeLog(0, fout, data + "\n");
 		if(!checkData(data, pattern.data())){
 			writeLog(0, fout, "Invalid input data!\n");
+			clearSpace(matrix, size);
 			fin.close();
 			fout.close();
 			return 0;
@@ -159,11 +167,8 @@ int main(){
 	long int det = calcMinor(matrix, size, 0, fout);
 	writeLog(0, fout, "The target determinant value is " + to_string(det) + ".\n");
 		
-	for(int j = 0; j < size-1; j++){
-			delete[] matrix[j];
-		}
-		delete[] matrix;
-	
+	clearSpace(matrix, size);
+
 	fin.close();
 	fout.close();
 
