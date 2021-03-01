@@ -8,11 +8,11 @@
 
 using namespace std;
 
-long int secondOrderDet(long int** matrix){
+long int secondOrderDet(long int** matrix){//вычисление определителя матрицы второго порядка
 	return matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
 }
 
-long int** makeMinor(long int** matrix, int line, int size){
+long int** makeMinor(long int** matrix, int line, int size){//создание матрицы меньшего порядка для вычисления минора
 	long int** minor = new long int*[size-1];
 	for(int i = 0; i < size-1; i++){
 		minor[i] = new long int[size-1];
@@ -35,7 +35,7 @@ long int** makeMinor(long int** matrix, int line, int size){
 	return minor;
 }
 
-void writeLog(int step, ofstream& fout, string message){
+void writeLog(int step, ofstream& fout, string message){//логирование промежуточных и итоговых данных
 	for(int i = 0; i < step; i++){
 		fout << "\t";
 		cout << "\t";
@@ -44,24 +44,24 @@ void writeLog(int step, ofstream& fout, string message){
 	cout << message;
 }
 
-long int calcMinor(long int** matrix, int size, int step, ofstream& fout){
+long int calcMinor(long int** matrix, int size, int step, ofstream& fout){//рекурсивная функция вычисления определителя
 	long int res = 0;
-	if(size == 1){
+	if(size == 1){//матрица 1 на 1
 		writeLog(step, fout, "It's is the simplest matrix content only one element.\n");
 		return matrix[0][0];
 	}
 	
-	if(size == 2){
+	if(size == 2){//матрица 2 на 2
 		int value = secondOrderDet(matrix);
 		writeLog(step, fout, "The 2x2 matrix have been found. Determinant can be found without recursion. Its value is " + to_string(value) + ".\n");
 		return value;
 	}
 	
-	for(int i = 0; i < size; i++){
+	for(int i = 0; i < size; i++){//матрица 3 на 3 и больше
 		long int** minor = makeMinor(matrix, i, size);
 		writeLog(step, fout, "To find this " + to_string(size) + "x" + to_string(size) + " matrix determinant the additional minor of elemet " + to_string(i+1) + ";1 should be found.\n");
 		long int minor_value = calcMinor(minor, size-1, step + 1, fout);
-		res += (pow(-1, i+2) * matrix[i][0] * minor_value);
+		res += (pow(-1, i+2) * matrix[i][0] * minor_value);//получение итогвого определителя
 		writeLog(step, fout, "The value of this minor is " + to_string(minor_value) + ". Current value of determinant of full matrix for this minor is " + to_string(res) + ".\n");
 		for(int j = 0; j < size-1; j++){
 			delete[] minor[j];
@@ -72,7 +72,7 @@ long int calcMinor(long int** matrix, int size, int step, ofstream& fout){
 	return res;
 }
 
-string makePattern(int size){
+string makePattern(int size){//создание шаблона для использования регулярок
 	string pattern = "^";
 	for(int i = 0; i < size-1; i++){
 		pattern += "[0-9]+\\s";
@@ -81,7 +81,7 @@ string makePattern(int size){
 	return pattern;
 }
 
-bool checkData(string& data, const char* pattern){
+bool checkData(string& data, const char* pattern){//проверка входных данных регулярками
 	regex_t rexp;
 	regmatch_t pm;
 	regcomp(&rexp, pattern, REG_EXTENDED);
@@ -94,7 +94,7 @@ bool checkData(string& data, const char* pattern){
 	return false;	
 }
 
-void stringToIntArray(string& data, long int* &line, int size){
+void stringToIntArray(string& data, long int* &line, int size){//преобразование строки входных данных к строке целых чисел
 	char* c_st = new char[data.size() + 1];
 	strcpy(c_st, data.data());
 	int i = 0;
@@ -109,7 +109,7 @@ void stringToIntArray(string& data, long int* &line, int size){
 	delete[] c_st;
 }
 
-void clearSpace(long int** &matrix, int size){
+void clearSpace(long int** &matrix, int size){//очистка выделенной под матрицу памяти
 	for(int j = 0; j < size-1; j++){
 			delete[] matrix[j];
 		}
@@ -117,6 +117,7 @@ void clearSpace(long int** &matrix, int size){
 }
 
 int main(){
+	//открытие файлов ввода-вывода и проверка этого
 	cout << "Input the path to data file:\n";
 	string fname;
 	cin >> fname;
@@ -133,6 +134,7 @@ int main(){
 		return 0;
 	}
 	
+	//чтение и проверка входных данных
 	int size;
 	string data;
 	getline(fin, data);
@@ -163,10 +165,12 @@ int main(){
 		}
 		stringToIntArray(data, matrix[i], size);
 	}
-	
+
+	//вычисление определителя
 	long int det = calcMinor(matrix, size, 0, fout);
 	writeLog(0, fout, "The target determinant value is " + to_string(det) + ".\n");
-		
+
+	//очистка памяти и закрытие файлов	
 	clearSpace(matrix, size);
 
 	fin.close();
