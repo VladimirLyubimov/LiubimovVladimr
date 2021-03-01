@@ -130,7 +130,9 @@ int main(){
 	string data;
 	getline(fin, data);
 	if(!checkData(data, "^[0-9]+$")){
-		cout << "Invalid input data!\n";
+		writeLog(0, fout, "Invalid input data!\n");
+		fin.close();
+		fout.close();
 		return 0;
 	}
 	size = atoi(data.data());
@@ -146,7 +148,9 @@ int main(){
 		getline(fin, data);
 		writeLog(0, fout, data + "\n");
 		if(!checkData(data, pattern.data())){
-			cout << "Invalid input data!\n";
+			writeLog(0, fout, "Invalid input data!\n");
+			fin.close();
+			fout.close();
 			return 0;
 		}
 		stringToIntArray(data, matrix[i], size);
@@ -159,6 +163,9 @@ int main(){
 			delete[] matrix[j];
 		}
 		delete[] matrix;
+	
+	fin.close();
+	fout.close();
 
 	return 0;
 }
