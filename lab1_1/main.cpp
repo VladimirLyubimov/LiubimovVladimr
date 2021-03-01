@@ -50,6 +50,12 @@ void writeLog(int step, ofstream& fout, string message){//логирование
 	cout << message;
 }
 
+void makeLogMessage(string& message, const char* st_data, char c_data){
+	message += st_data;
+	message += c_data;
+	message += "\n";
+}
+
 class H_list{
 	private:
 		Node* m_head;
@@ -81,12 +87,14 @@ class H_list{
 				return 0;
 			}
 			
+			string log_message = "";
 			while(i < data.size()){
 				if(data[0] != '(' && !m_head){
 					m_head = new Node(data[0]);
 					cur = m_head;
 					i += 1;
-					writeLog(level, fout, "The first element created. Its value is " + to_string(data[0]) + "\n");
+					makeLogMessage(log_message, "The first element created. Its value is ", data[0]);
+					writeLog(level, fout, log_message);
 					continue;
 				}
 				
@@ -94,7 +102,8 @@ class H_list{
 					i += 1;
 					m_head = new Node(data[i]);
 					cur = m_head;
-					cout << "The first element created. Its value is " << data[i] << "\n";
+					makeLogMessage(log_message, "The first element created. Its value is ", data[i]);
+					writeLog(level, fout, log_message);
 					i += 1;
 					continue;
 				}
@@ -103,9 +112,8 @@ class H_list{
 					i += 1;
 					cur->setChild(new Node(data[i]));
 					i += 1;
-					for(int j = 0; j < level; j++)
-						cout << "\t";
-					cout << "The building of new level of hierarchical list have been started. Recursion used. " << "The one more element created. Its value is " << data[i-1] << "\n";
+					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", data[i-1]);
+					writeLog(level, fout, log_message);
 					i = makeList(data, i, cur->getChild(), level+1, fout);
 					continue;
 				}
@@ -119,14 +127,14 @@ class H_list{
 				}
 				
 				if(data[i] != ')' && data[i] != '('){
-					for(int j = 0; j < level; j++)
-						cout << "\t";
-					cout << "The one more element created. Its value is " << data[i] << "\n";
+					makeLogMessage(log_message, "The one more element created. Its value is ", data[i]);
+					writeLog(level, fout, log_message);
 					cur->setNext(new Node(data[i]));
 					cur = cur->getNext();
 					i += 1;
 					continue;
 				}
+				log_message = "";
 			}
 			
 			return 0;
