@@ -36,9 +36,10 @@ long int** makeMinor(long int** matrix, int line, int size){
 }
 
 void writeLog(int step, ofstream& fout, string message){
-	for(int i = 0; i < step; i++)
+	for(int i = 0; i < step; i++){
 		fout << "\t";
 		cout << "\t";
+	}
 	fout << message;
 	cout << message;
 }
@@ -133,7 +134,7 @@ int main(){
 		return 0;
 	}
 	size = atoi(data.data());
-	cout << "The size of matrix is " << size << "x" << size << ".\n";
+	writeLog(0, fout, "The size of matrix is " + to_string(size) + "x" + to_string(size) + ".\n");
 	
 	long int** matrix = new long int*[size];
 	for(int i = 0; i < size; i++){
@@ -143,7 +144,7 @@ int main(){
 	string pattern = makePattern(size);
 	for(int i = 0; i < size; i++){
 		getline(fin, data);
-		cout << data << "\n";
+		writeLog(0, fout, data + "\n");
 		if(!checkData(data, pattern.data())){
 			cout << "Invalid input data!\n";
 			return 0;
@@ -152,10 +153,8 @@ int main(){
 	}
 	
 	long int det = calcMinor(matrix, size, 0, fout);
-	fout << "The target determinant value is " << det << ".\n";
-	cout << "The target determinant value is " << det << ".\n";
-	
-	
+	writeLog(0, fout, "The target determinant value is " + to_string(det) + ".\n");
+		
 	for(int j = 0; j < size-1; j++){
 			delete[] matrix[j];
 		}
