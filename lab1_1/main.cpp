@@ -1,39 +1,160 @@
-#include <regex.h>
-#include <string.h>
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <string>
 #include <cstdlib>
-#include <cmath>
 
 using namespace std;
 
-long int secondOrderDet(long int** matrix){//вычисление определителя матрицы второго порядка
-	return matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
-}
-
-long int** makeMinor(long int** matrix, int line, int size){//создание матрицы меньшего порядка для вычисления минора
-	long int** minor = new long int*[size-1];
-	for(int i = 0; i < size-1; i++){
-		minor[i] = new long int[size-1];
-	}
+class Node{
+	private:
+		char m_data;
+		Node* m_next;
+		Node* m_child;
+	public:
+		Node(char data = 0, Node* next = nullptr, Node* child = nullptr): m_data(data), m_next(next), m_child(child){			
+		}
+		
+		~Node(){}
+		
+		void setNext(Node* next){
+			m_next = next;
+		}
+		
+		void setChild(Node* child){
+			m_child = child;
+		}
+		
+		void setData(char data){
+			m_data = data;
+		}
+		
+		Node* getNext(){
+			return m_next;
+		}
 	
-	int i = 0;
-	int k = 0;
-	while(k < size){
-		if(k != line){
-			for(int j = 0; j < size-1; j++){
-				minor[i][j] = matrix[k][j+1];
+		Node* getChild(){
+			return m_child;
+		}
+		
+		char getData(){
+			return m_data;
+		}	
+};
+
+class H_list{
+	private:
+		Node* m_head;
+	public:
+		H_list(){
+			m_head = nullptr;
+		}
+				
+		void printList(string& str, Node* cur){
+			str += "(";
+			while(cur){
+				str += cur->getData();
+				if(cur->getChild()){
+					printList(str, cur->getChild());
+				}
+				cur = cur->getNext();
 			}
-			k++;
-			i++;
+			str += ")";
 		}
-		else{
-			k++;
+				
+		Node* getHead(){
+			return m_head;
 		}
-	}
-	return minor;
-}
+				
+		int makeList(string& data, int i, Node* cur, int level,  ofstream& fout){
+			if(data == ""){
+				m_head = new Node(0);
+				writeLog()
+				cout << "The empty hierarchical created.\n";
+				return 0;
+			}
+			
+			while(i < data.size()){
+				if(data[0] != '(' && !m_head){
+					m_head = new Node(data[0]);
+					cur = m_head;
+					i += 1;
+					cout << "The first element created. Its value is " << data[0] << "\n";
+					continue;
+				}
+				
+				if(data[i] == '(' && !m_head){
+					i += 1;
+					m_head = new Node(data[i]);
+					cur = m_head;
+					cout << "The first element created. Its value is " << data[i] << "\n";
+					i += 1;
+					continue;
+				}
+				
+				if(data[i] == '(' && m_head){
+					i += 1;
+					cur->setChild(new Node(data[i]));
+					i += 1;
+					for(int j = 0; j < level; j++)
+						cout << "\t";
+					cout << "The building of new level of hierarchical list have been started. Recursion used. " << "The one more element created. Its value is " << data[i-1] << "\n";
+					i = makeList(data, i, cur->getChild(), level+1, fout);
+					continue;
+				}
+				
+				if(data[i] == ')'){
+					i += 1;
+					for(int j = 0; j < level; j++)
+						cout << "\t";
+					cout << "Return to previos level of the list.\n";
+					return i;
+				}
+				
+				if(data[i] != ')' && data[i] != '('){
+					for(int j = 0; j < level; j++)
+						cout << "\t";
+					cout << "The one more element created. Its value is " << data[i] << "\n";
+					cur->setNext(new Node(data[i]));
+					cur = cur->getNext();
+					i += 1;
+					continue;
+				}
+			}
+			
+			return 0;
+		}
+		
+		void replaceAtom(char atom, char change, Node* cur,  ofstream& fout){
+			while(cur){
+				if(cur->getChild()){
+					replaceAtom(atom, change, cur->getChild(), fout);
+				}
+				
+				if(cur->getData() == atom){
+					cur->setData(change);
+				}
+				
+				cur = cur->getNext();
+			}
+		}
+		
+		void clearSpace(Node* cur){
+			Node* prev;
+			while(cur){
+				if(cur->getChild()){
+					clearSpace(cur->getChild());
+				}
+				prev = cur;
+				cur = cur->getNext();
+				delete prev;
+			}
+			return;
+		}
+		
+		~H_list(){
+			clearSpace(m_head);
+		}
+};
 
 void writeLog(int step, ofstream& fout, string message){//логирование промежуточных и итоговых данных
 	for(int i = 0; i < step; i++){
@@ -44,137 +165,21 @@ void writeLog(int step, ofstream& fout, string message){//логирование
 	cout << message;
 }
 
-long int calcMinor(long int** matrix, int size, int step, ofstream& fout){//рекурсивная функция вычисления определителя
-	long int res = 0;
-	if(size == 1){//матрица 1 на 1
-		writeLog(step, fout, "It's is the simplest matrix content only one element.\n");
-		return matrix[0][0];
-	}
-	
-	if(size == 2){//матрица 2 на 2
-		int value = secondOrderDet(matrix);
-		writeLog(step, fout, "The 2x2 matrix have been found. Determinant can be found without recursion. Its value is " + to_string(value) + ".\n");
-		return value;
-	}
-	
-	for(int i = 0; i < size; i++){//матрица 3 на 3 и больше
-		long int** minor = makeMinor(matrix, i, size);
-		writeLog(step, fout, "To find this " + to_string(size) + "x" + to_string(size) + " matrix determinant the additional minor of elemet " + to_string(i+1) + ";1 should be found.\n");
-		long int minor_value = calcMinor(minor, size-1, step + 1, fout);
-		res += (pow(-1, i+2) * matrix[i][0] * minor_value);//получение итогвого определителя
-		writeLog(step, fout, "The value of this minor is " + to_string(minor_value) + ". Current value of determinant of full matrix for this minor is " + to_string(res) + ".\n");
-		for(int j = 0; j < size-1; j++){
-			delete[] minor[j];
-		}
-		delete[] minor;
-	}
-	
-	return res;
-}
-
-string makePattern(int size){//создание шаблона для использования регулярок
-	string pattern = "^";
-	for(int i = 0; i < size-1; i++){
-		pattern += "[0-9]+\\s";
-	}
-	pattern += "[0-9]+$";
-	return pattern;
-}
-
-bool checkData(string& data, const char* pattern){//проверка входных данных регулярками
-	regex_t rexp;
-	regmatch_t pm;
-	regcomp(&rexp, pattern, REG_EXTENDED);
-	if(!regexec(&rexp, data.data(), 0, &pm, 0)){
-		regfree(&rexp);
-		return true;
-	}
-	
-	regfree(&rexp);
-	return false;	
-}
-
-void stringToIntArray(string& data, long int* &line, int size){//преобразование строки входных данных к строке целых чисел
-	char* c_st = new char[data.size() + 1];
-	strcpy(c_st, data.data());
-	int i = 0;
-	char* pch = strtok(c_st, " ");
-	line[i] = atol(pch);
-	i += 1;
-	while(i < size){
-		pch = strtok(NULL, " ");
-		line[i] = atol(pch);
-		i += 1;
-	}
-	delete[] c_st;
-}
-
-void clearSpace(long int** &matrix, int size){//очистка выделенной под матрицу памяти
-	for(int j = 0; j < size-1; j++){
-			delete[] matrix[j];
-		}
-		delete[] matrix;
-}
-
 int main(){
-	//открытие файлов ввода-вывода и проверка этого
-	cout << "Input the path to data file:\n";
-	string fname;
-	cin >> fname;
-	ifstream fin(fname);
-	if(!fin.is_open()){
-		cout << "Opening file with test data failed!\n";
-		return 0;
-	}
-	cout << "Input the path to result file:\n";
-	cin >> fname;
-	ofstream fout(fname);
-	if(!fout.is_open()){
-		cout << "Opening file for writing result data failed!\n";
-		return 0;
-	}
-	
-	//чтение и проверка входных данных
-	int size;
-	string data;
-	getline(fin, data);
-	if(!checkData(data, "^[0-9]+$")){
-		writeLog(0, fout, "Invalid input data!\n");
-		fin.close();
-		fout.close();
-		return 0;
-	}
-	size = atoi(data.data());
-	writeLog(0, fout, "The size of matrix is " + to_string(size) + "x" + to_string(size) + ".\n");
-	
-	long int** matrix = new long int*[size];
-	for(int i = 0; i < size; i++){
-		matrix[i] = new long int[size];
-	}
-	
-	string pattern = makePattern(size);
-	for(int i = 0; i < size; i++){
-		getline(fin, data);
-		writeLog(0, fout, data + "\n");
-		if(!checkData(data, pattern.data())){
-			writeLog(0, fout, "Invalid input data!\n");
-			clearSpace(matrix, size);
-			fin.close();
-			fout.close();
-			return 0;
-		}
-		stringToIntArray(data, matrix[i], size);
-	}
-
-	//вычисление определителя
-	long int det = calcMinor(matrix, size, 0, fout);
-	writeLog(0, fout, "The target determinant value is " + to_string(det) + ".\n");
-
-	//очистка памяти и закрытие файлов	
-	clearSpace(matrix, size);
-
-	fin.close();
+	H_list list;
+	ofstream fout;
+	fout.open("./res.txt");
+	string str = "";
+	string data = "(1(2(3(4(5(6(7))))3(45)))7)";
+	list.makeList(data, 0, list.getHead(), 0, fout);
+	list.printList(str, list.getHead());
+	list.replaceAtom('7', '!', list.getHead(), fout);
+	//cout << list.getHead().getData() << "\n";
+	//cout << list.getCur().getData() << "\n";
+	cout << str << "\n";
+	str = "";
+	list.printList(str, list.getHead());
+	cout << str << "\n";
 	fout.close();
-
 	return 0;
 }
