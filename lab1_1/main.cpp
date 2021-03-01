@@ -41,6 +41,15 @@ class Node{
 		}	
 };
 
+void writeLog(int step, ofstream& fout, string message){//логирование промежуточных и итоговых данных
+	for(int i = 0; i < step; i++){
+		fout << "\t";
+		cout << "\t";
+	}
+	fout << message;
+	cout << message;
+}
+
 class H_list{
 	private:
 		Node* m_head;
@@ -68,8 +77,7 @@ class H_list{
 		int makeList(string& data, int i, Node* cur, int level,  ofstream& fout){
 			if(data == ""){
 				m_head = new Node(0);
-				writeLog()
-				cout << "The empty hierarchical created.\n";
+				writeLog(level, fout, "The empty hierarchical created.\n");
 				return 0;
 			}
 			
@@ -78,7 +86,7 @@ class H_list{
 					m_head = new Node(data[0]);
 					cur = m_head;
 					i += 1;
-					cout << "The first element created. Its value is " << data[0] << "\n";
+					writeLog(level, fout, "The first element created. Its value is " + to_string(data[0]) + "\n");
 					continue;
 				}
 				
@@ -155,15 +163,6 @@ class H_list{
 			clearSpace(m_head);
 		}
 };
-
-void writeLog(int step, ofstream& fout, string message){//логирование промежуточных и итоговых данных
-	for(int i = 0; i < step; i++){
-		fout << "\t";
-		cout << "\t";
-	}
-	fout << message;
-	cout << message;
-}
 
 int main(){
 	H_list list;
