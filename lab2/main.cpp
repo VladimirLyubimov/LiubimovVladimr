@@ -16,27 +16,27 @@ class Node{//класс реализующий атом
 		
 		~Node(){}
 		
-		void setNext(Node* next){//устанвливает значение следющего за этим атомом на том же уровне атома
+		void setNext(Node* next){//устанвливает следющеий за этим атомом на том же уровне атом
 			m_next = next;
 		}
 		
-		void setChild(Node* child){
+		void setChild(Node* child){//устанавливает "ребёнка"
 			m_child = child;
 		}
 		
-		void setData(char data){
+		void setData(char data){//устанавливает значение атома
 			m_data = data;
 		}
 		
-		Node* getNext(){
+		Node* getNext(){//возвращает указатель на следующий атом
 			return m_next;
 		}
 	
-		Node* getChild(){
+		Node* getChild(){//возвращает указатель на ребёнка
 			return m_child;
 		}
 		
-		char getData(){
+		char getData(){//возвращает значение атома
 			return m_data;
 		}	
 };
@@ -50,21 +50,21 @@ void writeLog(int step, ofstream& fout, string message){//логирование
 	cout << message;
 }
 
-void makeLogMessage(string& message, const char* st_data, char c_data, const char* end){
+void makeLogMessage(string& message, const char* st_data, char c_data, const char* end){//создание с++ строки для логирования
 	message += st_data;
 	message += c_data;
 	message += end;
 }
 
-class H_list{
+class H_list{//класс, реализующий иерархический список
 	private:
-		Node* m_head;
+		Node* m_head;//голова списка
 	public:
-		H_list(){
+		H_list(){//конструктор
 			m_head = nullptr;
 		}
 				
-		void printList(string& str, Node* cur){
+		void printList(string& str, Node* cur){//рекурсивно создаёт сокращённую скобочную запись списка
 			str += "(";
 			while(cur){
 				str += cur->getData();
