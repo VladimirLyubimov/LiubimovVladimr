@@ -203,6 +203,7 @@ int main(){
 
 	char atom_f, atom_r;
 	string data;
+	cout << "Input atoms for replacement (target replacement):\n";
 	cin >> atom_f >> atom_r;
 	getline(fin, data);
 	writeLog(0, fout, "The source data is:\n" + data + "\n");
