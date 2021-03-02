@@ -50,10 +50,10 @@ void writeLog(int step, ofstream& fout, string message){//логирование
 	cout << message;
 }
 
-void makeLogMessage(string& message, const char* st_data, char c_data){
+void makeLogMessage(string& message, const char* st_data, char c_data, const char* end){
 	message += st_data;
 	message += c_data;
-	message += "\n";
+	message += end;
 }
 
 class H_list{
@@ -93,7 +93,7 @@ class H_list{
 					m_head = new Node(data[0]);
 					cur = m_head;
 					i += 1;
-					makeLogMessage(log_message, "The first element created. Its value is ", data[0]);
+					makeLogMessage(log_message, "The first element created. Its value is ", data[0], "\n");
 					writeLog(level, fout, log_message);
 					log_message = "";
 					continue;
@@ -103,7 +103,7 @@ class H_list{
 					i += 1;
 					m_head = new Node(data[i]);
 					cur = m_head;
-					makeLogMessage(log_message, "The first element created. Its value is ", data[i]);
+					makeLogMessage(log_message, "The first element created. Its value is ", data[i], "\n");
 					writeLog(level, fout, log_message);
 					i += 1;
 					log_message = "";
@@ -114,7 +114,7 @@ class H_list{
 					i += 1;
 					cur->setChild(new Node(data[i]));
 					i += 1;
-					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", data[i-1]);
+					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", data[i-1], "\n");
 					writeLog(level+1, fout, log_message);
 					i = makeList(data, i, cur->getChild(), level+1, fout);
 					log_message = "";
@@ -128,7 +128,7 @@ class H_list{
 				}
 				
 				if(data[i] != ')' && data[i] != '('){
-					makeLogMessage(log_message, "The one more element created. Its value is ", data[i]);
+					makeLogMessage(log_message, "The one more element created. Its value is ", data[i], "\n");
 					writeLog(level, fout, log_message);
 					cur->setNext(new Node(data[i]));
 					cur = cur->getNext();
@@ -142,16 +142,26 @@ class H_list{
 			return 0;
 		}
 		
-		void replaceAtom(char atom, char change, Node* cur,  ofstream& fout){
+		void replaceAtom(char atom, char change, Node* cur,  ofstream& fout, int level){
+			string log_message;
 			while(cur){
-				if(cur->getChild()){
-					replaceAtom(atom, change, cur->getChild(), fout);
-				}
-				
+				log_message = "";
+				makeLogMessage(log_message, "The value of current atom is ", cur->getData(), ". ");
+				writeLog(level, fout, log_message);
+
 				if(cur->getData() == atom){
+					log_message = "";
+					makeLogMessage(log_message, "This atom has the value which should be replacement. It will be replaced with ", change, "");
+					writeLog(0, fout, log_message);
 					cur->setData(change);
 				}
-				
+
+				writeLog(0, fout, "\n");
+
+				if(cur->getChild()){
+					replaceAtom(atom, change, cur->getChild(), fout, level+1);
+				}
+
 				cur = cur->getNext();
 			}
 		}
@@ -202,10 +212,10 @@ int main(){
 	list.makeList(data, 0, list.getHead(), 0, fout);
 	list.printList(out_data, list.getHead());
 	writeLog(0, fout, "The source list is:\n" + out_data + "\n");
-	list.replaceAtom(atom_f, atom_r, list.getHead(), fout);
+	list.replaceAtom(atom_f, atom_r, list.getHead(), fout, 0);
 	out_data = "";
 	list.printList(out_data, list.getHead());
-	writeLog(0, fout, "The list with replacement is:\n" + out_data + "\n");
+	writeLog(0, fout, "The list with replacements is:\n" + out_data + "\n");
 
 	fin.close();
 	fout.close();
