@@ -5,18 +5,18 @@
 
 using namespace std;
 
-class Node{
+class Node{//класс реализующий атом
 	private:
-		char m_data;
-		Node* m_next;
-		Node* m_child;
+		char m_data;//значение атома
+		Node* m_next;//указательна следующий за ним на том же уровне атом 
+		Node* m_child;//указатель на "ребёнка" этого атома, расположеного на уровень ниже
 	public:
-		Node(char data = 0, Node* next = nullptr, Node* child = nullptr): m_data(data), m_next(next), m_child(child){			
-		}
+		Node(char data = 0, Node* next = nullptr, Node* child = nullptr): m_data(data), m_next(next), m_child(child){
+		}//конструктор; инициализирует значение атома 0, а указатели - nullptr
 		
 		~Node(){}
 		
-		void setNext(Node* next){
+		void setNext(Node* next){//устанвливает значение следющего за этим атомом на том же уровне атома
 			m_next = next;
 		}
 		
