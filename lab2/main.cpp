@@ -110,26 +110,6 @@ class H_list{
 					continue;
 				}
 
-				if(data[i] == '(' && data[i+1] == '('){
-					cur->setChild(new Node(0));
-					i += 1;
-					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", 0, "\n");
-					writeLog(level+1, fout, log_message);
-					i = makeList(data, i, cur->getChild(), level+1, fout);
-					log_message = "";
-					continue;
-				}
-
-				if(data[i] == '(' && data[i+1] == ')'){
-					cur->setChild(new Node(0));
-					i += 1;
-					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", data[i-1], "\n");
-					writeLog(level+1, fout, log_message);
-					i = makeList(data, i, cur->getChild(), level+1, fout);
-					log_message = "";
-					continue;
-				}
-				
 				if(data[i] == '(' && m_head){
 					i += 1;
 					cur->setChild(new Node(data[i]));
