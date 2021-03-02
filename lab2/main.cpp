@@ -41,6 +41,21 @@ class Node{
 		}	
 };
 
+void writeLog(int step, ofstream& fout, string message){//логирование промежуточных и итоговых данных
+	for(int i = 0; i < step; i++){
+		fout << "\t";
+		cout << "\t";
+	}
+	fout << message;
+	cout << message;
+}
+
+void makeLogMessage(string& message, const char* st_data, char c_data){
+	message += st_data;
+	message += c_data;
+	message += "\n";
+}
+
 class H_list{
 	private:
 		Node* m_head;
@@ -49,12 +64,12 @@ class H_list{
 			m_head = nullptr;
 		}
 				
-		void getPrintMessage(string& str, Node* cur){
+		void printList(string& str, Node* cur){
 			str += "(";
 			while(cur){
 				str += cur->getData();
 				if(cur->getChild()){
-					getPrintMessage(str, cur->getChild());
+					printList(str, cur->getChild());
 				}
 				cur = cur->getNext();
 			}
@@ -65,19 +80,22 @@ class H_list{
 			return m_head;
 		}
 				
-		int makeList(string& data, int i, Node* cur, int level){
+		int makeList(string& data, int i, Node* cur, int level,  ofstream& fout){
 			if(data == ""){
 				m_head = new Node(0);
-				cout << "The empty hierarchical created.\n";
+				writeLog(level, fout, "The empty hierarchical created.\n");
 				return 0;
 			}
 			
+			string log_message = "";
 			while(i < data.size()){
 				if(data[0] != '(' && !m_head){
 					m_head = new Node(data[0]);
 					cur = m_head;
 					i += 1;
-					cout << "The first element created. Its value is " << data[0] << "\n";
+					makeLogMessage(log_message, "The first element created. Its value is ", data[0]);
+					writeLog(level, fout, log_message);
+					log_message = "";
 					continue;
 				}
 				
@@ -85,8 +103,10 @@ class H_list{
 					i += 1;
 					m_head = new Node(data[i]);
 					cur = m_head;
-					cout << "The first element created. Its value is " << data[i] << "\n";
+					makeLogMessage(log_message, "The first element created. Its value is ", data[i]);
+					writeLog(level, fout, log_message);
 					i += 1;
+					log_message = "";
 					continue;
 				}
 				
@@ -94,39 +114,38 @@ class H_list{
 					i += 1;
 					cur->setChild(new Node(data[i]));
 					i += 1;
-					for(int j = 0; j < level; j++)
-						cout << "\t";
-					cout << "The building of new level of hierarchical list have been started. Recursion used.\n";
-					i = makeList(data, i, cur->getChild(), level+1);
+					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", data[i-1]);
+					writeLog(level+1, fout, log_message);
+					i = makeList(data, i, cur->getChild(), level+1, fout);
+					log_message = "";
 					continue;
 				}
 				
 				if(data[i] == ')'){
 					i += 1;
-					for(int j = 0; j < level; j++)
-						cout << "\t";
-					cout << "Return to previos level of the list.\n";
+					writeLog(level, fout, "Return to previos level of the list.\n");
 					return i;
 				}
 				
 				if(data[i] != ')' && data[i] != '('){
-					for(int j = 0; j < level; j++)
-						cout << "\t";
-					cout << "The one more element created. Its value is " << data[i] << "\n";
+					makeLogMessage(log_message, "The one more element created. Its value is ", data[i]);
+					writeLog(level, fout, log_message);
 					cur->setNext(new Node(data[i]));
 					cur = cur->getNext();
 					i += 1;
+					log_message = "";
 					continue;
 				}
+				log_message = "";
 			}
 			
 			return 0;
 		}
 		
-		void replaceAtom(char atom, char change, Node* cur){
+		void replaceAtom(char atom, char change, Node* cur,  ofstream& fout){
 			while(cur){
 				if(cur->getChild()){
-					replaceAtom(atom, change, cur->getChild());
+					replaceAtom(atom, change, cur->getChild(), fout);
 				}
 				
 				if(cur->getData() == atom){
@@ -155,23 +174,40 @@ class H_list{
 		}
 };
 
-void makeLog(ofstream& fout, string message){
-	fout << message;
-	cout << message;
-}
-
 int main(){
+	cout << "Input the path to data file:\n";
+	string fname;
+	cin >> fname;
+	ifstream fin(fname);
+	if(!fin.is_open()){
+		cout << "Opening file with test data failed!\n";
+		return 0;
+	}
+	cout << "Input the path to result file:\n";
+	cin >> fname;
+	ofstream fout(fname);
+	if(!fout.is_open()){
+		cout << "Opening file for writing result data failed!\n";
+		return 0;
+	}
+
+	char atom_f, atom_r;
+	string data;
+	cin >> atom_f >> atom_r;
+	getline(fin, data);
+	writeLog(0, fout, "The source data is:\n" + data + "\n");
+
 	H_list list;
-	string str = "";
-	string data = "(1(2(3(4(5(6(7))))3(45)))7)";
-	list.makeList(data, 0, list.getHead(), 0);
-	list.getPrintMessage(str, list.getHead());
-	list.replaceAtom('7', '!', list.getHead());
-	//cout << list.getHead().getData() << "\n";
-	//cout << list.getCur().getData() << "\n";
-	cout << str << "\n";
-	str = "";
-	list.getPrintMessage(str, list.getHead());
-	cout << str << "\n";
+	string out_data = "";
+	list.makeList(data, 0, list.getHead(), 0, fout);
+	list.printList(out_data, list.getHead());
+	writeLog(0, fout, "The source list is:\n" + out_data + "\n");
+	list.replaceAtom(atom_f, atom_r, list.getHead(), fout);
+	out_data = "";
+	list.printList(out_data, list.getHead());
+	writeLog(0, fout, "The list with replacement is:\n" + out_data + "\n");
+
+	fin.close();
+	fout.close();
 	return 0;
 }
