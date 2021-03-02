@@ -206,17 +206,17 @@ int main(){
 	cout << "Input atoms for replacement (target replacement):\n";
 	cin >> atom_f >> atom_r;
 	getline(fin, data);
-	writeLog(0, fout, "The source data is:\n" + data + "\n");
+	writeLog(0, fout, "\nThe source data is:\n" + data + "\n");
 
 	H_list list;
 	string out_data = "";
 	list.makeList(data, 0, list.getHead(), 0, fout);
 	list.printList(out_data, list.getHead());
-	writeLog(0, fout, "The source list is:\n" + out_data + "\n");
+	writeLog(0, fout, "\nThe source list is:\n" + out_data + "\n\n");
 	list.replaceAtom(atom_f, atom_r, list.getHead(), fout, 0);
 	out_data = "";
 	list.printList(out_data, list.getHead());
-	writeLog(0, fout, "The list with replacements is:\n" + out_data + "\n");
+	writeLog(0, fout, "\nThe list with replacements is:\n" + out_data + "\n");
 
 	fin.close();
 	fout.close();
