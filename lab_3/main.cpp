@@ -56,9 +56,38 @@ void makeLogMessage(string& message, const char* st_data, char c_data, const cha
 	message += end;
 }
 
+class NodeStack{
+	private:
+		Node* m_data = nullptr;
+		int m_size = 0;
+		int m_memory_size = 0;
+	public:
+		NodeStack(){
+		}
+
+		void add(Node node){
+			if(m_memory_size == m_size){
+				m_memory_size += 10;
+				Node* new_data = new Node[m_memory_size];
+				for(int i = 0; i < m_size; i++){
+					new_data[i] = m_data[i];
+				}
+				delete[] m_data;
+				m_data = new_data;
+			}
+
+			m_data[m_size] = node;
+			m_size += 1;
+		}
+
+		Node pop(){
+			return m_data[m_size];
+		}
+};
+
 class BinTree{
 	private:
-		Node* m_data = NULL;
+		Node* m_data = nullptr;
 		int m_size = 0;
 		int m_memory_size = 0;
 	public:
@@ -85,10 +114,10 @@ class BinTree{
 					m_data[parent].setRight(m_size);
 					break;
 				default:
-					m_data[m_size] = value;
+					break;
 			}
 			m_size += 1;
-			return m_size;
+			return m_size - 1;
 		}
 
 		void makeTree(string tree, int& i, int parent){
@@ -128,6 +157,11 @@ class BinTree{
 						}
 				}
 			}
+		}
+
+		void getPrintTree(string& tree, int parent, NodeStack stack){
+			int cur = parent;
+			//while()
 		}
 
 		~BinTree(){
