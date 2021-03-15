@@ -10,6 +10,7 @@ class Node{//класс реализующий узел
 		char m_data;//значение узла
 		int m_left;
 		int m_right;
+		bool isVisit = false;
 	public:
 		Node(char data = 0, int left = -1, int right = -1): m_data(data), m_left(left), m_right(left){
 		}
@@ -32,13 +33,21 @@ class Node{//класс реализующий узел
 			return m_left;
 		}
 	
-		int getChild(){
+		int getRight(){
 			return m_right;
 		}
 		
 		char getData(){
 			return m_data;
-		}	
+		}
+
+		void setIsVisit(bool visit){
+			isVisit = visit;
+		}
+		
+		bool getIsVisit(){
+			return isVisit;
+		}
 };
 
 void writeLog(int step, ofstream& fout, string message){//логирование промежуточных и итоговых данных
@@ -80,9 +89,21 @@ class NodeStack{
 			m_size += 1;
 		}
 
-		Node pop(){
-			return m_data[m_size];
-		}
+	Node top(){
+		return m_data[m_size];
+	}
+
+	void pop(){
+		m_size -= 1;
+	}
+
+	int getSize(){
+		return m_size; 
+	}
+
+	~NodeStack(){
+		//delete m_data;
+	}
 };
 
 class BinTree{
@@ -118,6 +139,10 @@ class BinTree{
 			}
 			m_size += 1;
 			return m_size - 1;
+		}
+
+		Node getRoot(){
+			return m_data[0];
 		}
 
 		void makeTree(string tree, int& i, int parent){
@@ -159,9 +184,31 @@ class BinTree{
 			}
 		}
 
-		void getPrintTree(string& tree, int parent, NodeStack stack){
-			int cur = parent;
-			//while()
+		void getPrintTree(string& tree, NodeStack& stack){
+			for(int i = 0; i < m_size; i++){
+					cout << m_data[i].getData();
+				}
+			/*while(stack.getSize()){
+				tree += stack.top().getData();
+
+				if(stack.top().getLeft() != -1){
+					tree += '(';
+					stack.add(m_data[stack.top().getLeft()]);
+					getPrintTree(tree, stack);
+				}
+
+				if(stack.top().getRight() != -1){
+					tree += '(';
+					stack.add(m_data[stack.top().getRight()]);
+					getPrintTree(tree, stack);
+				}
+
+				if((stack.top().getLeft() == -1 && stack.top().getRight() == -1) || (m_data[stack.top().getRight()].getIsVisit() && m_data[stack.top().getLeft()].getIsVisit())){
+					tree += ')';
+					stack.pop();
+					return;
+				}
+			}*/
 		}
 
 		~BinTree(){
@@ -172,6 +219,11 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	tree.makeTree("(f(h)(j))", root, 0);
+	tree.makeTree("(f(hk)(j))", root, 0);
+	string str = "";
+	NodeStack stack;
+	stack.add(tree.getRoot());
+	tree.getPrintTree(str, stack);
+	//cout << str << '\n';
 	return 0;
 }
