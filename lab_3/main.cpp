@@ -221,6 +221,42 @@ class BinTree{
 			return res;
 		}
 
+		int isPyramid(int root){
+			int l_res, r_res, res;
+
+			if(root == -1){
+				res = 1;
+				return res;
+			}
+			
+			if(m_data[root].getLeft() != -1){
+				if(m_data[root].getData() >= m_data[m_data[root].getLeft()].getData()){
+					l_res = 1*isPyramid(m_data[root].getLeft());
+				}
+				else{
+					l_res = 0;
+				}
+			}
+			else{
+				l_res = 1;
+			}
+
+			if(m_data[root].getRight() != -1){
+				if(m_data[root].getData() >= m_data[m_data[root].getRight()].getData()){
+					r_res = 1*isPyramid(m_data[root].getRight());
+				}
+				else{
+					r_res = 0;
+				}
+			}
+			else{
+				r_res = 1;
+			}
+
+			res = r_res*l_res;
+			return res;
+		}
+
 		~BinTree(){
 			delete[] m_data;
 		}
@@ -229,12 +265,13 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	string st = "(-10(-18 8))";
+	string st = "(10(-18 8))";
 	cout << st << '\n';
 	tree.makeTree(st, root, 0);
 	string str = "";
 	tree.getPrintTree(str, 0);
 	cout << str << '\n';
 	cout << tree.isBST(0) << '\n';
+	cout << tree.isPyramid(0) << '\n';
 	return 0;
 }
