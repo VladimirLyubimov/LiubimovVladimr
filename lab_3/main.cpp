@@ -187,11 +187,6 @@ class BinTree{
 
 		int isBST(int root){
 			int l_res, r_res, res;
-
-			if(root == -1){
-				res = 1;
-				return res;
-			}
 			
 			if(m_data[root].getLeft() != -1){
 				if(m_data[root].getData() > m_data[m_data[root].getLeft()].getData()){
@@ -223,11 +218,6 @@ class BinTree{
 
 		int isPyramid(int root){
 			int l_res, r_res, res;
-
-			if(root == -1){
-				res = 1;
-				return res;
-			}
 			
 			if(m_data[root].getLeft() != -1){
 				if(m_data[root].getData() >= m_data[m_data[root].getLeft()].getData()){
@@ -265,7 +255,7 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	string st = "(10(-18 8))";
+	string st = "(9(8(7(6(5(4(3(2(1)))))))10))";
 	cout << st << '\n';
 	tree.makeTree(st, root, 0);
 	string str = "";
