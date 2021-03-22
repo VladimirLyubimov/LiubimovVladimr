@@ -7,12 +7,12 @@ using namespace std;
 
 class Node{//класс реализующий узел
 	private:
-		char m_data;//значение узла
+		int m_data;//значение узла
 		int m_left;
 		int m_right;
 		bool isVisit = false;
 	public:
-		Node(char data = 0, int left = -1, int right = -1): m_data(data), m_left(left), m_right(left){
+		Node(int data = 0, int left = -1, int right = -1): m_data(data), m_left(left), m_right(left){
 		}
 		
 		~Node(){}
@@ -25,7 +25,7 @@ class Node{//класс реализующий узел
 			m_right = right;
 		}
 		
-		void setData(char data){
+		void setData(int data){
 			m_data = data;
 		}
 		
@@ -37,7 +37,7 @@ class Node{//класс реализующий узел
 			return m_right;
 		}
 		
-		char getData(){
+		int getData(){
 			return m_data;
 		}
 
@@ -65,47 +65,6 @@ void makeLogMessage(string& message, const char* st_data, char c_data, const cha
 	message += end;
 }
 
-class NodeStack{
-	private:
-		Node* m_data = nullptr;
-		int m_size = 0;
-		int m_memory_size = 0;
-	public:
-		NodeStack(){
-		}
-
-		void add(Node node){
-			if(m_memory_size == m_size){
-				m_memory_size += 10;
-				Node* new_data = new Node[m_memory_size];
-				for(int i = 0; i < m_size; i++){
-					new_data[i] = m_data[i];
-				}
-				delete[] m_data;
-				m_data = new_data;
-			}
-
-			m_data[m_size] = node;
-			m_size += 1;
-		}
-
-	Node top(){
-		return m_data[m_size];
-	}
-
-	void pop(){
-		m_size -= 1;
-	}
-
-	int getSize(){
-		return m_size; 
-	}
-
-	~NodeStack(){
-		//delete m_data;
-	}
-};
-
 class BinTree{
 	private:
 		Node* m_data = nullptr;
@@ -115,7 +74,7 @@ class BinTree{
 		BinTree(){
 		}
 
-		int addNode(char value, int parent, char side){
+		int addNode(int value, int parent, char side){
 			if(m_memory_size == m_size){
 				m_memory_size += 10;
 				Node* new_data = new Node[m_memory_size];
@@ -126,6 +85,7 @@ class BinTree{
 				m_data = new_data;
 			}
 			
+			cout << parent << ' ' << m_size << '\n';
 			m_data[m_size].setData(value);
 			switch (side){
 				case 'l':
@@ -145,70 +105,88 @@ class BinTree{
 			return m_data[0];
 		}
 
+		int strToInt(string& tree, int& i){
+			string s_res = "";
+			int i_res = 0;
+			while(1){
+				if(tree[i] == '-' || isdigit(tree[i])){
+					s_res += tree[i];
+					i += 1;
+					continue;
+				}
+				else{
+					i_res = stoi(s_res);
+					return i_res;
+				}
+			}
+		}
+
 		void makeTree(string tree, int& i, int parent){
 			int cur = parent;
+			int node_val = 0;
 			while(i < tree.size()){
 				switch (tree[i]){
 					case '(':
 						i += 1;
 						makeTree(tree, i, parent);
+						continue;
 						break;
 					case ')':
 						i += 1;
 						return;
 					default:
+						if(tree[i] == '|' || tree[i] == ' '){
+							i += 1;
+							continue;
+						}
+
 						if(!m_data){
-							cur = addNode(tree[i], -1, 0);
-							i += 1;
+							node_val = strToInt(tree, i);
+							cur = addNode(node_val, -1, 0);
 							continue;
 						}
-						if(tree[i] == '|'){
-							i += 1;
-							continue;
-						}
+						
 						if(tree[i-1] == '('){
-							if(tree[i+1] == '(')
-								parent = addNode(tree[i], cur, 'l');
-							else
-								addNode(tree[i], cur, 'l');
-							i += 1;
+							if(tree[i+1] == '('){
+								node_val = strToInt(tree, i);
+								parent = addNode(node_val, cur, 'l');
+							}
+							else{
+								node_val = strToInt(tree, i);
+								addNode(node_val, cur, 'l');
+							}
+							continue;
 						}
 						if(tree[i-1] != '('){
-							if(tree[i+1] == '(')
-								parent = addNode(tree[i], cur, 'r');
-							else
-								addNode(tree[i], cur, 'r');
-							i += 1;
+							if(tree[i+1] == '('){
+								node_val = strToInt(tree, i);
+								parent = addNode(node_val, cur, 'r');
+							}
+							else{
+								node_val = strToInt(tree, i);
+								addNode(node_val, cur, 'r');
+							}
+							continue;
 						}
 				}
 			}
 		}
 
-		void getPrintTree(string& tree, NodeStack& stack){
-			for(int i = 0; i < m_size; i++){
-					cout << m_data[i].getData();
-				}
-			/*while(stack.getSize()){
-				tree += stack.top().getData();
+		void getPrintTree(string& tree, int cur){
+			if(cur == -1){
+				tree += '|';
+				return;
+			}
+			tree += to_string(m_data[cur].getData());
+			tree += '(';
+			getPrintTree(tree, m_data[cur].getLeft());
+			getPrintTree(tree, m_data[cur].getRight());
+			tree += ')';
+			return;
+		}
 
-				if(stack.top().getLeft() != -1){
-					tree += '(';
-					stack.add(m_data[stack.top().getLeft()]);
-					getPrintTree(tree, stack);
-				}
-
-				if(stack.top().getRight() != -1){
-					tree += '(';
-					stack.add(m_data[stack.top().getRight()]);
-					getPrintTree(tree, stack);
-				}
-
-				if((stack.top().getLeft() == -1 && stack.top().getRight() == -1) || (m_data[stack.top().getRight()].getIsVisit() && m_data[stack.top().getLeft()].getIsVisit())){
-					tree += ')';
-					stack.pop();
-					return;
-				}
-			}*/
+		int isBST(int cur){
+			return 0;
 		}
 
 		~BinTree(){
@@ -219,11 +197,11 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	tree.makeTree("(f(hk)(j))", root, 0);
+	string st = "(-10(-18 8))";
+	cout << st << '\n';
+	tree.makeTree(st, root, 0);
 	string str = "";
-	NodeStack stack;
-	stack.add(tree.getRoot());
-	tree.getPrintTree(str, stack);
-	//cout << str << '\n';
+	tree.getPrintTree(str, 0);
+	cout << str << '\n';
 	return 0;
 }
