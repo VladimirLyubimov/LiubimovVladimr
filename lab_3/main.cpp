@@ -183,13 +183,13 @@ class BinTree{
 			return;
 		}
 
-		int isBST(int root, int step, ofstream& fout){
+		int isBST(int root, int step, ofstream& fout, int& min){
 			int l_res, r_res, res;
 			
 			if(m_data[root].getLeft() != -1){
 				if(m_data[root].getData() > m_data[m_data[root].getLeft()].getData()){
 					writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is more than value of its left son, which is " + to_string(m_data[m_data[root].getLeft()].getData()) + ".\n");
-					l_res = 1*isBST(m_data[root].getLeft(), step+1, fout);
+					l_res = 1*isBST(m_data[root].getLeft(), step+1, fout, min);
 				}
 				else{
 					l_res = 0;
@@ -199,10 +199,13 @@ class BinTree{
 				l_res = 1;
 			}
 
+			if(m_data[m_data[root].getRight()].getData() > min){
+						min = m_data[m_data[root].getRight()].getData();
+					}
 			if(m_data[root].getRight() != -1){
 				if(m_data[root].getData() <= m_data[m_data[root].getRight()].getData()){
 					writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is less tha value of its right son, which is " + to_string(m_data[m_data[root].getRight()].getData()) + ".\n");
-					r_res = 1*isBST(m_data[root].getRight(),step+1, fout);
+					r_res = 1*isBST(m_data[root].getRight(),step+1, fout, min);
 				}
 				else{
 					r_res = 0;
@@ -210,6 +213,10 @@ class BinTree{
 			}
 			else{
 				r_res = 1;
+			}
+
+			if(min < (m_data[root].getData())){
+				return 0;
 			}
 
 			res = r_res*l_res;
@@ -225,6 +232,7 @@ class BinTree{
 				}
 				else{
 					l_res = 0;
+					return 0;
 				}
 			}
 			else{
@@ -237,6 +245,7 @@ class BinTree{
 				}
 				else{
 					r_res = 0;
+					return 0;
 				}
 			}
 			else{
@@ -255,14 +264,15 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	string st = "(10(123(75)56))";
+	string st = "(99(81(71(61(51(41(31(21(11)))))))108(86))";
 	ofstream fout;
 	cout << st << '\n';
 	tree.makeTree(st, root, 0);
 	string str = "";
 	tree.getPrintTree(str, 0);
 	cout << str << '\n';
-	cout << tree.isBST(0, 0, fout) << '\n';
+	int isbst = 1000;
+	cout << tree.isBST(0, 0, fout, isbst) << '\n';
 	cout << tree.isPyramid(0) << '\n';
 	return 0;
 }
