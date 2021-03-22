@@ -185,8 +185,40 @@ class BinTree{
 			return;
 		}
 
-		int isBST(int cur){
-			return 0;
+		int isBST(int root){
+			int l_res, r_res, res;
+
+			if(root == -1){
+				res = 1;
+				return res;
+			}
+			
+			if(m_data[root].getLeft() != -1){
+				if(m_data[root].getData() > m_data[m_data[root].getLeft()].getData()){
+					l_res = 1*isBST(m_data[root].getLeft());
+				}
+				else{
+					l_res = 0;
+				}
+			}
+			else{
+				l_res = 1;
+			}
+
+			if(m_data[root].getRight() != -1){
+				if(m_data[root].getData() <= m_data[m_data[root].getRight()].getData()){
+					r_res = 1*isBST(m_data[root].getRight());
+				}
+				else{
+					r_res = 0;
+				}
+			}
+			else{
+				r_res = 1;
+			}
+
+			res = r_res*l_res;
+			return res;
 		}
 
 		~BinTree(){
@@ -203,5 +235,6 @@ int main(){
 	string str = "";
 	tree.getPrintTree(str, 0);
 	cout << str << '\n';
+	cout << tree.isBST(0) << '\n';
 	return 0;
 }
