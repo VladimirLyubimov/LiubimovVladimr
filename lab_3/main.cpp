@@ -147,23 +147,21 @@ class BinTree{
 						}
 						
 						if(tree[i-1] == '('){
-							if(tree[i+1] == '('){
-								node_val = strToInt(tree, i);
+                            node_val = strToInt(tree, i);
+							if(tree[i] == '('){
 								parent = addNode(node_val, cur, 'l');
 							}
 							else{
-								node_val = strToInt(tree, i);
 								addNode(node_val, cur, 'l');
 							}
 							continue;
 						}
 						if(tree[i-1] != '('){
-							if(tree[i+1] == '('){
-								node_val = strToInt(tree, i);
+                            node_val = strToInt(tree, i);
+							if(tree[i] == '('){
 								parent = addNode(node_val, cur, 'r');
 							}
 							else{
-								node_val = strToInt(tree, i);
 								addNode(node_val, cur, 'r');
 							}
 							continue;
@@ -185,12 +183,13 @@ class BinTree{
 			return;
 		}
 
-		int isBST(int root){
+		int isBST(int root, int step, ofstream& fout){
 			int l_res, r_res, res;
 			
 			if(m_data[root].getLeft() != -1){
 				if(m_data[root].getData() > m_data[m_data[root].getLeft()].getData()){
-					l_res = 1*isBST(m_data[root].getLeft());
+					writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is more than value of its left son, which is " + to_string(m_data[m_data[root].getLeft()].getData()) + ".\n");
+					l_res = 1*isBST(m_data[root].getLeft(), step+1, fout);
 				}
 				else{
 					l_res = 0;
@@ -202,7 +201,8 @@ class BinTree{
 
 			if(m_data[root].getRight() != -1){
 				if(m_data[root].getData() <= m_data[m_data[root].getRight()].getData()){
-					r_res = 1*isBST(m_data[root].getRight());
+					writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is less tha value of its right son, which is " + to_string(m_data[m_data[root].getRight()].getData()) + ".\n");
+					r_res = 1*isBST(m_data[root].getRight(),step+1, fout);
 				}
 				else{
 					r_res = 0;
@@ -255,13 +255,14 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	string st = "(9(8(7(6(5(4(3(2(1)))))))10))";
+	string st = "(10(123(75)56))";
+	ofstream fout;
 	cout << st << '\n';
 	tree.makeTree(st, root, 0);
 	string str = "";
 	tree.getPrintTree(str, 0);
 	cout << str << '\n';
-	cout << tree.isBST(0) << '\n';
+	cout << tree.isBST(0, 0, fout) << '\n';
 	cout << tree.isPyramid(0) << '\n';
 	return 0;
 }
