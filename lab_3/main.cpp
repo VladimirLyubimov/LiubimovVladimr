@@ -183,13 +183,32 @@ class BinTree{
 			return;
 		}
 
-		int isBST(int root, int step, ofstream& fout, int& min){
+		int isBST(int root, int step, ofstream& fout, int& max, int& min){
 			int l_res, r_res, res;
-			
+			int loc_max, loc_min;
+			//max = 0;
+			//min = 0;
+			//loc_max = max;
+			//loc_min = min;
+			//cout << loc_max << '\n';
+			//cout << loc_min << '\n';
+			//if(m_data[root].getData() > max){
+					//max = m_data[root].getData();
+				//}
+			//max = m_data[root].getData();
+			//loc_max = m_data[root].getData();
+			//cout << loc_max << '\n';
+
 			if(m_data[root].getLeft() != -1){
+				min = m_data[m_data[root].getLeft()].getData();
 				if(m_data[root].getData() > m_data[m_data[root].getLeft()].getData()){
-					writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is more than value of its left son, which is " + to_string(m_data[m_data[root].getLeft()].getData()) + ".\n");
-					l_res = 1*isBST(m_data[root].getLeft(), step+1, fout, min);
+					//writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is more than value of its left son, which is " + to_string(m_data[m_data[root].getLeft()].getData()) + ".\n");
+					min = m_data[m_data[root].getLeft()].getData();
+					l_res = 1*isBST(m_data[root].getLeft(), step+1, fout, max, min);
+					//cout << '.' << max << '\n';
+					//if(loc_max < max){
+					//	l_res = 0;
+					//}
 				}
 				else{
 					l_res = 0;
@@ -199,13 +218,18 @@ class BinTree{
 				l_res = 1;
 			}
 
-			if(m_data[m_data[root].getRight()].getData() > min){
-						min = m_data[m_data[root].getRight()].getData();
-					}
 			if(m_data[root].getRight() != -1){
+				//if(m_data[root].getData() < min){
+				///	min = m_data[root].getData();
+				//}
+				//loc_min = min;
 				if(m_data[root].getData() <= m_data[m_data[root].getRight()].getData()){
-					writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is less tha value of its right son, which is " + to_string(m_data[m_data[root].getRight()].getData()) + ".\n");
-					r_res = 1*isBST(m_data[root].getRight(),step+1, fout, min);
+					//writeLog(step, fout, "The value of current node is " + to_string(m_data[root].getData()) + ". It is less tha value of its right son, which is " + to_string(m_data[m_data[root].getRight()].getData()) + ".\n");
+					max = m_data[m_data[root].getRight()].getData();
+					r_res = 1*isBST(m_data[root].getRight(),step+1, fout, max, min);
+					//if(loc_min > min){
+						//r_res = 0;
+					//}
 				}
 				else{
 					r_res = 0;
@@ -214,10 +238,7 @@ class BinTree{
 			else{
 				r_res = 1;
 			}
-
-			if(min < (m_data[root].getData())){
-				return 0;
-			}
+			
 
 			res = r_res*l_res;
 			return res;
@@ -264,15 +285,16 @@ class BinTree{
 int main(){
 	BinTree tree;
 	int root = 0;
-	string st = "(99(81(71(61(51(41(31(21(11)))))))108(86))";
+	string st = "(17(7(4(1 5))))";
 	ofstream fout;
 	cout << st << '\n';
 	tree.makeTree(st, root, 0);
 	string str = "";
 	tree.getPrintTree(str, 0);
 	cout << str << '\n';
-	int isbst = 1000;
-	cout << tree.isBST(0, 0, fout, isbst) << '\n';
+	int isbst = 0;
+	int isbst2 = 10000;
+	cout << tree.isBST(0, 0, fout, isbst, isbst2) << '\n';
 	cout << tree.isPyramid(0) << '\n';
 	return 0;
 }
