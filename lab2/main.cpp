@@ -52,6 +52,9 @@ void writeLog(int step, ofstream& fout, string message){//логирование
 
 void makeLogMessage(string& message, const char* st_data, char c_data, const char* end){//создание с++ строки для логирования
 	message += st_data;
+	if(c_data == ' '){
+		c_data = '|';
+	}
 	message += c_data;
 	message += end;
 }
@@ -66,8 +69,13 @@ class H_list{//класс, реализующий иерархический с�
 				
 		void printList(string& str, Node* cur){//рекурсивно создаёт сокращённую скобочную запись списка
 			str += "(";
+			char atom;
 			while(cur){
-				str += cur->getData();
+				atom = cur->getData();
+				if(atom == 0 || atom == ' '){
+					atom = '|';
+				}
+				str += atom;
 				if(cur->getChild()){
 					printList(str, cur->getChild());
 				}
@@ -81,7 +89,7 @@ class H_list{//класс, реализующий иерархический с�
 		}
 				
 		int makeList(string& data, int i, Node* cur, int level,  ofstream& fout){
-			if(data == ""){
+			if(data == "" || data == "()"){
 				m_head = new Node(0);
 				writeLog(level, fout, "The empty hierarchical created.\n");
 				return 0;
@@ -110,7 +118,39 @@ class H_list{//класс, реализующий иерархический с�
 					continue;
 				}
 
-				if(data[i] == '(' && m_head){
+				if(data[i] == '(' && data[i-1] == ')'){
+					makeLogMessage(log_message, "The one more element created. Its value is ", '|', "\n");
+					writeLog(level, fout, log_message);
+					cur->setNext(new Node('|'));
+					cur = cur->getNext();
+					log_message = "";
+					if(data[i] != '('){
+						i += 1;
+						continue;
+					}
+				}
+
+				if(data[i] == '(' && data[i+1] == '('){
+					cur->setChild(new Node('|'));
+					i += 1;
+					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", '|', "\n");
+					writeLog(level+1, fout, log_message);
+					i = makeList(data, i, cur->getChild(), level+1, fout);
+					log_message = "";
+					continue;
+				}
+
+				if(data[i] == '(' && data[i+1] == ')'){
+					cur->setChild(new Node('|'));
+					i += 1;
+					makeLogMessage(log_message, "The building of new level of hierarchical list have been started. Recursion used. The one more element created. Its value is ", '|', "\n");
+					writeLog(level+1, fout, log_message);
+					i = makeList(data, i, cur->getChild(), level+1, fout);
+					log_message = "";
+					continue;
+				}
+
+				if(data[i] == '('){
 					i += 1;
 					cur->setChild(new Node(data[i]));
 					i += 1;
@@ -146,16 +186,24 @@ class H_list{//класс, реализующий иерархический с�
 			string log_message;
 			while(cur){
 				log_message = "";
-				makeLogMessage(log_message, "The value of current atom is ", cur->getData(), ". ");
+				makeLogMessage(log_message, "The atom with value ", atom, " should be replaced. ");
 				writeLog(level, fout, log_message);
+				log_message = "";
+				makeLogMessage(log_message, "The value of current atom is ", cur->getData(), ". ");
+				writeLog(0, fout, log_message);
 
 				if(cur->getData() == atom){
 					log_message = "";
-					makeLogMessage(log_message, "This atom has the value which should be replacement. It will be replaced with ", change, "");
+					makeLogMessage(log_message, "So this atom should be replacement. It will be replaced with ", change, "");
 					writeLog(0, fout, log_message);
 					cur->setData(change);
 				}
-
+				else{
+					log_message = "";
+					makeLogMessage(log_message, "So this atom should not be replacement", 0, ".");
+					writeLog(0, fout, log_message);
+				}
+				
 				writeLog(0, fout, "\n");
 
 				if(cur->getChild()){
