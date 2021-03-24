@@ -90,7 +90,7 @@ class H_list{//класс, реализующий иерархический с�
 				
 		int makeList(string& data, int i, Node* cur, int level,  ofstream& fout){
 			if(data == "" || data == "()"){
-				m_head = new Node(0);
+				m_head = new Node('|');
 				writeLog(level, fout, "The empty hierarchical created.\n");
 				return 0;
 			}
