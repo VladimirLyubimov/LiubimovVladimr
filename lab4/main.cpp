@@ -251,7 +251,7 @@ int main(){
 		cin >> type;
 		switch (type){
 			case 'q':
-				cout << "You choose to end the program!\n";
+				cout << "You choose to end the programm!\n";
 				return 0;
 
 			case 'l':
@@ -268,7 +268,21 @@ int main(){
 				fin.close();
 				cout << "Input the path to result file:\n";
 				cin >> fname;
-				fout.open(fname, ofstream::app);
+
+				cout << "Do you want to rewrite it (y/n)?:\n";
+				cin >> type;
+				switch (type){
+					case 'y':
+						fout.open(fname, ofstream::trunc);
+						break;
+					case 'n':
+						fout.open(fname, ofstream::app);
+						break;
+					default:
+						cout << "Error command! File will be rewritten!\n";
+						fout.open(fname, ofstream::trunc);
+						break;
+				}
 				if(!fout.is_open()){
 					cout << "Opening file for writing result data failed! Try again!\n";
 					break;
@@ -312,7 +326,21 @@ int main(){
 				fin.close();
 				cout << "Input the path to result file:\n";
 				cin >> fname;
-				fout.open(fname, ofstream::app);
+				cout << "Do you want to rewrite it (y/n)?:\n";
+				cin >> type;
+				switch (type){
+					case 'y':
+						fout.open(fname, ofstream::trunc);
+						break;
+					case 'n':
+						fout.open(fname, ofstream::app);
+						break;
+					default:
+						cout << "Error command! File will be rewritten!\n";
+						fout.open(fname, ofstream::trunc);
+						break;
+				}
+
 				if(!fout.is_open()){
 					cout << "Opening file for writing result data failed! Try again!\n";
 					break;
