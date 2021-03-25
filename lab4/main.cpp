@@ -34,7 +34,7 @@ int getData(T* &arr, ifstream& fin){
 
 template <class T>
 void Sort(T* &arr, int size, ofstream& fout){
-	int cur = 0;
+	T cur = 0;
 	int j = 0;
 	for(int i = 1; i < size; i++){
 		cur = arr[i];
@@ -86,9 +86,9 @@ template <class T>
 class Node{
 	private:
 		T m_value;
-		Node* m_next;
+		int m_next;
 	public:
-		Node(T value, Node* next = nullptr): m_value(value), m_next(next){
+		Node(T value = 0, int next = -1): m_value(value), m_next(next){
 		}
 
 		void setValue(T value){
@@ -99,11 +99,11 @@ class Node{
 			return m_value;
 		}
 
-		void setNext(Node* next){
+		void setNext(int next){
 			m_next = next;
 		}
 
-		Node* getNext(){
+		int getNext(){
 			return m_next;
 		}
 };
@@ -111,20 +111,42 @@ class Node{
 template <class T>
 class List{
 	private:
-		T* m_head = nullptr;
-		T* m_cur = nullptr;
+		Node<T>* m_head = nullptr;
+		int head = 0;
+		int m_size = 0;
+		int m_memory_size = 0;
 	public:
 		List(){
 			m_head = nullptr;
-			m_cur = nullptr;
 		}
 
 		void addNode(T value){
-			m_cur->setNext(new Node<T>(value));
 			if(!m_head){
-				m_head = m_cur;
+				head = 0;
+				m_head = new Node<T>[10];
+				m_head[0].setValue(value);
+				m_size += 1;
+				m_memory_size = 10;
+				return;
 			}
-			m_cur = m_cur->setNext;
+
+			if(m_size == m_memory_size){
+				m_memory_size += 10;
+				Node<T>* new_arr = new Node<T>[m_memory_size];
+				for(int i = 0; i < m_size; i++){
+					new_arr[i] = m_head[i];
+				}
+				delete[] m_head;
+				m_head = new_arr;
+			}
+
+			int cur = 0;
+			while(m_head[cur].getNext() != -1){
+				cur += 1;
+			}
+			m_head[cur].setNext(m_size);;
+			m_head[m_size].setValue(value);
+			m_size += 1;
 		}
 
 		void makeList(T* &arr, int size){
@@ -134,52 +156,79 @@ class List{
 		}
 
 		void printList(ofstream& fout){
-			T* cur = m_head;
-			while(cur){
-				cout << cur->getValue() << ' ';
-				fout << cur->getValue() << ' ';
-				cur = cur->getNext();
+			int cur = head;
+			while(cur != -1){
+				cout << m_head[cur].getValue() << ' ';
+				fout << m_head[cur].getValue() << ' ';
+				cur = m_head[cur].getNext();
 			}
 			cout << '\n';
 			fout << '\n';
 		}
 
-		void Sort(){
-			T* precur = m_head;
-			T* cur = precur->getNext();
-			T* comp = m_head;
-			while(cur){
-				precur->setNexy(cur->getNext());
-				cur->setNext(nullptr);
-				
+		void sort(ofstream& fout){
+			int precur = head;
+			int cur = m_head[precur].getNext();
+			int comp = head;
+			int precomp = head;
+			while(cur != -1){
+				fout << m_head[cur].getValue() << '\n';
+				fout << m_head[head].getValue() << '\n';
+				fout << m_head[comp].getValue() << '\n';
+				fout << m_head[precomp].getValue() << '\n';
+				m_head[precur].setNext(m_head[cur].getNext());
+				m_head[cur].setNext(-1);
+				//writeLog()
 
+				while(comp != -1 && m_head[comp].getValue() < m_head[cur].getValue()){
+					precomp = comp;
+					comp = m_head[comp].getNext();
+				}
+
+				if(comp == head){
+					m_head[cur].setNext(comp);
+					head = cur;
+				}
+				else{
+					m_head[precomp].setNext(cur);
+					m_head[cur].setNext(comp);
+				}
+
+				cur = m_head[precur].getNext();
+				fout << m_head[cur].getValue() << '\n';
+				fout << m_head[head].getValue() << '\n';
+				fout << m_head[comp].getValue() << '\n';
+				fout << m_head[precomp].getValue() << '\n';
+				comp = head;
+				precomp = head;	
+				//printList(fout);	
 			}
 		}
 
 		~List(){
-			T* next;
-			while(m_head){
-				next = m_head->getNext();
-				delete m_head;
-				m_head = next;
-			}
+			delete[] m_head;
 		}
 };
 
 int main(){
-	int* arr = nullptr;
+	double* arr = nullptr;
 	ifstream fin("./test.txt");
 	int size = getData(arr, fin);
 	ofstream fout("./res.txt");
 	fin.close();
 
-	for(int i = 0; i < size; i++){
+	/*for(int i = 0; i < size; i++){
 		cout << arr[i] << ' ';
 	}
 	cout << '\n';
-
+*/
+	List<double> list;
+	list.makeList(arr, size);
+	list.printList(fout);
 	//Sort(arr, size, fout);
-
+	list.sort(fout);
+	list.printList(fout);
+	
 	for(int i = 0; i < size; i++){
 		cout << arr[i] << ' ';
 	}
