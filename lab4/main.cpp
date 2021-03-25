@@ -174,18 +174,30 @@ class List{
 			while(cur != -1){
 				m_head[precur].setNext(m_head[cur].getNext());
 				m_head[cur].setNext(-1);
-				//writeLog()
 
-				while(comp != -1 && m_head[comp].getValue() < m_head[cur].getValue()){
+				cout << "Current element is \033[33m" << m_head[cur].getValue() << "\033[0m\n";
+				cout << "This element is going to be compared with elements before its postion in list begining with the head of the list.\n";
+				fout << "Current element is " << m_head[cur].getValue() << '\n';
+				fout << "This element is going to be compared with elements before its postion in list begining with the head of the list.\n";
+
+				while(comp != -1 && m_head[comp].getValue() < m_head[cur].getValue() && comp != m_head[precur].getNext()){
+					cout << "\033[32m" << m_head[comp].getValue() << "\033[0m is less than \033[33m" <<  m_head[cur].getValue() << "\033[0m\n";
+					fout << m_head[comp].getValue() << " is less than " <<  m_head[cur].getValue() << '\n';
 					precomp = comp;
 					comp = m_head[comp].getNext();
 				}
 
+				cout << "\033[32m" << m_head[comp].getValue() << "\033[0m is more or equal than \033[33m" <<  m_head[cur].getValue() << "\033[0m. ";
+				fout << m_head[comp].getValue() << " is more or equal than " <<  m_head[cur].getValue() << ". ";
 				if(comp == head){
+					cout << "It is the head of th list, so \033[33m" << m_head[cur].getValue() << "\033[0m is a new head of the list.\n";
+					fout << "It is the head of th list, so " << m_head[cur].getValue() << " is a new head of the list.\n";
 					m_head[cur].setNext(comp);
 					head = cur;
 				}
 				else{
+					cout << "So \033[33m" << m_head[cur].getValue() << "\033[0m has been placed between \033[32m" << m_head[precomp].getValue() << "\033[0m and \033[32m" << m_head[comp].getValue() << "\033[0m\n";
+					fout << "So " << m_head[cur].getValue() << " has been placed between " << m_head[precomp].getValue() << " and " << m_head[comp].getValue() << '\n';
 					m_head[precomp].setNext(cur);
 					m_head[cur].setNext(comp);
 				}
@@ -197,8 +209,12 @@ class List{
 					cur = m_head[precur].getNext();
 				}
 				comp = head;
-				precomp = head;	
-				//printList(fout);	
+				precomp = head;
+				cout << "The current state of the list: ";
+				fout << "The current state of the list: ";
+				printList(fout);
+				cout << '\n';
+				fout << '\n';
 			}
 		}
 
