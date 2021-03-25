@@ -191,8 +191,8 @@ class List{
 					comp = m_head[comp].getNext();
 				}
 
-				cout << "\033[32m" << m_head[comp].getValue() << "\033[0m is more or equal than \033[33m" <<  m_head[cur].getValue() << "\033[0m. ";
-				fout << m_head[comp].getValue() << " is more or equal than " <<  m_head[cur].getValue() << ". ";
+				cout << "\033[32m" << m_head[comp].getValue() << "\033[0m is more or equal than \033[33m" <<  m_head[cur].getValue() << "\033[0m. Also its possiblke that all elements before current have been viewed and current is bigger then all of them. ";
+				fout << m_head[comp].getValue() << " is more or equal than " <<  m_head[cur].getValue() << ". Also its possiblke that all elements before current have been viewed and current is bigger then all of them. ";
 				if(comp == head){
 					cout << "It is the head of th list, so \033[33m" << m_head[cur].getValue() << "\033[0m is a new head of the list.\n";
 					fout << "It is the head of th list, so " << m_head[cur].getValue() << " is a new head of the list.\n";
