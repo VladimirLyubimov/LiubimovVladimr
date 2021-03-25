@@ -172,10 +172,6 @@ class List{
 			int comp = head;
 			int precomp = head;
 			while(cur != -1){
-				fout << m_head[cur].getValue() << '\n';
-				fout << m_head[head].getValue() << '\n';
-				fout << m_head[comp].getValue() << '\n';
-				fout << m_head[precomp].getValue() << '\n';
 				m_head[precur].setNext(m_head[cur].getNext());
 				m_head[cur].setNext(-1);
 				//writeLog()
@@ -193,12 +189,13 @@ class List{
 					m_head[precomp].setNext(cur);
 					m_head[cur].setNext(comp);
 				}
-
-				cur = m_head[precur].getNext();
-				fout << m_head[cur].getValue() << '\n';
-				fout << m_head[head].getValue() << '\n';
-				fout << m_head[comp].getValue() << '\n';
-				fout << m_head[precomp].getValue() << '\n';
+				if(m_head[precur].getNext() == cur){
+					precur = cur;
+					cur = m_head[cur].getNext();
+				}
+				else{
+					cur = m_head[precur].getNext();
+				}
 				comp = head;
 				precomp = head;	
 				//printList(fout);	
