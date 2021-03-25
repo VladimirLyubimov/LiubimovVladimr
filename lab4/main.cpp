@@ -33,7 +33,7 @@ int getData(T* &arr, ifstream& fin){
 }
 
 template <class T>
-void Sort(T* &arr, int size, ofstream& fout){
+void sort(T* &arr, int size, ofstream& fout){
 	T cur = 0;
 	int j = 0;
 	for(int i = 1; i < size; i++){
@@ -223,31 +223,113 @@ class List{
 		}
 };
 
-int main(){
-	double* arr = nullptr;
-	ifstream fin("./test.txt");
-	int size = getData(arr, fin);
-	ofstream fout("./res.txt");
-	fin.close();
-
-	/*for(int i = 0; i < size; i++){
-		cout << arr[i] << ' ';
-	}
-	cout << '\n';
-*/
-	List<double> list;
-	list.makeList(arr, size);
-	list.printList(fout);
-	//Sort(arr, size, fout);
-	list.sort(fout);
-	list.printList(fout);
-	
+template <class T>
+void printArr(T* &arr, ofstream& fout, int size){
 	for(int i = 0; i < size; i++){
 		cout << arr[i] << ' ';
+		fout << arr[i] << ' ';
 	}
 	cout << '\n';
+	fout << '\n';
+}
 
-	fout.close();
+int main(){
+	double* arr = nullptr;
+	string fname;
+	char type;
+	ifstream fin;
+	List<double>* list;
+	int size;
+	ofstream fout;
 
+	while(1){
+		cout << "Input the type of the data structure (l(for list)/a(for array)) or input 'q' to stop the program:\n";
+		cin >> type;
+		switch (type){
+			case 'q':
+				cout << "You choose to end the program!\n";
+				return 0;
+
+			case 'l':
+				cout << "Input the path to data file:\n";
+				cin >> fname;
+				fin.open(fname, ifstream::in);
+				if(!fin.is_open()){
+					cout << "Opening file with test data failed! Try again!\n";
+					break;
+				}
+
+				size = getData(arr, fin);
+
+				fin.close();
+				cout << "Input the path to result file:\n";
+				cin >> fname;
+				fout.open(fname, ofstream::app);
+				if(!fout.is_open()){
+					cout << "Opening file for writing result data failed! Try again!\n";
+					break;
+				}
+
+				list = new List<double>;
+				list->makeList(arr, size);
+				cout<< "List before sort: ";
+				fout<< "List before sort: ";
+				list->printList(fout);
+
+				list->sort(fout);
+
+				cout<< "List after sort: ";
+				fout<< "List after sort: ";
+				list->printList(fout);
+				cout<< "\n";
+				fout<< "\n";
+				fout.close();
+
+				delete list;
+				list = nullptr;
+				break;
+
+			case 'a':
+				cout << "Input the path to data file:\n";
+				cin >> fname;
+				fin.open(fname, ifstream::in);
+				if(!fin.is_open()){
+					cout << "Opening file with test data failed! Try again!\n";
+					break;
+				}
+
+				size = getData(arr, fin);
+
+				fin.close();
+				cout << "Input the path to result file:\n";
+				cin >> fname;
+				fout.open(fname, ofstream::app);
+				if(!fout.is_open()){
+					cout << "Opening file for writing result data failed! Try again!\n";
+					break;
+				}
+
+				cout<< "Array before sort: ";
+				fout<< "Array before sort: ";
+				printArr(arr, fout, size);
+
+				sort(arr, size, fout);
+
+				cout<< "Array after sort: ";
+				fout<< "Array after sort: ";
+				printArr(arr, fout, size);
+				cout<< "\n";
+				fout<< "\n";
+				fout.close();
+
+				delete[] arr;
+				arr = nullptr;
+				break;
+
+			default:
+				cout << "Error command! Try again!\n";
+				break;
+		}
+	}
 	return 0;
 }
