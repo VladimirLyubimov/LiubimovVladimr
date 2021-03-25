@@ -34,6 +34,10 @@ int getData(T* &arr, ifstream& fin){
 
 template <class T>
 void sort(T* &arr, int size, ofstream& fout){
+	if(size == 1){
+		cout << "Only one elememt in array! Sort doesn't need.\n";
+		fout << "Only one elememt in array! Sort doesn't need.\n";
+	}
 	T cur = 0;
 	int j = 0;
 	for(int i = 1; i < size; i++){
@@ -275,6 +279,11 @@ int main(){
 				cout<< "List before sort: ";
 				fout<< "List before sort: ";
 				list->printList(fout);
+
+				if(size == 1){
+					cout << "Only one elememt in array! Sort doesn't need.\n";
+					fout << "Only one elememt in array! Sort doesn't need.\n";
+				}
 
 				list->sort(fout);
 
