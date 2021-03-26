@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm> //for swap()
+
+using namespace std;
+
+class Dheap{
+	private:
+		int* m_arr = nullptr;
+		int m_root = 0;
+		int m_size = 0;
+		int m_d = 2;
+	
+	private:
+		int findMaxLeaf(int root){
+			for
+		}
+
+	public:
+		Dheap(int* arr = nullptr, int root = 0, int size = 0, int d = 2): m_arr(arr), m_root(0), m_size(size), m_d(d){
+		}
+
+		void SiftUp(int leaf){
+			if(leaf == m_root || (leaf-1)/m_d < 0){
+				return;
+			}
+
+			while(leaf != m_root && m_arr[leaf] > m_arr[(leaf-1)/m_d]){
+				swap(m_arr[leaf], m_arr[(leaf-1)/m_d]);
+				leaf = (leaf-1)/m_d;
+				if(leaf < 0){
+					return;
+				}
+			}
+		}
+
+		void SiftDown(){}
+
+		void makeHeap(int* arr, int size, int d){
+
+		}
+
+		~Dheap(){
+			delete[] m_arr;
+		}
+};
+
+int main() {
+	return 0;
+}
