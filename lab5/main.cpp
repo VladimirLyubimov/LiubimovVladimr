@@ -77,16 +77,33 @@ class Dheap{
 
 		void printNode(int node_value, int step){
 			for(int i = 0; i < step; i++){
-				cout <<''
+				cout << '_';
 			}
+			cout.setf(ios::left);
+			cout.width(4);
+			cout << node_value;
+			cout.unsetf(ios::left);
 		}
 
 		void printHeap(){
 			int lev = 0;
 			double height = floor(log(double(m_size))/log(double(m_d))) + 1;
-			int step = int(6*pow(double(m_d),height-1)/(2*pow(double(m_d),lev))) - 3;
+			int step = int((6*pow(double(m_d),height-1)-6)/(2*pow(double(m_d),lev)));
 			for(int i = 0; i < m_size; i++){
-				cout << m_arr[i] << ' ';
+				if(lev == 0){
+					printNode(m_arr[i], step + 1);
+					lev += 1;
+					step = step/m_d;
+					cout << '\n';
+					continue;
+				}
+				printNode(m_arr[i], step + 1);
+				if(i%((int)(double(1.0-pow(double(m_d), double(lev+1)))/double(1-m_d))-1) == 0){
+					lev += 1;
+					step = step/m_d;
+					cout << '\n';
+				}
+				//cout << m_arr[i] << ' ';
 				//if(i%(m_d*lev) == 0){
 					//lev += 1;
 				//	cout << '\n';
@@ -116,7 +133,7 @@ int main(){
 	}
 	cout << '\n';
 
-	Dheap heap(arr, 0, 10, 9);
+	Dheap heap(arr, 0, 10, 2);
 	heap.makeHeap();
 	heap.printHeap();
 	return 0;
