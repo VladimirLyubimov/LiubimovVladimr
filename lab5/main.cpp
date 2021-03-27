@@ -5,7 +5,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
-#include <algorithm> //for swap()
 
 using namespace std;
 
@@ -14,6 +13,7 @@ class Dheap{
 		int* m_arr = nullptr;
 		int m_root = 0;
 		int m_size = 0;
+		int m_arr_size = 0;//размер массива
 		int m_mem_size = 0;
 		int m_d = 2;
 
@@ -25,7 +25,7 @@ class Dheap{
 			}
 		}
 
-		Dheap(ifstream &fin){//конструктор считывающий массив из входного
+		Dheap(ifstream &fin){//конструктор считывающий массив из входного файла
 			m_size = 0;
 			m_mem_size = 0;
 			m_root = 0; 
@@ -51,7 +51,7 @@ class Dheap{
 			}
 		}
 
-		int calcHeight(){
+		int calcHeight(){//высчитывает количество уровней в дереве
 			int i = m_root;
 			int height = 0;
 			while(i < m_size){
@@ -61,7 +61,20 @@ class Dheap{
 			return height;
 		}
 
-		int findMax(int root){//поиск максимального элемента среди вершины и потомков
+		int findMaxLeaf(int root){//поиск индекса максимального элемента среди потомков вершины
+			int max = -1;
+			for(int i = root*m_d+1; i <= root*m_d + m_d && i < m_size; i++){
+				if(max == -1){
+					max = i;
+				}
+				if(m_arr[i] > m_arr[max]){
+					max = i;
+				}
+			}
+			return max;
+		}
+
+		int findMax(int root){//поиск индекса максимального элемента среди вершины и потомков
 			int max = root;
 			for(int i = root*m_d+1; i <= root*m_d + m_d && i < m_size; i++){
 				if(m_arr[i] > m_arr[max]){
@@ -71,9 +84,7 @@ class Dheap{
 			return max;
 		}
 
-		
-
-		void siftUp(int leaf){//просейка снизу-вверх с модификацией для восходящей просейки 
+		void siftUp(int leaf){//просейка снизу-вверх
 			if(leaf == m_root || (leaf-1)/m_d < 0){
 				return;
 			}
@@ -110,18 +121,86 @@ class Dheap{
 			int i = m_size/m_d;
 			while(i >= 0){
 				siftDown(i);
-				//printHeap();
 				i -= 1;
+			}
+			m_arr_size = m_size;
+		}
+		
+		void dragMax(){//удаляет вершину из кучи перенося её в конец массива предварительно заменив его последним элементом
+			int max = m_arr[m_root];
+			m_arr[m_root] = m_arr[m_size-1];
+			m_arr[m_size-1] = max;
+			m_size -= 1;
+		}
+
+		void upwardSift(){
+			int buf;
+			int cur = m_root;
+			int way[calcHeight()];
+			int i = 0;
+			way[i] = m_root;
+			i += 1;
+
+			while(cur*m_d+1 < m_size){
+				cur = findMaxLeaf(cur);
+				way[i] = cur;
+				i += 1;
+			}
+
+			//i -= 1;
+			//for(int j  = 0; j < i; j++){
+				//cout << way[j] << '\n';
+			//}
+			while(m_arr[m_root] > m_arr[cur]){
+				cur = way[i-1];
+				i -= 1;
+			}
+			//cout << cur << '\n';
+			buf = m_arr[cur];
+			m_arr[cur] = m_arr[m_root];
+			i -= 1;
+			int add_buf = buf;
+			//m_arr[cur] = buf;
+			while(cur > m_root){
+				cur = way[i];
+				//cout << m_arr[cur] << '\n';
+				buf = m_arr[cur];
+				//m_arr[way[i-1]] = m_arr[cur];
+				m_arr[cur] = add_buf;
+				add_buf = buf;
+				i -= 1;
+				//cur = way[i];
+				//cout << i << '\n';
+			}
+			//cout << way[length-2] << '\n';
+			/*for(int i = length-2; i > 0; i--){
+				if(m_arr[way[i]] > m_arr[way[i-1]]){
+					cout << way[i] << ' ' << way[i-1] << '\n';
+					buf = m_arr[way[i]];
+					m_arr[way[i]] = m_arr[way[i-1]];
+					m_arr[way[i-1]] = buf;
+				}
+				//return;
+				//printHeap();
+			}*/
+		}
+
+		void upwardSiftSort(){
+			while(m_size){;
+				dragMax();
+				upwardSift();
+				//return;
+				//printHeap();
+				printAsArr();
+				//cout << "\n\n\n";
 			}
 		}
 
-		void addElement(){}
-		
-		int dragMax(){
-			int max = m_arr[m_root];
-			m_arr[m_root] = m_arr[m_size-1];
-			m_size -= 1;
-			return max;
+		void printAsArr(){
+			for(int i = 0; i < m_arr_size; i++){
+				cout << m_arr[i] << ' ';
+			}
+			cout << '\n';
 		}
 
 		void printNode(int node_value, int step){
@@ -144,8 +223,8 @@ class Dheap{
 			int lev = 0;
 			int sep = 0;
 			int height = calcHeight();
-			cout << height << '\n';
-			cout << m_size << '\n';
+			//cout << height << '\n';
+			//cout << m_size << '\n';
 			int step = 0;
 			for(int i = 0; i < m_size; i++){
 				step = int(3*2*int(pow(double(m_d),double(height-1)))/(2*int(pow(double(m_d),double(lev))))-2);
@@ -166,14 +245,21 @@ class Dheap{
 			cout << '\n';
 		}
 
-		int getRoot(){
-			return m_root;
+		int goToMaxLeaf(int* &way){//спускаемся до листа, для каждой вершины выбирая максимального потомка
+			int root =	m_root;
+			int length = 1;
+			int i = 0;
+			way[i] = root;
+			while(root*m_d+1 < m_size){
+				length += 1;
+				i += 1;
+				root = findMaxLeaf(root);
+				way[i] = root;
+			}
+
+			return length;
 		}
 
-		int getSize(){
-			return m_size;
-		}
-		
 		int getHeight(){
 			return calcHeight();
 		}
@@ -182,19 +268,6 @@ class Dheap{
 			delete[] m_arr;
 		}
 };
-
-void goToMaxLeaf(Dheap &heap, int* &way){//спускаемся до листа, для каждой вершины выбирая максимального потомка
-	int root =	heap.getRoot();
-	int i = 0; 
-	way[i] = root;
-	cout << root << '\n';
-	while(root != heap.findMaxLeaf(root)){
-		i += 1;
-		root = heap.findMaxLeaf(root);
-		
-		way[i] = root;
-	}
-}
 
 int main(){
 	int* arr = new int[15];
@@ -209,12 +282,24 @@ int main(){
 	heap.printHeap();
 	heap.makeHeap();
 	heap.printHeap();
+	//heap.printHeap();
+	//heap.printAsArr();
+	//heap.dragMax();
+	heap.upwardSiftSort();
+	heap.printHeap();
+	heap.printAsArr();
+	
+	//
+	//heap.printHeap();
+	//heap.upwardSift();
+	//heap.printAsArr();
+	//heap.printHeap();
 
-	int* way = new int[heap.getHeight()];
-	goToMaxLeaf(heap, way);
+	/*int* way = new int[heap.getHeight()];
+	heap.goToMaxLeaf(way);
 	for(int i = 0; i < heap.getHeight(); i++){
 		cout << way[i] << ' ';
-	}
+	}*/
 	cout << '\n';
 	return 0;
 }
