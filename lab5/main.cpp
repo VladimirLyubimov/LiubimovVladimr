@@ -147,52 +147,42 @@ class Dheap{
 				i += 1;
 			}
 
-			//i -= 1;
-			//for(int j  = 0; j < i; j++){
-				//cout << way[j] << '\n';
-			//}
-			while(m_arr[m_root] > m_arr[cur]){
-				cur = way[i-1];
-				i -= 1;
+			if(m_arr[m_root] > m_arr[cur]){
+				while(m_arr[m_root] > m_arr[cur]){
+					cur = way[i-1];
+					i -= 1;
+				}
 			}
-			//cout << cur << '\n';
+			else{
+				i -= 1;
+				cur = way[i];
+			}
 			buf = m_arr[cur];
 			m_arr[cur] = m_arr[m_root];
 			i -= 1;
 			int add_buf = buf;
-			//m_arr[cur] = buf;
 			while(cur > m_root){
 				cur = way[i];
-				//cout << m_arr[cur] << '\n';
 				buf = m_arr[cur];
-				//m_arr[way[i-1]] = m_arr[cur];
 				m_arr[cur] = add_buf;
 				add_buf = buf;
 				i -= 1;
-				//cur = way[i];
-				//cout << i << '\n';
 			}
-			//cout << way[length-2] << '\n';
-			/*for(int i = length-2; i > 0; i--){
-				if(m_arr[way[i]] > m_arr[way[i-1]]){
-					cout << way[i] << ' ' << way[i-1] << '\n';
-					buf = m_arr[way[i]];
-					m_arr[way[i]] = m_arr[way[i-1]];
-					m_arr[way[i-1]] = buf;
-				}
-				//return;
-				//printHeap();
-			}*/
 		}
 
 		void upwardSiftSort(){
 			while(m_size){;
 				dragMax();
 				upwardSift();
-				//return;
-				//printHeap();
 				printAsArr();
-				//cout << "\n\n\n";
+			}
+		}
+
+		void siftDownSort(){
+			while(m_size){;
+				dragMax();
+				siftDown(m_root);
+				printAsArr();
 			}
 		}
 
@@ -285,7 +275,8 @@ int main(){
 	//heap.printHeap();
 	//heap.printAsArr();
 	//heap.dragMax();
-	heap.upwardSiftSort();
+	//heap.upwardSiftSort();
+	heap.siftDownSort();
 	heap.printHeap();
 	heap.printAsArr();
 	
