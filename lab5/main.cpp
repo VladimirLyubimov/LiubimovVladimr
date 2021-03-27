@@ -17,16 +17,20 @@ class Dheap{
 		int m_d = 2;
 
 	public:
-		Dheap(int* arr = nullptr, int root = 0, int size = 0, int d = 2): m_root(root), m_size(size), m_d(d){
+		Dheap(int* arr = nullptr, int root = 0, int size = 0, int d = 2): m_root(root), m_size(size), m_d(d){//конструктор копирует полученный массив в массив вершин; пока в это ещё не d-арное дерево
 			m_arr = new int[size];
 			for(int i = 0; i < size; i++){
 				m_arr[i] = arr[i];
 			}
 		}
 
-		int findMaxLeaf(int root){
+		Dheap(ifstream &fin){
+
+		}//конструктор считывающий массив из входного
+
+		int findMaxLeaf(int root){//поиск максимального листа
 			int max = root;
-			for(int i = root*m_d+1; i <= root*m_d + m_d; i++){
+			for(int i = root*m_d+1; i <= root*m_d + m_d && i < m_size; i++){
 				if(m_arr[i] > m_arr[max]){
 					max = i;
 				}
@@ -34,13 +38,15 @@ class Dheap{
 			return max;
 		}
 
-		void siftUp(int leaf){
+		void siftUp(int leaf){//просейка снизу-вверх с модификацией для восходящей просейки 
 			if(leaf == m_root || (leaf-1)/m_d < 0){
 				return;
 			}
 
-			while(leaf != m_root && m_arr[leaf] > m_arr[(leaf-1)/m_d]){
-				swap(m_arr[leaf], m_arr[(leaf-1)/m_d]);
+			while(leaf != m_root && m_arr[leaf] > m_arr[(leaf-1)/m_d] && m_arr[m_root] < m_arr[leaf]){
+				int c = m_arr[leaf];
+				m_arr[leaf] = m_arr[m_root];
+				m_arr[m_root] = c;
 				leaf = (leaf-1)/m_d;
 				if(leaf < 0){
 					return;
@@ -48,9 +54,8 @@ class Dheap{
 			}
 		}
 
-		void siftDown(int root){
+		void siftDown(int root){//обыкновенная просейка сверху-вниз
 			while(root * m_d + 1 < m_size){
-				//cout << root << '\n';
 				if(m_arr[root] > m_arr[findMaxLeaf(root)]){
 					return;
 				}
@@ -86,23 +91,24 @@ class Dheap{
 
 		void printNode(int node_value, int step){
 			for(int i = 0; i < step; i++){
-				cout << '_';
+				cout << ' ';
 			}
+
 			cout.setf(ios::left);
-			//cout.width(4);
 			cout << node_value;
 			cout.unsetf(ios::left);
+
 			for(int i = 0; i < step; i++){
-				cout << '_';
+				cout << ' ';
 			}
 		}
 
 		void printHeap(){
 			int lev = 0;
+			int sep = 0;
 			double height = floor(log(double(m_size))/log(double(m_d))) + 1;
-			int step = int((10*pow(double(m_d),height-1))/(2*pow(double(m_d),lev)));
+			int step = int((10*height*pow(double(m_d),height-1))/(2*pow(double(m_d),lev)));
 			for(int i = 0; i < m_size; i++){
-				//cout << step << ' ';
 				if(lev == 0){
 					printNode(m_arr[i], step);
 					lev += 1;
@@ -111,16 +117,17 @@ class Dheap{
 					continue;
 				}
 				printNode(m_arr[i], step);
-				if(i%((int)(double(1.0-pow(double(m_d), double(lev+1)))/double(1-m_d))-1) == 0){
+				sep += 1;
+				if(i%((int)(double(1.0-pow(double(m_d), double(lev+1)))/double(1-m_d))-1) == 0 || m_d == 1){
 					lev += 1;
 					step = step/m_d;
+					sep = 0;
 					cout << '\n';
 				}
-				//cout << m_arr[i] << ' ';
-				//if(i%(m_d*lev) == 0){
-					//lev += 1;
-				//	cout << '\n';
-				//}
+				if(sep == m_d){
+					cout << '|';
+					sep = 0;
+				}
 			}
 			cout << '\n';
 		}
