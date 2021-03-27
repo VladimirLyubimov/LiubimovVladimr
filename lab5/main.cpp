@@ -14,6 +14,7 @@ class Dheap{
 		int* m_arr = nullptr;
 		int m_root = 0;
 		int m_size = 0;
+		int m_mem_size = 0;
 		int m_d = 2;
 
 	public:
@@ -24,9 +25,31 @@ class Dheap{
 			}
 		}
 
-		Dheap(ifstream &fin){
+		Dheap(ifstream &fin){//конструктор считывающий массив из входного
+			m_size = 0;
+			m_mem_size = 0;
+			m_root = 0; 
+			fin >> m_d;
 
-		}//конструктор считывающий массив из входного
+			while(1){
+			if(m_size == m_mem_size){
+				m_mem_size += 10;
+				int* new_arr = new int[m_mem_size];
+				for(int i = 0; i < m_size; i++){
+					new_arr[i] = m_arr[i];
+				}
+				delete[] m_arr;
+				m_arr = new_arr;
+			}
+
+			if(fin.eof()){
+				break;
+			}
+
+			fin >> m_arr[m_size];
+			m_size += 1;
+	}
+	}
 
 		int findMaxLeaf(int root){//поиск максимального листа
 			int max = root;
@@ -89,7 +112,7 @@ class Dheap{
 			return max;
 		}
 
-		void printNode(int node_value, int step){
+		void printNode(int node_value, int step, int& sep){
 			for(int i = 0; i < step; i++){
 				cout << ' ';
 			}
@@ -98,35 +121,50 @@ class Dheap{
 			cout << node_value;
 			cout.unsetf(ios::left);
 
+			if(sep == m_d){
+				step -= 1;
+			}
 			for(int i = 0; i < step; i++){
 				cout << ' ';
+			}
+			if(sep == m_d){
+				cout << '|';
+				sep = 0;
 			}
 		}
 
 		void printHeap(){
 			int lev = 0;
 			int sep = 0;
-			double height = floor(log(double(m_size))/log(double(m_d))) + 1;
-			int step = int((10*height*pow(double(m_d),height-1))/(2*pow(double(m_d),lev)));
+			double height = floor(log(double(m_size-1))/log(double(m_d))) + 2;
+			cout << m_size << '\n';
+			int step = int((3*pow(double(m_d),height-1))/(2*pow(double(m_d),lev))+3*(height-1)*m_d);
 			for(int i = 0; i < m_size; i++){
 				if(lev == 0){
-					printNode(m_arr[i], step);
+					printNode(m_arr[i], step, sep);
 					lev += 1;
 					step = step/m_d;
 					cout << '\n';
 					continue;
 				}
-				printNode(m_arr[i], step);
+
 				sep += 1;
+				printNode(m_arr[i], step, sep);
+
 				if(i%((int)(double(1.0-pow(double(m_d), double(lev+1)))/double(1-m_d))-1) == 0 || m_d == 1){
 					lev += 1;
 					step = step/m_d;
 					sep = 0;
 					cout << '\n';
 				}
-				if(sep == m_d){
-					cout << '|';
-					sep = 0;
+
+				//if(sep == m_d){
+				//	sep = 0;
+				//	continue;
+				//}
+
+				if(step == 0){
+					cout << "|";
 				}
 			}
 			cout << '\n';
@@ -144,16 +182,14 @@ int main(){
 		cout << "Opening file with test data failed!\n";
 		return 0;
 	}
-	for(int i = 0; i < 15; i++){
-		fin >> arr[i];
-	}
-	
+
 	for(int i = 0; i < 15; i++){
 		cout << arr[i] << ' ';
 	}
 	cout << '\n';
 
-	Dheap heap(arr, 0, 15, 2);
+	//Dheap heap(arr, 0, 15, 2);
+	Dheap heap(fin);
 	heap.printHeap();
 	heap.makeHeap();
 	heap.printHeap();
