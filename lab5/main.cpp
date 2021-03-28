@@ -508,6 +508,10 @@ int main(){
 						break;
 					}
 
+					cout << "Heap as array:\n";
+					heap->printAsArr(false);
+					cout << "\n\n\n";
+
 					cout << "Heap as tree:\n";
 					heap->printHeap(nullptr, -1);
 					cout << "\n\n\n";
