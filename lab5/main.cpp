@@ -149,6 +149,20 @@ class Dheap{
 		void siftDown(int root){//обыкновенная просейка сверху-вниз
 			cout << "-----------------------------------------------\n";
 			cout << "It is the sifting down.\n";
+			if(m_size < 2){
+				cout << "Only root is reamining in the heap, so it is already heap. No sifting needed.\n";
+				cout << "Sifting down has ended.\n";
+				cout << "-----------------------------------------------\n";
+				return;
+			}
+
+			if(!(root * m_d + 1 < m_size)){
+				cout << "No son of this node exist, so it is already subheap. No sifting needed.\n";
+				cout << "Sifting down has ended.\n";
+				cout << "-----------------------------------------------\n";
+				return;
+			}
+
 			while(root * m_d + 1 < m_size){
  
 				int n_root = findMax(root);
@@ -211,66 +225,71 @@ class Dheap{
 		void upwardSift(){//восходящая просейка (модифицированная просейка снизу-вверх); спускаемся вниз по наибольшим вершинам, поднимаемся по этой ветке до первой вершины больше корня, сохраняем её, заменяем её корнем, сдвигаем ветку на один уровень вверх через буфферную переменную
 			cout << "-----------------------------------------------\n";
 			cout << "Starting upward sifting.\n";
-			int buf;
-			int cur = m_root;
-			int way[calcHeight()];
-			int i = 0;
-			way[i] = m_root;
-			i += 1;
-
-			cout << "Firstly, we need to find a route from heap root to the leaf which consist of the biggest sons.\n";
-			while(cur*m_d+1 < m_size){
-				cur = findMaxLeaf(cur);
-				way[i] = cur;
+			if(m_size > 1){
+				int buf;
+				int cur = m_root;
+				int way[calcHeight()];
+				int i = 0;
+				way[i] = m_root;
 				i += 1;
-			}
-			cout << "So we have got the next route:\n";
-			printHeap(way, i);
-			
-			cout << "\nLet's find the first element on this route which is bigger than root.\n";
-			int nodes[2] = {m_root, cur};
-			if(m_arr[m_root] > m_arr[cur]){
-				while(m_arr[m_root] > m_arr[cur]){
-					cout << "Current node, which value is " << m_arr[cur] << " is less than root, which value is " << m_arr[m_root] <<". So we exclude it from the route.\n";
-					printHeap(nodes, 2);
-					cur = way[i-1];
-					nodes[1] = cur;
-					i -= 1;
+
+				cout << "Firstly, we need to find a route from heap root to the leaf which consist of the biggest sons.\n";
+				while(cur*m_d+1 < m_size){
+					cur = findMaxLeaf(cur);
+					way[i] = cur;
+					i += 1;
 				}
+				cout << "So we have got the next route:\n";
+				printHeap(way, i);
+				
+				cout << "\nLet's find the first element on this route which is bigger than root.\n";
+				int nodes[2] = {m_root, cur};
+				if(m_arr[m_root] > m_arr[cur]){
+					while(m_arr[m_root] > m_arr[cur]){
+						cout << "Current node, which value is " << m_arr[cur] << " is less than root, which value is " << m_arr[m_root] <<". So we exclude it from the route.\n";
+						printHeap(nodes, 2);
+						cur = way[i-1];
+						nodes[1] = cur;
+						i -= 1;
+					}
+				}
+				else{
+					i -= 1;
+					cur = way[i];
+				}
+
+				nodes[1] = cur;
+				cout << "Current node, which value is " << m_arr[cur] << " is more than root, which value is " << m_arr[m_root] <<"\n";
+				printHeap(nodes, 2);
+
+				cout << "Save current node in buffer variable, replace the value of current node with the value of the root and exclude this node from the route.\n";
+				buf = m_arr[cur];
+				m_arr[cur] = m_arr[m_root];
+				printHeap(nodes, 2);
+				i -= 1;
+				int add_buf = buf;
+
+				cout << "Now we are going to shift all remaining nodes in the route, which we have got early, to the one level upper. The nearest node which will be replaced with previous saved in buffer variable node value, which is " << buf << "\n";
+				cout << "Remaining route:\n";
+				printHeap(way, i+1);
+
+				while(cur > m_root){
+					cout << "The value of current will be saved in buffer variable and then will be replaced with the value of its biggest son, which is " << add_buf << " and has been saved in the another buffer variable.\n";
+					cur = way[i];
+					nodes[0] = cur;
+					printHeap(nodes, 1);
+					buf = m_arr[cur];
+					m_arr[cur] = add_buf;
+					add_buf = buf;
+					i -= 1;
+					nodes[0] = cur;
+					printHeap(nodes, 1);
+				}
+				cout << "The heap root has been reached. Shifting nodes to upper level has successfully ended.\n";
 			}
 			else{
-				i -= 1;
-				cur = way[i];
+				cout << "Only root is reamining in the heap, so it is already heap. No sifting needed.\n";
 			}
-
-			nodes[1] = cur;
-			cout << "Current node, which value is " << m_arr[cur] << " is more than root, which value is " << m_arr[m_root] <<"\n";
-			printHeap(nodes, 2);
-
-			cout << "Save current node in buffer variable, replace the value of current node with the value of the root and exclude this node from the route.\n";
-			buf = m_arr[cur];
-			m_arr[cur] = m_arr[m_root];
-			printHeap(nodes, 2);
-			i -= 1;
-			int add_buf = buf;
-
-			cout << "Now we are going to shift all remaining nodes in the route, which we have got early, to the one level upper. The nearest node which will be replaced with previous saved in buffer variable node value, which is " << buf << "\n";
-			cout << "Remaining route:\n";
-			printHeap(way, i+1);
-
-			while(cur > m_root){
-				cout << "The value of current will be saved in buffer variable and then will be replaced with the value of its biggest son, which is " << add_buf << " and has been saved in the another buffer variable.\n";
-				cur = way[i];
-				nodes[0] = cur;
-				printHeap(nodes, 1);
-				buf = m_arr[cur];
-				m_arr[cur] = add_buf;
-				add_buf = buf;
-				i -= 1;
-				nodes[0] = cur;
-				printHeap(nodes, 1);
-			}
-			cout << "The heap root has been reached. Shifting nodes to upper level has successfully ended.\n";
 
 			cout << "Upward sifting has ended.\n";
 			cout << "-----------------------------------------------\n";
@@ -287,7 +306,9 @@ class Dheap{
 				}
 				cout << "\033[1;30;43mHeap is corrupted after draging maximal element!\033[0m Let's restore our heap with sifting it down.\n";
 				upwardSift();
-				cout << "\033[1;30;42mThe heap restored!\033[0m\n\n\n\n";
+				cout << "\033[1;30;42mThe heap restored!\033[0m\nCurrent state of the heap:\n";
+				printHeap(nullptr, -1);
+				cout << "\n\n\n\n";
 			}
 			cout << "----------------------------------------------------------------------------------\n";
 			cout << "Sort has successfully ended!\n";
@@ -305,7 +326,9 @@ class Dheap{
 				}
 				cout << "\033[1;30;43mHeap is corrupted after draging maximal element!\033[0m Let's restore our heap with sifting it down.\n";
 				siftDown(m_root);
-				cout << "\033[1;30;42mThe heap restored!\033[0m\n\n\n\n";
+				cout << "\033[1;30;42mThe heap restored!\033[0m\nCurrent state of the heap:\n";
+				printHeap(nullptr, -1);
+				cout << "\n\n\n\n";
 			}
 			cout << "----------------------------------------------------------------------------------\n";
 			cout << "Sort has successfully ended!\n";
@@ -324,7 +347,7 @@ class Dheap{
 		}
 
 		void printAsArr(bool is_col_first){//выводит кучу как массив
-			cout << "It is heap as array. The green part is actually the heap, white is sorted sequence and cyan is the old root: ";
+			cout << "It is heap as array. The green part is actually the heap, white is sorted sequence and cyan is the old root, which just has been added to the sorted sequence: ";
 			for(int i = 0; i < m_arr_size; i++){
 				cout << "\033[1;30;42m";
 				if(i >= m_size){
@@ -363,6 +386,7 @@ class Dheap{
 		void printHeap(int* color_nodes, int col_size){//выводит кучу в консоль, как дерево
 			if(m_size == 0){
 				cout << "Empty heap!\n";
+				return;
 			}
 			int lev = 0;
 			int sep = 0;
@@ -448,7 +472,7 @@ int main(){
 	//heap.printHeap();
 	//heap.printAsArr();
 	//heap.dragMax();
-	heap.upwardSiftSort();
+	//heap.upwardSiftSort();
 	//heap.siftDownSort();
 	//heap.printHeap(nullptr, -1);
 	//heap.printAsArr();
