@@ -181,7 +181,7 @@ class Dheap{
 			cout << "Exclude the node with biggest value. It is the root because we are working with max-heap. Save the root value in buffer variable and make the value of the last element in heap the root value.\n";
 			int nodes[2] {m_root, m_size-1};
 			printHeap(nodes, 2);
-			printAsArr();
+			printAsArr(false);
 			int max = m_arr[m_root];
 			m_arr[m_root] = m_arr[m_size-1];
 			m_arr[m_size-1] = max;
@@ -189,7 +189,7 @@ class Dheap{
 			cout << "Eventually, put the old root value into the last position in heap and decrease the size of the heap. So we have already sorted elements after the heap in the array that is storing our elements as heap and sorted sequence.\n";
 			cout << "Heap as tree:\n";
 			printHeap(nullptr, -1);
-			printAsArr();
+			printAsArr(true);
 		}
 
 		void upwardSift(){//восходящая просейка (модифицированная просейка снизу-вверх); спускаемся вниз по наибольшим вершинам, поднимаемся по этой ветке до первой вершины больше корня, сохраняем её, заменяем её корнем, сдвигаем ветку на один уровень вверх через буфферную переменную
@@ -256,16 +256,21 @@ class Dheap{
 			cout << '\n';
 		}
 
-		void printAsArr(){//выводит кучу как массив
-			cout << "It is heap as array. The green part is actually the heap and white is sorted sequence: ";
-			cout << "\033[1;30;42m";
+		void printAsArr(bool is_col_first){//выводит кучу как массив
+			cout << "It is heap as array. The green part is actually the heap, white is sorted sequence and red is the old root: ";
 			for(int i = 0; i < m_arr_size; i++){
-				if(i == m_size){
-					cout << "\033[1;30;47m";
+				cout << "\033[1;30;42m";
+				if(i >= m_size){
+					if(i == m_size && is_col_first){
+						cout << "\033[1;30;41m";
+					}
+					else{
+						cout << "\033[1;30;47m";
+					}
 				}
 				cout << m_arr[i] << ' ';
+				cout << "\033[0m";
 			}
-			cout << "\033[0m";
 			cout << '\n';
 		}
 
