@@ -121,7 +121,6 @@ class Dheap{
 			cout << "Summary, the value of maximal element of root and its leaf is " << m_arr[max] << "\n";
 			nodes[0] = max;
 			printHeap(nodes, 1);
-			cout << "\n\n\n";
 			return max;
 		}
 
@@ -146,17 +145,27 @@ class Dheap{
  
 				int n_root = findMax(root);
 
-				if(m_arr[root] > m_arr[n_root]){
+				//if(m_arr[root] > m_arr[n_root]){
+					//return;
+				//}
+
+				if(n_root == root){
+					cout << "The root is more than his sons, so this subtree is heap!\n";
+					printHeap(nullptr, -1);
+					cout << "\n\n\n";
 					return;
 				}
 
-				if(n_root == root){
-					return;
-				}
+				cout << "The son, which value is " << m_arr[n_root] << ", is bigger than father, which value is " << m_arr[root] << "! So let's change their value\n";
+				int nodes[2] {root, n_root};
+				printHeap(nodes, 2);
 				int c = m_arr[root];
 				m_arr[root] = m_arr[n_root];
 				m_arr[n_root] = c;
 				root = n_root;
+				cout << "Values successfully changed! One more step to make heap has been done! Much better!\n";
+				printHeap(nodes, 2);
+				cout << "\n\n\n";
 			}
 		}
 
