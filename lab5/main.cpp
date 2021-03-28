@@ -430,7 +430,7 @@ class Dheap{
 			int length = 1;
 			int i = 0;
 			way[i] = root;
-			cout << "So the first node is root of the heap and its value is " << m_arr[root] << ". It has been added to the route.";
+			cout << "So the first node is root of the heap and its value is " << m_arr[root] << ". It has been added to the route.\n";
 			while(root*m_d+1 < m_size){
 				length += 1;
 				i += 1;
@@ -483,9 +483,9 @@ int main(){
 	//heap.printAsArr();
 	//heap.printHeap();
 
-	/*int* way = new int[heap.getHeight()];
+	int* way = new int[heap.getHeight()];
 	heap.goToMaxLeaf(way);
-	for(int i = 0; i < heap.getHeight(); i++){
+	/*for(int i = 0; i < heap.getHeight(); i++){
 		cout << way[i] << ' ';
 	}*/
 	cout << '\n';
