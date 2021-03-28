@@ -31,7 +31,7 @@ class Dheap{
 			fin >> m_d;
 
 			if(m_d <= 0){
-				cout << "Non natural value of amount of node sons!\n"
+				cout << "Non natural value of amount of node sons!\n";
 				return false;
 			}
 
@@ -450,7 +450,7 @@ class Dheap{
 				root = findMaxLeaf(root);
 				way[i] = root;
 				cout << "So node with value " << m_arr[root] << " and index " << root << " has been added to the route.\n";
-				cout << "Current way is:\n";
+				cout << "Current route is:\n";
 				printHeap(way, length);
 				cout << "\n\n";
 			}
@@ -502,6 +502,7 @@ int main(){
 					fin.close();
 					if(!isD){
 						cout << "Error in input data";
+						delete heap;
 						break;
 					}
 
