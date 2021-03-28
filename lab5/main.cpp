@@ -78,8 +78,8 @@ class Dheap{
 					max = i;
 					cout << m_arr[i] << " is first son, so it is new maximum value.\n";
 					nodes[j] = i;
-					j += 1;
-					printHeap(nodes, j);					
+					//j += 1;
+					printHeap(nodes, j+1);					
 					continue;
 				}
 
@@ -88,11 +88,11 @@ class Dheap{
 					max = i;
 				}
 				else{
-					cout << m_arr[i] << " is less than current maximum value, which is " << m_arr[max] << '\n';
+					cout << m_arr[i] << " is less or equal than current maximum value, which is " << m_arr[max] << '\n';
 				}
 				nodes[j] = i;
-				j += 1;
-				printHeap(nodes, j);
+				//j += 1;
+				printHeap(nodes, j+1);
 			}
 			cout << "Summary, the value of maximal leaf is " << m_arr[max] << "\n";
 			nodes[0] = max;
@@ -117,11 +117,11 @@ class Dheap{
 					max = i;
 				}
 				else{
-					cout << m_arr[i] << " is less than current maximum value, which is " << m_arr[max] << '\n';
+					cout << m_arr[i] << " is less or equal than current maximum value, which is " << m_arr[max] << '\n';
 				}
 				nodes[j] = i;
-				j += 1;
-				printHeap(nodes, j);
+				//j += 1;
+				printHeap(nodes, j+1);
 			}
 			cout << "Summary, the value of maximal element of root and its leaf is " << m_arr[max] << "\n";
 			nodes[0] = max;
@@ -436,7 +436,7 @@ class Dheap{
 				i += 1;
 				root = findMaxLeaf(root);
 				way[i] = root;
-				cout << "So node with value " << m_arr[root] << " has been added to the route.\n\n\n";
+				cout << "So node with value " << m_arr[root] << " and index " << root << " has been added to the route.\n\n\n";
 			}
 			
 			cout << "Eventually we have managed to get the route!\n";
@@ -456,12 +456,15 @@ class Dheap{
 
 
 int main(){
-	int* arr = new int[15];
 	ifstream fin("test.txt");
 	if(!fin.is_open()){
 		cout << "Opening file with test data failed!\n";
 		return 0;
 	}
+
+	//while(1){
+		//cout << "Input the path to data file or input 'q' to stop the program:\n";
+	//}
 
 	Dheap heap(fin);
 	heap.printHeap(nullptr, -1);
