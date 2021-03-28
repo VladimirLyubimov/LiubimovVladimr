@@ -1,5 +1,3 @@
-#include <regex.h>
-#include <string.h>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -25,7 +23,7 @@ class Dheap{
 			}
 		}
 
-		Dheap(ifstream &fin){//конструктор считывающий массив из входного файла
+		void readHeapFromFile(ifstream &fin){//метод считывающий массив из входного файла
 			m_size = 0;
 			m_mem_size = 0;
 			m_root = 0; 
@@ -194,12 +192,16 @@ class Dheap{
 
 		void makeHeap(){//получение кучи из массива за О(n) времени, где n - количетсво элементов в массиве
 			cout << "----------------------------------------------------------------------------------\n";
+			cout << "Let's make heap!\nThe current state of heap is:\n";
+			printHeap(nullptr, -1);
 			int i = m_size/m_d;//элементы с большими индексами не имеют потомков, то есть они уже являются кучами
 			while(i >= 0){
 				siftDown(i);
 				i -= 1;
 			}
 			m_arr_size = m_size;
+			cout << "Building heap has been ended!\nThe current state of heap is:\n";
+			printHeap(nullptr, -1);
 			cout << "----------------------------------------------------------------------------------\n";
 		}
 		
@@ -459,20 +461,58 @@ class Dheap{
 
 
 int main(){
-	ifstream fin("test.txt");
-	if(!fin.is_open()){
-		cout << "Opening file with test data failed!\n";
-		return 0;
-	}
+	ifstream fin;
 
+	char command;
+	string fname;
+	Dheap* heap = nullptr;
+	int* route = nullptr;
+	int length = 0;
 	while(1){
-		cout << "Input the path to data file or input 'q' to stop the program:\n";
+		cout << "Input 's' to start the program or input 'q' to stop the program:\n";
+			cin >> command;
+			switch (command){
+				case 'q':
+					cout << "You choose to end the programm!\n";
+					return 0;
+				
+				case 's':
+					cout << "Input the path to data file:\n";
+					cin >> fname;
+					fin.open(fname, ifstream::in);
+					if(!fin.is_open()){
+						cout << "Opening file with test data failed! Try again!\n";
+						break;
+					}
+
+					heap = new Dheap;
+					heap->readHeapFromFile(fin);
+					fin.close();
+
+					cout << "Heap as tree:\n";
+					heap->printHeap(nullptr, -1);
+					cout << "\n\n\n";
+
+					route = new int[heap->calcHeight()];
+					length = 0;
+					length = heap->goToMaxLeaf(route);
+					cout << "Indexes of the route nodes:\n";
+					for(int i = 0; i < length; i++){
+						cout << route[i] << ' ';
+					}
+					cout << "\n\n\n\n";
+
+					delete[] route;
+					delete heap;
+					break;
+
+				default:
+					cout << "Error command! Try again!\n";
+					break;
+
+			}
 	}
 
-	Dheap heap(fin);
-	heap.printHeap(nullptr, -1);
-	heap.makeHeap();
-	heap.printHeap(nullptr, -1);
 	//int* way = new int[heap.getHeight()];
 	//heap.goToMaxLeaf(way);
 	//heap.printHeap();
@@ -489,11 +529,11 @@ int main(){
 	//heap.printAsArr();
 	//heap.printHeap();
 
-	int* way = new int[heap.getHeight()];
-	heap.goToMaxLeaf(way);
+	//int* way = new int[heap.getHeight()];
+	//heap.goToMaxLeaf(way);
 	/*for(int i = 0; i < heap.getHeight(); i++){
 		cout << way[i] << ' ';
 	}*/
-	cout << '\n';
+	//cout << '\n';
 	return 0;
 }
