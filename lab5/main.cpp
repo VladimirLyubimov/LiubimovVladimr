@@ -64,6 +64,7 @@ class Dheap{
 		}
 
 		int findMaxLeaf(int root){//поиск индекса максимального элемента среди потомков вершины
+			cout << "Let's find the maximal son of this root!\n";
 			int max = -1;
 			int j = 0;
 			int nodes[m_d+1];
@@ -99,6 +100,7 @@ class Dheap{
 		}
 
 		int findMax(int root){//поиск индекса максимального элемента среди вершины и потомков
+			cout << "Let's find the maximal elememt in this root or its sons!\n";
 			int max = root;
 			int j = 0;
 			int nodes[m_d+1];
@@ -141,6 +143,7 @@ class Dheap{
 		}
 
 		void siftDown(int root){//обыкновенная просейка сверху-вниз
+			cout << "It is the sifting down.\n";
 			while(root * m_d + 1 < m_size){
  
 				int n_root = findMax(root);
@@ -156,16 +159,17 @@ class Dheap{
 					return;
 				}
 
-				cout << "The son, which value is " << m_arr[n_root] << ", is bigger than father, which value is " << m_arr[root] << "! So let's change their value\n";
+				cout << "The son, which value is " << m_arr[n_root] << ", is bigger than father, which value is " << m_arr[root] << "! So let's change their value.\n";
 				printHeap(nodes, 2);
 				int c = m_arr[root];
 				m_arr[root] = m_arr[n_root];
 				m_arr[n_root] = c;
 				root = n_root;
-				cout << "Values successfully changed! One more step to make heap has been done! Much better!\n";
+				cout << "Values successfully changed! One more step to make heap has been done!\n";
 				printHeap(nodes, 2);
 				cout << "\n";
 			}
+			cout << "Sifting down has ended.\n";
 		}
 
 		void makeHeap(){//получение кучи из массива за О(n) времени, где n - количетсво элементов в массиве
@@ -201,11 +205,13 @@ class Dheap{
 			way[i] = m_root;
 			i += 1;
 
+			cout << "Firstly, we need to find a route from heap root to the leaf which consist of the biggest sons.\n";
 			while(cur*m_d+1 < m_size){
 				cur = findMaxLeaf(cur);
 				way[i] = cur;
 				i += 1;
 			}
+			cout << 
 
 			if(m_arr[m_root] > m_arr[cur]){
 				while(m_arr[m_root] > m_arr[cur]){
@@ -231,19 +237,23 @@ class Dheap{
 		}
 
 		void upwardSiftSort(){//сортировка с использованием восходящей просейки
+			cout << "Heapsort with upward sifting.\n This sort using the upward sifting to restore heap after draging max element.\n";
 			while(m_size){;
 				dragMax();
 				upwardSift();
 			}
+			cout << "Sort has successfully ended!\n";
 		}
 
 		void siftDownSort(){//сортировка с использованием просейки сверху-вниз
+			cout << "Heapsort with sifting down.\n This sort using the sifting down to restore heap after draging max element.\n";
 			while(m_size){;
 				dragMax();
 				cout << "\033[1;30;43mHeap is corrupted after draging maximal element!\033[0m Let's restore our heap with sifting it down.\n";
 				siftDown(m_root);
 				cout << "\033[1;30;42mThe heap restored!\033[0m\n\n\n\n";
 			}
+			cout << "Sort has successfully ended!\n";
 		}
 
 		void printSortArr(){//выводит отсортированную часть массива
@@ -263,7 +273,7 @@ class Dheap{
 				cout << "\033[1;30;42m";
 				if(i >= m_size){
 					if(i == m_size && is_col_first){
-						cout << "\033[1;30;41m";
+						cout << "\033[1;30;46m";
 					}
 					else{
 						cout << "\033[1;30;47m";
@@ -295,6 +305,9 @@ class Dheap{
 		}
 
 		void printHeap(int* color_nodes, int col_size){//выводит кучу в консоль, как дерево
+			if(m_size == 0){
+				cout << "Empty heap!\n";
+			}
 			int lev = 0;
 			int sep = 0;
 			int height = calcHeight();
