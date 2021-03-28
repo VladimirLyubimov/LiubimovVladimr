@@ -17,9 +17,12 @@ class Dheap{
 
 	public:
 		Dheap(int* arr = nullptr, int root = 0, int size = 0, int d = 2): m_root(root), m_size(size), m_d(d){//конструктор копирует полученный массив в массив вершин; пока в это ещё не d-арное дерево
-			m_arr = new int[size];
-			for(int i = 0; i < size; i++){
-				m_arr[i] = arr[i];
+			if(arr){
+				m_arr = new int[size];
+				m_arr_size = size;
+				for(int i = 0; i < size; i++){
+					m_arr[i] = arr[i];
+				}
 			}
 		}
 
@@ -402,7 +405,6 @@ class Dheap{
 				return;
 			}
 			int lev = 0;
-			int sep = 0;
 			int height = calcHeight();
 			bool is_col = false;
 			int j = 0;
@@ -505,6 +507,10 @@ int main(){
 						delete heap;
 						break;
 					}
+
+					cout << "Heap as array:\n";
+					heap->printAsArr(false);
+					cout << "\n\n\n";
 
 					cout << "Heap as tree:\n";
 					heap->printHeap(nullptr, -1);
