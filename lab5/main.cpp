@@ -148,16 +148,15 @@ class Dheap{
 				//if(m_arr[root] > m_arr[n_root]){
 					//return;
 				//}
-
+				int nodes[2] {root, n_root};
 				if(n_root == root){
-					cout << "The root is more than his sons, so this subtree is heap!\n";
-					printHeap(nullptr, -1);
-					cout << "\n\n\n";
+					cout << "The root, which value is " << m_arr[root] << " is more than his sons, so this subtree is heap!\n";
+					printHeap(nodes, 2);
+					cout << "\n";
 					return;
 				}
 
 				cout << "The son, which value is " << m_arr[n_root] << ", is bigger than father, which value is " << m_arr[root] << "! So let's change their value\n";
-				int nodes[2] {root, n_root};
 				printHeap(nodes, 2);
 				int c = m_arr[root];
 				m_arr[root] = m_arr[n_root];
@@ -165,7 +164,7 @@ class Dheap{
 				root = n_root;
 				cout << "Values successfully changed! One more step to make heap has been done! Much better!\n";
 				printHeap(nodes, 2);
-				cout << "\n\n\n";
+				cout << "\n";
 			}
 		}
 
@@ -179,10 +178,18 @@ class Dheap{
 		}
 		
 		void dragMax(){//удаляет вершину из кучи перенося её в конец массива предварительно заменив его последним элементом
+			cout << "Exclude the node with biggest value. It is the root because we are working with max-heap. Save the root value in buffer variable and make the value of the last element in heap the root value.\n";
+			int nodes[2] {m_root, m_size-1};
+			printHeap(nodes, 2);
+			printAsArr();
 			int max = m_arr[m_root];
 			m_arr[m_root] = m_arr[m_size-1];
 			m_arr[m_size-1] = max;
 			m_size -= 1;
+			cout << "Eventually, put the old root value into the last position in heap and decrease the size of the heap. So we have already sorted elements after the heap in the array that is storing our elements as heap and sorted sequence.\n";
+			cout << "Heap as tree:\n";
+			printHeap(nullptr, -1);
+			printAsArr();
 		}
 
 		void upwardSift(){//восходящая просейка (модифицированная просейка снизу-вверх); спускаемся вниз по наибольшим вершинам, поднимаемся по этой ветке до первой вершины больше корня, сохраняем её, заменяем её корнем, сдвигаем ветку на один уровень вверх через буфферную переменную
@@ -232,14 +239,33 @@ class Dheap{
 		void siftDownSort(){//сортировка с использованием просейки сверху-вниз
 			while(m_size){;
 				dragMax();
+				cout << "\033[1;30;43mHeap is corrupted after draging maximal element!\033[0m Let's restore our heap with sifting it down.\n";
 				siftDown(m_root);
+				cout << "\033[1;30;42mThe heap restored!\033[0m\n\n\n\n";
 			}
 		}
 
-		void printAsArr(){//выводит кучу как массив
-			for(int i = 0; i < m_arr_size; i++){
+		void printSortArr(){//выводит отсортированную часть массива
+			if(m_size == m_arr_size){
+				cout << "No sorted sequence!\n";
+				return;
+			}
+			for(int i = m_size; i < m_arr_size; i++){
 				cout << m_arr[i] << ' ';
 			}
+			cout << '\n';
+		}
+
+		void printAsArr(){//выводит кучу как массив
+			cout << "It is heap as array. The green part is actually the heap and white is sorted sequence: ";
+			cout << "\033[1;30;42m";
+			for(int i = 0; i < m_arr_size; i++){
+				if(i == m_size){
+					cout << "\033[1;30;47m";
+				}
+				cout << m_arr[i] << ' ';
+			}
+			cout << "\033[0m";
 			cout << '\n';
 		}
 
@@ -295,7 +321,7 @@ class Dheap{
 					cout << '\n';
 				}
 			}
-			cout << "\n\n";
+			cout << "\n";
 		}
 
 		int goToMaxLeaf(int* &way){//спускаемся до листа, для каждой вершины выбирая максимального потомка
@@ -346,7 +372,7 @@ int main(){
 	//heap.printAsArr();
 	//heap.dragMax();
 	//heap.upwardSiftSort();
-	//heap.siftDownSort();
+	heap.siftDownSort();
 	heap.printHeap(nullptr, -1);
 	//heap.printAsArr();
 	
