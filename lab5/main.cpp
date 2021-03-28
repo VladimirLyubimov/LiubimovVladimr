@@ -23,11 +23,17 @@ class Dheap{
 			}
 		}
 
-		void readHeapFromFile(ifstream &fin){//метод считывающий массив из входного файла
+		bool readHeapFromFile(ifstream &fin){//метод считывающий массив из входного файла
 			m_size = 0;
 			m_mem_size = 0;
-			m_root = 0; 
+			m_root = 0;
+			m_d = 0;
 			fin >> m_d;
+
+			if(m_d <= 0){
+				cout << "Non natural value of amount of node sons!\n"
+				return false;
+			}
 
 			while(1){
 				if(m_size == m_mem_size){
@@ -49,6 +55,11 @@ class Dheap{
 			}
 
 			m_arr_size = m_size;
+			if(m_size == 0){
+				cout << "Error! Empty heap has inputed!\n";
+				return false;
+			}
+			return true;
 		}
 
 		int calcHeight(){//высчитывает количество уровней в дереве
@@ -468,6 +479,7 @@ int main(){
 	Dheap* heap = nullptr;
 	int* route = nullptr;
 	int length = 0;
+	bool isD = true;
 	while(1){
 		cout << "Input 's' to start the program or input 'q' to stop the program:\n";
 			cin >> command;
@@ -486,8 +498,12 @@ int main(){
 					}
 
 					heap = new Dheap;
-					heap->readHeapFromFile(fin);
+					isD = heap->readHeapFromFile(fin);
 					fin.close();
+					if(!isD){
+						cout << "Error in input data";
+						break;
+					}
 
 					cout << "Heap as tree:\n";
 					heap->printHeap(nullptr, -1);
