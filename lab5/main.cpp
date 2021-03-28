@@ -436,7 +436,10 @@ class Dheap{
 				i += 1;
 				root = findMaxLeaf(root);
 				way[i] = root;
-				cout << "So node with value " << m_arr[root] << " and index " << root << " has been added to the route.\n\n\n";
+				cout << "So node with value " << m_arr[root] << " and index " << root << " has been added to the route.\n";
+				cout << "Current way is:\n";
+				printHeap(way, length);
+				cout << "\n\n";
 			}
 			
 			cout << "Eventually we have managed to get the route!\n";
@@ -462,9 +465,9 @@ int main(){
 		return 0;
 	}
 
-	//while(1){
-		//cout << "Input the path to data file or input 'q' to stop the program:\n";
-	//}
+	while(1){
+		cout << "Input the path to data file or input 'q' to stop the program:\n";
+	}
 
 	Dheap heap(fin);
 	heap.printHeap(nullptr, -1);
