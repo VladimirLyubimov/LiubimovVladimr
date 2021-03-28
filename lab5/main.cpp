@@ -178,7 +178,7 @@ class Dheap{
 		}
 		
 		void dragMax(){//удаляет вершину из кучи перенося её в конец массива предварительно заменив его последним элементом
-			cout << "Exclude the node with biggest value. It is the root because we are working with max-heap. Save the root value in buffer variable and make the value of the last element in heap the root value.\n";
+			cout << "Exclude the node with biggest value. It is the root because we are working with max-heap. Save the root value in buffer variable\n";
 			int nodes[2] {m_root, m_size-1};
 			printHeap(nodes, 2);
 			printAsArr(false);
@@ -186,9 +186,10 @@ class Dheap{
 			m_arr[m_root] = m_arr[m_size-1];
 			m_arr[m_size-1] = max;
 			m_size -= 1;
-			cout << "Eventually, put the old root value into the last position in heap and decrease the size of the heap. So we have already sorted elements after the heap in the array that is storing our elements as heap and sorted sequence.\n";
+			cout << "Make the value of the last element in heap the root value. Eventually, put the old root value into the last position in heap and decrease the size of the heap. So we have already sorted elements after the heap in the array that is storing our elements as heap and sorted sequence.\n";
 			cout << "Heap as tree:\n";
-			printHeap(nullptr, -1);
+			nodes[0] = m_root;
+			printHeap(nodes, 1);
 			printAsArr(true);
 		}
 
