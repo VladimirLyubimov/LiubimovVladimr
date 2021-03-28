@@ -64,6 +64,7 @@ class Dheap{
 		}
 
 		int findMaxLeaf(int root){//поиск индекса максимального элемента среди потомков вершины
+			cout << "----------------\n";
 			cout << "Let's find the maximal son of this root!\n";
 			int max = -1;
 			int j = 0;
@@ -96,10 +97,12 @@ class Dheap{
 			cout << "Summary, the value of maximal leaf is " << m_arr[max] << "\n";
 			nodes[0] = max;
 			printHeap(nodes, 1);
+			cout << "----------------\n";
 			return max;
 		}
 
 		int findMax(int root){//поиск индекса максимального элемента среди вершины и потомков
+			cout << "----------------\n";
 			cout << "Let's find the maximal elememt in this root or its sons!\n";
 			int max = root;
 			int j = 0;
@@ -123,6 +126,7 @@ class Dheap{
 			cout << "Summary, the value of maximal element of root and its leaf is " << m_arr[max] << "\n";
 			nodes[0] = max;
 			printHeap(nodes, 1);
+			cout << "----------------\n";
 			return max;
 		}
 
@@ -143,6 +147,7 @@ class Dheap{
 		}
 
 		void siftDown(int root){//обыкновенная просейка сверху-вниз
+			cout << "-----------------------------------------------\n";
 			cout << "It is the sifting down.\n";
 			while(root * m_d + 1 < m_size){
  
@@ -170,18 +175,22 @@ class Dheap{
 				cout << "\n";
 			}
 			cout << "Sifting down has ended.\n";
+			cout << "-----------------------------------------------\n";
 		}
 
 		void makeHeap(){//получение кучи из массива за О(n) времени, где n - количетсво элементов в массиве
+			cout << "----------------------------------------------------------------------------------\n";
 			int i = m_size/m_d;//элементы с большими индексами не имеют потомков, то есть они уже являются кучами
 			while(i >= 0){
 				siftDown(i);
 				i -= 1;
 			}
 			m_arr_size = m_size;
+			cout << "----------------------------------------------------------------------------------\n";
 		}
 		
 		void dragMax(){//удаляет вершину из кучи перенося её в конец массива предварительно заменив его последним элементом
+			cout << "-----------------------------------------------\n";
 			cout << "Exclude the node with biggest value. It is the root because we are working with max-heap. Save the root value in buffer variable\n";
 			int nodes[2] {m_root, m_size-1};
 			printHeap(nodes, 2);
@@ -191,13 +200,17 @@ class Dheap{
 			m_arr[m_size-1] = max;
 			m_size -= 1;
 			cout << "Make the value of the last element in heap the root value. Eventually, put the old root value into the last position in heap and decrease the size of the heap. So we have already sorted elements after the heap in the array that is storing our elements as heap and sorted sequence.\n";
-			cout << "Heap as tree:\n";
+			cout << "Current state of heap as tree:\n";
 			nodes[0] = m_root;
 			printHeap(nodes, 1);
+			cout << "Current state of heap as array:\n";
 			printAsArr(true);
+			cout << "-----------------------------------------------\n";
 		}
 
 		void upwardSift(){//восходящая просейка (модифицированная просейка снизу-вверх); спускаемся вниз по наибольшим вершинам, поднимаемся по этой ветке до первой вершины больше корня, сохраняем её, заменяем её корнем, сдвигаем ветку на один уровень вверх через буфферную переменную
+			cout << "-----------------------------------------------\n";
+			cout << "Starting upward sifting.\n";
 			int buf;
 			int cur = m_root;
 			int way[calcHeight()];
@@ -211,11 +224,17 @@ class Dheap{
 				way[i] = cur;
 				i += 1;
 			}
-			cout << 
-
+			cout << "So we have got the next route:\n";
+			printHeap(way, i);
+			
+			cout << "\nLet's find the first element on this route which is bigger than root.\n";
+			int nodes[2] = {m_root, cur};
 			if(m_arr[m_root] > m_arr[cur]){
 				while(m_arr[m_root] > m_arr[cur]){
+					cout << "Current node, which value is " << m_arr[cur] << " is less than root, which value is " << m_arr[m_root] <<". So we exclude it from the route.\n";
+					printHeap(nodes, 2);
 					cur = way[i-1];
+					nodes[1] = cur;
 					i -= 1;
 				}
 			}
@@ -223,37 +242,74 @@ class Dheap{
 				i -= 1;
 				cur = way[i];
 			}
+
+			nodes[1] = cur;
+			cout << "Current node, which value is " << m_arr[cur] << " is more than root, which value is " << m_arr[m_root] <<"\n";
+			printHeap(nodes, 2);
+
+			cout << "Save current node in buffer variable, replace the value of current node with the value of the root and exclude this node from the route.\n";
 			buf = m_arr[cur];
 			m_arr[cur] = m_arr[m_root];
+			printHeap(nodes, 2);
 			i -= 1;
 			int add_buf = buf;
+
+			cout << "Now we are going to shift all remaining nodes in the route, which we have got early, to the one level upper. The nearest node which will be replaced with previous saved in buffer variable node value, which is " << buf << "\n";
+			cout << "Remaining route:\n";
+			printHeap(way, i+1);
+
 			while(cur > m_root){
+				cout << "The value of current will be saved in buffer variable and then will be replaced with the value of its biggest son, which is " << add_buf << " and has been saved in the another buffer variable.\n";
 				cur = way[i];
+				nodes[0] = cur;
+				printHeap(nodes, 1);
 				buf = m_arr[cur];
 				m_arr[cur] = add_buf;
 				add_buf = buf;
 				i -= 1;
+				nodes[0] = cur;
+				printHeap(nodes, 1);
 			}
+			cout << "The heap root has been reached. Shifting nodes to upper level has successfully ended.\n";
+
+			cout << "Upward sifting has ended.\n";
+			cout << "-----------------------------------------------\n";
 		}
 
 		void upwardSiftSort(){//сортировка с использованием восходящей просейки
 			cout << "Heapsort with upward sifting.\n This sort using the upward sifting to restore heap after draging max element.\n";
+			cout << "----------------------------------------------------------------------------------\n";
 			while(m_size){;
 				dragMax();
+				if(!m_size){
+					cout << "It was the last node in the heap!\n";
+					break;
+				}
+				cout << "\033[1;30;43mHeap is corrupted after draging maximal element!\033[0m Let's restore our heap with sifting it down.\n";
 				upwardSift();
+				cout << "\033[1;30;42mThe heap restored!\033[0m\n\n\n\n";
 			}
+			cout << "----------------------------------------------------------------------------------\n";
 			cout << "Sort has successfully ended!\n";
+			printAsArr(false);
 		}
 
 		void siftDownSort(){//сортировка с использованием просейки сверху-вниз
 			cout << "Heapsort with sifting down.\n This sort using the sifting down to restore heap after draging max element.\n";
+			cout << "----------------------------------------------------------------------------------\n";
 			while(m_size){;
 				dragMax();
+				if(!m_size){
+					cout << "It was the last node in the heap!\n";
+					break;
+				}
 				cout << "\033[1;30;43mHeap is corrupted after draging maximal element!\033[0m Let's restore our heap with sifting it down.\n";
 				siftDown(m_root);
 				cout << "\033[1;30;42mThe heap restored!\033[0m\n\n\n\n";
 			}
+			cout << "----------------------------------------------------------------------------------\n";
 			cout << "Sort has successfully ended!\n";
+			printAsArr(false);
 		}
 
 		void printSortArr(){//выводит отсортированную часть массива
@@ -268,7 +324,7 @@ class Dheap{
 		}
 
 		void printAsArr(bool is_col_first){//выводит кучу как массив
-			cout << "It is heap as array. The green part is actually the heap, white is sorted sequence and red is the old root: ";
+			cout << "It is heap as array. The green part is actually the heap, white is sorted sequence and cyan is the old root: ";
 			for(int i = 0; i < m_arr_size; i++){
 				cout << "\033[1;30;42m";
 				if(i >= m_size){
@@ -344,12 +400,13 @@ class Dheap{
 		}
 
 		int goToMaxLeaf(int* &way){//спускаемся до листа, для каждой вершины выбирая максимального потомка
+			cout << "----------------------------------------------------------------------------------\n";
 			cout << "Now we will find a route to the leaf which consist of the biggest sons.\n";
 			int root =	m_root;
 			int length = 1;
 			int i = 0;
 			way[i] = root;
-			cout << "So the first node is root of the heap and its value is " << m_arr[root] << ". Itshas been added to the route.";
+			cout << "So the first node is root of the heap and its value is " << m_arr[root] << ". It has been added to the route.";
 			while(root*m_d+1 < m_size){
 				length += 1;
 				i += 1;
@@ -360,6 +417,7 @@ class Dheap{
 			
 			cout << "Eventually we have managed to get the route!\n";
 			printHeap(way, length);
+			cout << "----------------------------------------------------------------------------------\n";
 			return length;
 		}
 
@@ -390,9 +448,9 @@ int main(){
 	//heap.printHeap();
 	//heap.printAsArr();
 	//heap.dragMax();
-	//heap.upwardSiftSort();
-	heap.siftDownSort();
-	heap.printHeap(nullptr, -1);
+	heap.upwardSiftSort();
+	//heap.siftDownSort();
+	//heap.printHeap(nullptr, -1);
 	//heap.printAsArr();
 	
 	//
