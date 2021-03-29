@@ -89,18 +89,20 @@ class Dheap{
 				if(max == -1){
 					max = i;
 					cout << m_arr[i] << " is first son, so it is new maximum value.\n";
-					nodes[j] = i;
+					nodes[0] = i;
 					//j += 1;
-					printHeap(nodes, j+1);					
+					printHeap(nodes, j);					
 					continue;
 				}
 
 				if(m_arr[i] > m_arr[max]){
 					cout << m_arr[i] << " is more than current maximum value, which is " << m_arr[max] << '\n';
+					nodes[0] = max;
 					max = i;
 				}
 				else{
 					cout << m_arr[i] << " is less or equal than current maximum value, which is " << m_arr[max] << '\n';
+					nodes[0] = max;
 				}
 				nodes[j] = i;
 				//j += 1;
@@ -126,10 +128,12 @@ class Dheap{
 			for(int i = root*m_d+1; i <= root*m_d + m_d && i < m_size; i++){
 				if(m_arr[i] > m_arr[max]){
 					cout << m_arr[i] << " is more than current maximum value, which is " << m_arr[max] << '\n';
+					nodes[0] = max;
 					max = i;
 				}
 				else{
 					cout << m_arr[i] << " is less or equal than current maximum value, which is " << m_arr[max] << '\n';
+					nodes[0] = max;
 				}
 				nodes[j] = i;
 				//j += 1;
@@ -440,7 +444,7 @@ class Dheap{
 
 		int goToMaxLeaf(int* &way){//спускаемся до листа, для каждой вершины выбирая максимального потомка
 			cout << "----------------------------------------------------------------------------------\n";
-			cout << "Now we will find a route to the leaf which consist of the biggest sons.\n";
+			cout << "Now we will find a route to the leaf, which consist of the biggest sons.\n";
 			int root =	m_root;
 			int length = 1;
 			int i = 0;
