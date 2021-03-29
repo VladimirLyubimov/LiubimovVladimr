@@ -146,22 +146,6 @@ class Dheap{
 			return max;
 		}
 
-		void siftUp(int leaf){//просейка снизу-вверх
-			if(leaf == m_root || (leaf-1)/m_d < 0){
-				return;
-			}
-
-			while(leaf != m_root && m_arr[leaf] > m_arr[(leaf-1)/m_d] && m_arr[m_root] < m_arr[leaf]){
-				int c = m_arr[leaf];
-				m_arr[leaf] = m_arr[m_root];
-				m_arr[m_root] = c;
-				leaf = (leaf-1)/m_d;
-				if(leaf < 0){
-					return;
-				}
-			}
-		}
-
 		void siftDown(int root){//обыкновенная просейка сверху-вниз
 			cout << "-----------------------------------------------\n";
 			cout << "It is the sifting down.\n";
@@ -179,13 +163,9 @@ class Dheap{
 				return;
 			}
 
-			while(root * m_d + 1 < m_size){
- 
+			while(root * m_d + 1 < m_size){ 
 				int n_root = findMax(root);
 
-				//if(m_arr[root] > m_arr[n_root]){
-					//return;
-				//}
 				int nodes[2] {root, n_root};
 				if(n_root == root){
 					cout << "The root, which value is " << m_arr[root] << " is more than his sons, so this subtree is heap!\n";
@@ -355,12 +335,8 @@ class Dheap{
 			printAsArr(false);
 		}
 
-		void printSortArr(){//выводит отсортированную часть массива
-			if(m_size == m_arr_size){
-				cout << "No sorted sequence!\n";
-				return;
-			}
-			for(int i = m_size; i < m_arr_size; i++){
+		void printArr(){//выводит массив
+			for(int i = 0; i < m_arr_size; i++){
 				cout << m_arr[i] << ' ';
 			}
 			cout << '\n';
@@ -384,9 +360,16 @@ class Dheap{
 			cout << '\n';
 		}
 
-		void printNode(int node_value, int step, bool is_col){//выводит узел в консоль
-			for(int i = 0; i < step; i++){
-				cout << ' ';
+		void printNode(int node_value, int step, bool is_col, char side){//выводит узел в консоль
+			if(side == 'l' || side == 't'){
+				for(int i = 0; i < step; i++){
+					cout << ' ';
+				}
+			}
+			else{
+				for(int i = 0; i < step; i++){
+					cout << '-';
+				}
 			}
 
 			if(is_col){
@@ -394,12 +377,23 @@ class Dheap{
 			}
 			cout.setf(ios::left);
 			cout.width(4);
+			if(side != 'r' && side != 't'){
+				cout.fill('-');
+			}
 			cout << node_value;
 			cout.unsetf(ios::left);
+			cout.fill(' ');
 			cout << "\033[0m";
 
-			for(int i = 0; i < step; i++){
-				cout << ' ';
+			if(side == 'r' || side == 't'){
+				for(int i = 0; i < step; i++){
+					cout << ' ';
+				}
+			}
+			else{
+				for(int i = 0; i < step; i++){
+					cout << '-';
+				}
 			}
 		}
 
@@ -412,8 +406,8 @@ class Dheap{
 			int height = calcHeight();
 			bool is_col = false;
 			int j = 0;
-			//cout << height << '\n';
-			//cout << m_size << '\n';
+			char side = 0;
+			
 			int step = 0;
 			for(int i = 0; i < m_size; i++){
 				step = int(3*2*int(pow(double(m_d),double(height-1)))/(2*int(pow(double(m_d),double(lev))))-2);
@@ -425,46 +419,31 @@ class Dheap{
 						j += 1;
 					}
 				}
-				//cout << lev << ' ' << step << '\n';
+				
 				if(lev == 0){
-					printNode(m_arr[i], step, is_col);
+					printNode(m_arr[i], step, is_col, 't');
 					lev += 1;
+					cout << "|||||";
 					cout << '\n';
 					continue;
 				}
-				printNode(m_arr[i], step, is_col);
+
+				if(i%m_d == 1){
+					side = 'l';
+				}
+				if(i%m_d == 0 || i == m_size-1){
+					side = 'r';
+				}
+				printNode(m_arr[i], step, is_col, side);
+				side = 0;
 
 				if(i%((int)(double(1.0-pow(double(m_d), double(lev+1)))/double(1-m_d))-1) == 0 || m_d == 1){
 					lev += 1;
+					cout << "|||||";
 					cout << '\n';
 				}
 			}
 			cout << "\n";
-		}
-
-		int goToMaxLeaf(int* &way){//спускаемся до листа, для каждой вершины выбирая максимального потомка
-			cout << "----------------------------------------------------------------------------------\n";
-			cout << "Now we will find a route to the leaf, which consist of the biggest sons.\n";
-			int root =	m_root;
-			int length = 1;
-			int i = 0;
-			way[i] = root;
-			cout << "So the first node is root of the heap and its value is " << m_arr[root] << ". It has been added to the route.\n";
-			while(root*m_d+1 < m_size){
-				length += 1;
-				i += 1;
-				root = findMaxLeaf(root);
-				way[i] = root;
-				cout << "So node with value " << m_arr[root] << " and index " << root << " has been added to the route.\n";
-				cout << "Current route is:\n";
-				printHeap(way, length);
-				cout << "\n\n";
-			}
-			
-			cout << "Eventually we have managed to get the route!\n";
-			printHeap(way, length);
-			cout << "----------------------------------------------------------------------------------\n";
-			return length;
 		}
 
 		int getHeight(){//возвращает высоту дерева
@@ -479,13 +458,11 @@ class Dheap{
 
 int main(){
 	ifstream fin;
-
 	char command;
 	string fname;
 	Dheap* heap = nullptr;
-	int* route = nullptr;
-	int length = 0;
 	bool isD = true;
+	
 	while(1){
 		cout << "Input 's' to start the program or input 'q' to stop the program:\n";
 			cin >> command;
@@ -511,25 +488,35 @@ int main(){
 						delete heap;
 						break;
 					}
-
-					cout << "Heap as array:\n";
-					heap->printAsArr(false);
+					
+					cout << "Input array:\n";
+					heap->printArr();
+					cout << "Fistly we need to make heap from starting array.\n";
+					heap->makeHeap();
 					cout << "\n\n\n";
 
-					cout << "Heap as tree:\n";
-					heap->printHeap(nullptr, -1);
-					cout << "\n\n\n";
-
-					route = new int[heap->calcHeight()];
-					length = 0;
-					length = heap->goToMaxLeaf(route);
-					cout << "Indexes of the route nodes:\n";
-					for(int i = 0; i < length; i++){
-						cout << route[i] << ' ';
+					cout << "Choose sifting type. 'd' for sifting down and 'u' for upward sifting:\n";
+					cin >> command;
+					if(command == 'd'){
+						cout << "You choose sifting down sort.\n";
+						heap->siftDownSort();
 					}
-					cout << "\n\n\n\n";
+					else{
+						if(command == 'u'){
+							cout << "You choose upward sifting sort.\n";
+							heap->upwardSiftSort();
+						}
+						else{
+							cout << "Error command!\n";
+							delete heap;
+							break;
+						}
+					}
 
-					delete[] route;
+					cout << "\n\n\n\n";
+					cout << "Sorted array:\n";
+					heap->printArr();
+					cout << "\n\n\n\n";
 					delete heap;
 					break;
 
@@ -540,27 +527,5 @@ int main(){
 			}
 	}
 
-	//int* way = new int[heap.getHeight()];
-	//heap.goToMaxLeaf(way);
-	//heap.printHeap();
-	//heap.printAsArr();
-	//heap.dragMax();
-	//heap.upwardSiftSort();
-	//heap.siftDownSort();
-	//heap.printHeap(nullptr, -1);
-	//heap.printAsArr();
-	
-	//
-	//heap.printHeap();
-	//heap.upwardSift();
-	//heap.printAsArr();
-	//heap.printHeap();
-
-	//int* way = new int[heap.getHeight()];
-	//heap.goToMaxLeaf(way);
-	/*for(int i = 0; i < heap.getHeight(); i++){
-		cout << way[i] << ' ';
-	}*/
-	//cout << '\n';
 	return 0;
 }
