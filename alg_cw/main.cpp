@@ -428,7 +428,7 @@ class Dheap{
 					continue;
 				}
 
-				if(i%m_d == 1){
+				if(i%m_d == 1 || m_d == 1){
 					side = 'l';
 				}
 				if(i%m_d == 0 || i == m_size-1){
