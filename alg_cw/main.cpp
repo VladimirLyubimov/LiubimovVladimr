@@ -368,7 +368,7 @@ class Dheap{
 			}
 			else{
 				for(int i = 0; i < step; i++){
-					cout << '-';
+					cout << '_';
 				}
 			}
 
@@ -378,7 +378,7 @@ class Dheap{
 			cout.setf(ios::left);
 			cout.width(4);
 			if(side != 'r' && side != 't'){
-				cout.fill('-');
+				cout.fill('_');
 			}
 			cout << node_value;
 			cout.unsetf(ios::left);
@@ -392,7 +392,7 @@ class Dheap{
 			}
 			else{
 				for(int i = 0; i < step; i++){
-					cout << '-';
+					cout << '_';
 				}
 			}
 		}
@@ -428,11 +428,15 @@ class Dheap{
 					continue;
 				}
 
-				if(i%m_d == 1 || m_d == 1){
+				if(i%m_d == 1){
 					side = 'l';
 				}
 				if(i%m_d == 0 || i == m_size-1){
 					side = 'r';
+				}
+
+				if(m_d == 1 || (i == m_size-1 && i%m_d == 1)){
+					side = 't';
 				}
 				printNode(m_arr[i], step, is_col, side);
 				side = 0;
