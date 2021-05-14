@@ -7,11 +7,11 @@
 using std::cout;
 using std::cin;
 
-void getGraph(int** &graph) {
+void getGraph(int**& graph) {
     std::string st;
-    while(1){
+    while (1) {
         getline(cin, st);
-        if (st.empty()){
+        if (st.empty()) {
             break;
         }
         cout << st << '\n';
@@ -20,7 +20,7 @@ void getGraph(int** &graph) {
     cout << 0 << '\n';
 }
 
-class Node{
+class Node {
 private:
     char m_val;
     float m_path_val;
@@ -29,7 +29,7 @@ private:
     std::vector<Node> m_neighbours;
 
 public:
-    Node(int val) :m_val(val) {
+    Node(char val) :m_val(val) {
         m_path_val = 0;
         m_everistic_val = 0;
         m_total_val = 0;
@@ -55,6 +55,10 @@ public:
         return m_total_val;
     }
 
+    void appendNeighbour(Node node) {
+        m_neighbours.push_back(node);
+    }
+
     bool isNeighbour(Node node) {
         for (int i = 0; i < m_neighbours.size(); i++) {
             if (m_neighbours[i].getValue() == node.getValue()) {
@@ -66,10 +70,40 @@ public:
     }
 };
 
-void Astar(int** &graph, int start, int finish){
-    std::queue<int> closed_set;
+class Graph {
+public:
+    std::vector<Node> m_data;
+
+public:
+    Graph(int** &Atable, int table_size) {
+        for (int i = 0; i < table_size; i++) {
+            char node_val = static_cast<char>(i + 97);
+            m_data.push_back(Node(node_val))
+        for (int i = 0; i < table_size; i++) {
+            char node_val = static_cast<char>(i+97);
+            for (int j = 0; j < table_size; i++) {
+                if (Atable[i][j] >= 0) {
+                    if(!isNodeExist)
+                }
+            }
+        }
+    };
+
+    bool isNodeExist(char node_val) {
+        for (int i = 0; i < m_data.size(); i++) {
+            if (m_data[i].getValue() == node_val) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+};
+
+void Astar(int**& graph, int start, int finish) {
+    std::vector<int> closed_set;
     std::queue<int> open_set;
-    std::queue<int> path;
+    std::vector<int> path;
 
     open_set.push(start);
 }
