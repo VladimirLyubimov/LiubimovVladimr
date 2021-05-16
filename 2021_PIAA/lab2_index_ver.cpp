@@ -201,10 +201,10 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
                 float tempral_path_val = graph.m_data[cur_node_index].getPathValue() + Atable[cur_node_index][cur_neighbour];
                 bool need_update = false;
 
-                //if (std::find(open_set.begin(), open_set.end(), cur_neighbour) == open_set.end()) {
+                if (std::find(open_set.begin(), open_set.end(), cur_neighbour) == open_set.end()) {
                     open_set.push_back(cur_neighbour);
                     //need_update = true;
-                //}
+                }
                 //else {
                     if (tempral_path_val < graph.m_data[cur_neighbour].getPathValue()) {
                         need_update = true;
