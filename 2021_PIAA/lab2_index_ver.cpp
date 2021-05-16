@@ -8,12 +8,48 @@
 using std::cout;
 using std::cin;
 
-void getGraph(int**& graph) {
+void increaseSize(int**& Atable, int new_length, int old_length) {
+    int** new_table = new int* [new_length];
+    for (int i = 0; i < new_length; i++) {
+        new_table[i] = new int[new_length];
+    }
+
+    if (old_length != 0) {
+        for (int i = 0; i < new_length; i++) {
+            for (int j = 0; j < new_length; j++) {
+                if (i < old_length && j < old_length) {
+                    new_table[i][j] = Atable[i][j];
+                }
+                else {
+                    new_table[i][j] = -1;
+                }
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < new_length; i++) {
+            for (int j = 0; j < new_length; j++) {
+                new_table[i][j] = -1;
+            }
+        }
+    }
+
+    Atable = new_table;
+}
+
+int getAtable(int**& Atable) {
+    int size = 0;
     char ch1, ch2;
     float val;
     while (cin >> ch1 >> ch2 >> val) {
-        graph[static_cast<int>(ch1) - 97][static_cast<int>(ch2) - 97] = val;
+        int max = std::max(static_cast<int>(ch1) - 96, static_cast<int>(ch2) - 96);
+        if (max > size) {
+            increaseSize(Atable, max, size);
+            size = max;
+        }
+        Atable[static_cast<int>(ch1) - 97][static_cast<int>(ch2) - 97] = val;
     }
+    return size;
 }
 
 class Node {
@@ -83,12 +119,12 @@ public:
     std::vector<Node> m_data;
 
 public:
-    Graph(int** &Atable, int table_size) {
+    Graph(int**& Atable, int table_size) {
         for (int i = 0; i < table_size; i++) {
             char node_val = static_cast<char>(i + 97);
             m_data.push_back(Node(node_val));
         }
-        
+
         for (int i = 0; i < table_size; i++) {
             for (int j = 0; j < table_size; j++) {
                 if (Atable[i][j] >= 0) {
@@ -105,15 +141,15 @@ public:
             }
         }
 
-            return false;
-        }
-    };
+        return false;
+    }
+};
 
 bool cmp(Node node1, Node node2) {
     return (node1.getTotalValue() >= node2.getTotalValue());
 }
 
-int findMinNode(std::vector<Node>& nodes, std::vector<int>& arr){
+int findMinNode(std::vector<Node>& nodes, std::vector<int>& arr) {
     int min_index = arr[0];
     for (int i = 0; i < arr.size(); i++) {
         if (nodes[arr[i]].getTotalValue() < nodes[min_index].getTotalValue()) {
@@ -194,28 +230,24 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
     }
 }
 
-    int main(){
-        int size = 5;
-        int** Atable = new int* [size];
-        for (int i = 0; i < size; i++) {
-            Atable[i] = new int[size];
-        }
+int main() {
+    int start, finish;
+    int** Atable = nullptr;
+    int size;
+    char ch1, ch2;
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                Atable[i][j] = -1;
-            }
-        }
+    cin >> ch1 >> ch2;
+    start = static_cast<int>(ch1) - 97;
+    finish = static_cast<int>(ch2) - 97;
 
-        cout << "Input data:\n";
-        getGraph(Atable);
+    size = getAtable(Atable);
 
-        Graph graph(Atable, size);
-        std::vector<char> path = Astar(graph, 0, 4, Atable);
-        for (int i = 0; i < path.size(); i++) {
-            cout << path[i] << ' ';
-        }
-        cout << '\n';
-
-        return 0;
+    Graph graph(Atable, size);
+    std::vector<char> path = Astar(graph, start, finish, Atable);
+    for (int i = 0; i < path.size(); i++) {
+        cout << path[i];
     }
+    cout << '\n';
+
+    return 0;
+}
