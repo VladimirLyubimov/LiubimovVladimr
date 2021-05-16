@@ -195,24 +195,24 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
         }
 
         for (int i = 0; i < graph.m_data[cur_node_index].m_neighbours.size(); i++) {
-            if (std::find(closed_set.begin(), closed_set.end(), graph.m_data[cur_node_index].m_neighbours[i]) == closed_set.end()) {
+            //if (std::find(closed_set.begin(), closed_set.end(), graph.m_data[cur_node_index].m_neighbours[i]) == closed_set.end()) {
                 int cur_neighbour = graph.m_data[cur_node_index].m_neighbours[i];
 
                 float tempral_path_val = graph.m_data[cur_node_index].getPathValue() + Atable[cur_node_index][cur_neighbour];
                 bool need_update = false;
 
-                if (std::find(open_set.begin(), open_set.end(), cur_neighbour) == open_set.end()) {
+                //if (std::find(open_set.begin(), open_set.end(), cur_neighbour) == open_set.end()) {
                     open_set.push_back(cur_neighbour);
-                    need_update = true;
-                }
-                else {
+                    //need_update = true;
+                //}
+                //else {
                     if (tempral_path_val < graph.m_data[cur_neighbour].getPathValue()) {
                         need_update = true;
                     }
                     else {
                         need_update = false;
                     }
-                }
+                //}
 
                 if (need_update) {
                     graph.m_data[cur_neighbour].setCameFrom(cur_node_index);
@@ -220,7 +220,7 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
                     graph.m_data[cur_neighbour].calcEveristic(graph.m_data[finish].getValue());
                     graph.m_data[cur_neighbour].calcTotalValue();
                 }
-            }
+            //}
         }
 
 
