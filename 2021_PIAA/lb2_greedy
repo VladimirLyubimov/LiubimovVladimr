@@ -120,32 +120,33 @@ public:
 
         return false;
     }
+
+    void addNode(char node_val) {
+        m_data.push_back(Node(node_val));
+    }
 };
 
-int findNextNode(std::vector<Node>& nodes, std::vector<int>& arr) {
-    int min_index = arr[0];
-    for (int i = 0; i < arr.size(); i++) {
-        if (nodes[arr[i]].getPathValue() < nodes[min_index].getPathValue()) {
-            min_index = arr[i];
+int findNextNode(int cur_node, std::vector<int>& neighbours, int**& Atable) {
+    if (neighbours.empty()) {
+        return -1;
+    }
+
+    int min_index = neighbours[0];
+    for (int i = 0; i < neighbours.size(); i++) {
+        if (Atable[cur_node][neighbours[i]] < Atable[cur_node][min_index]) {
+            min_index = neighbours[i];
             continue;
         }
 
-        if (nodes[arr[i]].getPathValue() == nodes[min_index].getPathValue()) {
-            if (nodes[arr[i]].getValue() < nodes[min_index].getValue()) {
-                min_index = arr[i];
+        if (Atable[cur_node][neighbours[i]] == Atable[cur_node][min_index]) {
+            if (neighbours[i] < min_index) {
+                min_index = neighbours[i];
             }
+            continue;
         }
     }
 
     return min_index;
-}
-
-void makePath(std::vector<Node>& nodes, std::vector<char>& path, int finish) {
-    int cur_index = finish;
-    while (cur_index != -1) {
-        path.insert(path.begin(), nodes[cur_index].getValue());
-        cur_index = nodes[cur_index].getCameFrom();
-    }
 }
 
 std::vector<char> GreedyAlgo(Graph graph, int start, int finish, int**& Atable) {
@@ -159,27 +160,30 @@ std::vector<char> GreedyAlgo(Graph graph, int start, int finish, int**& Atable) 
     while (!visited_set.empty())
     {
         int cur_node_index = visited_set.front();
+
         if (cur_node_index == finish) {
-            makePath(graph.m_data, path, finish);
+            path.push_back(graph.m_data[cur_node_index].getValue());
             return path;
         }
 
         int next_node_index = -1;
+        next_node_index = findNextNode(cur_node_index, graph.m_data[cur_node_index].m_neighbours, Atable);
 
-        for (int i = 0; i < graph.m_data[cur_node_index].m_neighbours.size(); i++) {
-            int cur_neighbour = graph.m_data[cur_node_index].m_neighbours[i];
-
-            float tempral_path_val = graph.m_data[cur_node_index].getPathValue() + Atable[cur_node_index][cur_neighbour];
-            graph.m_data[cur_neighbour].setCameFrom(cur_node_index);
-            graph.m_data[cur_neighbour].setPathVal(tempral_path_val);
+        if (next_node_index == -1) {
+            visited_set.erase(visited_set.begin());
+            path.pop_back();
+            continue;
         }
 
-        visited_set.erase(visited_set.begin());
+        visited_set.insert(visited_set.begin(), next_node_index);
 
-        if (!graph.m_data[cur_node_index].m_neighbours.empty()) {
-            next_node_index = findNextNode(graph.m_data, graph.m_data[cur_node_index].m_neighbours);
-            visited_set.insert(visited_set.begin(), next_node_index);
-        }
+        float tempral_path_val = graph.m_data[cur_node_index].getPathValue() + Atable[cur_node_index][next_node_index];
+        int next_node_index_copy = next_node_index;
+
+        path.push_back(graph.m_data[cur_node_index].getValue());
+        graph.m_data[next_node_index].setPathVal(tempral_path_val);
+        graph.m_data[cur_node_index].m_neighbours.erase(std::find(graph.m_data[cur_node_index].m_neighbours.begin(), graph.m_data[cur_node_index].m_neighbours.end(), next_node_index));
+        
     }
 }
 
