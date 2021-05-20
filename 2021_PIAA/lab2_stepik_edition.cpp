@@ -198,7 +198,7 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
             //if (std::find(closed_set.begin(), closed_set.end(), graph.m_data[cur_node_index].m_neighbours[i]) == closed_set.end()) {
             int cur_neighbour = graph.m_data[cur_node_index].m_neighbours[i];
 
-            float tempral_path_val = graph.m_data[cur_node_index].getPathValue() + Atable[cur_node_index][cur_neighbour];
+            float temporal_path_val = graph.m_data[cur_node_index].getPathValue() + Atable[cur_node_index][cur_neighbour];
             bool need_update = false;
 
             if (std::find(open_set.begin(), open_set.end(), cur_neighbour) == open_set.end()) {
@@ -206,7 +206,7 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
                 //need_update = true;
             }
             //else {
-            if (tempral_path_val < graph.m_data[cur_neighbour].getPathValue()) {
+            if (temporal_path_val < graph.m_data[cur_neighbour].getPathValue()) {
                 need_update = true;
             }
             else {
@@ -216,12 +216,14 @@ std::vector<char> Astar(Graph graph, int start, int finish, int**& Atable) {
 
             if (need_update) {
                 graph.m_data[cur_neighbour].setCameFrom(cur_node_index);
-                graph.m_data[cur_neighbour].setPathVal(tempral_path_val);
+                graph.m_data[cur_neighbour].setPathVal(temporal_path_val);
                 graph.m_data[cur_neighbour].calcEveristic(graph.m_data[finish].getValue());
                 graph.m_data[cur_neighbour].calcTotalValue();
             }
             //}
+            //graph.m_data[cur_node_index].m_neighbours.erase(std::find(graph.m_data[cur_node_index].m_neighbours.begin(), graph.m_data[cur_node_index].m_neighbours.end(), cur_neighbour));
         }
+        graph.m_data[cur_node_index].m_neighbours.clear();
 
 
         int cur_node_index_copy = cur_node_index;
