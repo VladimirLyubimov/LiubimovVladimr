@@ -65,7 +65,7 @@ vector<int> KMP(string& text, string& pattern) {
 int main() {
 	string text = "";
 	string substring = "";
-	cout << "Input substring:\n";
+	cout << "Input pattern:\n";
 	cin >> substring;
 	cout << "Input text:\n";
 	cin >> text;
