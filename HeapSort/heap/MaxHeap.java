@@ -68,21 +68,42 @@ public class MaxHeap{
 	}
 	
 	private void siftDown(int index){
+		System.out.println("------------------------------------------------------------------------------------------------");
+		System.out.println("Sifting down started! Target node will be droped dowm to lower level of heap until its possition will become fulfilled the heap feature - all descendants are less the their parent.\n");
+		int[] col_nodes = new int[2];
+		
 		while(n*index + 1 < size){
+			col_nodes[0] = index;
+			System.out.println("Current node has value " + data.getElem(index));
+			printAsHeap(col_nodes, 1);
+			System.out.println();
+			
+			System.out.println("Finding max son of our node:");
 			int max_son = getMaxSonIndex(index);
 			if(max_son == -1){
+				System.out.println("Our node is leaf, so it obviously fulfills heap feature!\n");
 				return;
 			}
 			if(data.getElem(index) < data.getElem(max_son)){
+				col_nodes[1] = max_son;
+				System.out.println("The son with value " + data.getElem(max_son) + " is bigger than our node. Lets swap these values!");
+				printAsHeap(col_nodes, 2);
+				
 				int temp_val = data.getElem(index);
 				data.replaceElem(data.getElem(max_son), index);
 				data.replaceElem(temp_val, max_son);
+				
+				System.out.println("Elements swaped! Let's continue dropping our node dowm.\n");
+				printAsHeap(col_nodes, 2);
+				
 				index = max_son;
 			}
 			else{
+				System.out.println("Our node bigger than all its descendants, so it fulfills heap feature!\n\n");
 				return;
 			}
 		}
+		System.out.println("Our node is leaf, so it obviously fulfills heap feature!\n");
 	}
 	
 	private int getHeight(){
@@ -111,13 +132,24 @@ public class MaxHeap{
 		int[] way = new int[getHeight()];
 		int i = 0;
 		
+		System.out.println("------------------------------------------------------------------------------------------------");
+		System.out.println("We are going to drop down with the nodes which have the biggest values among their brothers.\n");
+		System.out.println("Root is automaticly added to the path.");
+		
 		while(root < size && root != -1){
 			way[i] = root;
-			i += 1;
-			root = getMaxSonIndex(root);
+			
+			System.out.println("Current path is:");
 			printAsHeap(way, way.length);
+			
+			System.out.println("\nFinding next element:");
+			i += 1;		
+			root = getMaxSonIndex(root);
 		}
 		
+		System.out.println("\nLeaf reached! Path has been found!");
+		printAsHeap(way, way.length);
+		System.out.print("\n\n");
 		return way;
 	}
 	

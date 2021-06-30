@@ -31,8 +31,10 @@ public class Main{
 		
 		System.out.println("\n\nHeap buildng:");
 		MaxHeap tree = new MaxHeap(h_arr, n);
-		tree.printAsHeap(null, 0);
 		System.out.println("Heap buildng has been ended!");
+		tree.printAsHeap(null, 0);
+		System.out.println("\nHeap as array:");
+		tree.printAll();
 		
 		System.out.println("\n\nPath finding:");
 		tree.maxSonPath();
