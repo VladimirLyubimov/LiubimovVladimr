@@ -26,18 +26,44 @@ public class MaxHeap{
 	
 	private int getMaxSonIndex(int index){
 		int max = -1;
+		int[] col_nodes = new int[2];
+		col_nodes[0] = index;
+		
+		System.out.println("---------------------------------------------");
+		System.out.println("Let's find max son for this node with value " + data.getElem(index));
+		printAsHeap(col_nodes, 1);
+		System.out.println();
+		
 		if(n*index+1 < size){
 			max = n*index+1;
 		}
 		else{
+			System.out.println("This node has not got any sons!\n\n");
 			return max;
 		}
-		for(int i = n*index+1; i <= n*index+n && i < size; i++){
+		
+		System.out.println("First max son is the left son");
+		for(int i = n*index+2; i <= n*index+n && i < size; i++){
+			System.out.println("Current max son is node with value " + data.getElem(max) + ". It being compared with node with value " + data.getElem(i));
+			col_nodes[0] = max;
+			col_nodes[1] = i;
+			printAsHeap(col_nodes, 2);
+			
 			if(data.getElem(max) < data.getElem(i)){
 				max = i;
+				System.out.println("New temporal max son found!. It is value is " + data.getElem(max));
 			}
+			else{
+				System.out.println("Current max is still node with value " + data.getElem(max));
+			}
+			
+			System.out.println();
 		}
 		
+		col_nodes[0] = max;
+		System.out.println("\nFinal max son is node with value " + data.getElem(max));
+		printAsHeap(col_nodes, 1);
+		System.out.print("\n\n");
 		return max;
 	}
 	
@@ -185,8 +211,8 @@ public class MaxHeap{
 			}
 		}
 		System.out.println();
-		System.out.println();
-		System.out.println();
+		//System.out.println();
+		//System.out.println();
 	}
 	
 	
