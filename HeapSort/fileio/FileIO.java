@@ -13,9 +13,7 @@ public class FileIO{
 			int c;
 			while((c = fin.read()) != -1){
 				arr.add(c);
-				//System.out.print(c + " ");
 			}			
-			//System.out.println();
 			fin.close();
 		}
 		catch(IOException err){

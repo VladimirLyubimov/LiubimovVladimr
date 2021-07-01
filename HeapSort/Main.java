@@ -15,6 +15,11 @@ public class Main{
 		}
 		
 		int n = arr[0];
+		if(n < 1){
+			System.out.println("Unccorrect n. n must be more than zero!");
+			return;
+		}
+		
 		int[] h_arr = new int[arr.length-1];
 		for(int i  = 1; i < arr.length; i++){
 			h_arr[i-1] = arr[i];
