@@ -36,6 +36,9 @@ public class Main{
 		System.out.println("\nHeap as array:");
 		tree.printAll();
 		
+		System.out.println("Pres any letter to continue:");
+		sc.next();
+		
 		System.out.println("\n\nPath finding:");
 		tree.maxSonPath();
 		System.out.println("\n\nPath finding has been ended!");
