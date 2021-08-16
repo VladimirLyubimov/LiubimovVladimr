@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+using std::cout;
+using std::cin;
+
+class Edge {
+private:
+    char m_end = 0;
+    int m_reverse_flow = 0;
+    int m_flow = 0;
+
+public:
+    Edge(char end = 0, int reverse_flow = 0, int flow = 0): m_end(end), m_reverse_flow(reverse_flow), m_flow(flow) {}
+    Edge() {}
+    
+    void set_end(char end) {
+        m_end = end;
+    }
+
+    void change_reverse_flow(int delta) {
+        m_reverse_flow += delta;
+    }
+
+    void change_flow(int delta) {
+        m_flow += delta;
+    }
+
+    char get_end() {
+        return m_end;
+    }
+
+    int get_reverse_flow() {
+        return m_reverse_flow;
+    }
+
+    int get_flow() {
+        return m_flow;
+    }
+};
+
+class Node {
+public:
+    char m_prev = 0;
+    char m_name = 0;
+    bool m_is_visited = false;
+    std::vector<Edge> m_edges;
+public:
+    Node(char prev = 0, char name = 0, bool visited = false) : m_prev(prev), m_name(name), m_is_visited(visited) {}
+
+    void addEdge(char end, int reverse_flow) {
+        m_edges.push_back(Edge(end, reverse_flow, 0));
+    }
+};
+
+std::map<char, Node> readGraph(int size) {
+    std::map<char, Node> graph;
+    char a, b;
+    int c = 0;;
+    for (int i = 0; i < size; i++) {
+        cin >> a >> b >> c;
+        if (graph.find(a) == graph.end()) {
+            graph.emplace(a, Node(0, a, false));
+            graph[a].addEdge(b, c);
+        }
+        else {
+            graph[a].addEdge(b, c);
+        }
+    }
+    return graph;
+}
+
+int main() {
+    char start, end;
+    int size;
+    cin >> size >> start >> end;
+    std::map<char, Node> graph = readGraph(size);
+    for (auto elem: graph) {
+        cout << elem.second.m_name << ":\n";
+        for (auto edge : elem.second.m_edges) {
+            cout << "edge: " << edge.get_end() << " " << edge.get_reverse_flow() << " " << edge.get_flow() << "\n";
+        }
+    }
+    return 0;
+}
