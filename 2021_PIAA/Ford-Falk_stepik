@@ -56,6 +56,19 @@ public:
     }
 };
 
+bool lex_cmp(Edge edge1, Edge edge2) {//edges sorting by end names
+    return edge1.get_end() < edge2.get_end();
+}
+
+void printGraph(std::map<char, Node> graph) {
+    for (std::pair<char, Node> node : graph) {
+        std::sort(graph[node.first].m_edges.begin(), graph[node.first].m_edges.end(), lex_cmp);
+        for (Edge edge : node.second.m_edges) {
+            cout << node.first << ' ' << edge.get_end() << ' ' << std::max(0, edge.get_flow()) << '\n';
+        }
+    }
+}
+
 std::map<char, Node> readGraph(int size) {
     std::map<char, Node> graph;
     char a, b;
@@ -151,10 +164,6 @@ void updateNet(std::map<char, Node>& graph, std::vector<char> path) {
     }
 }
 
-bool lex_cmp(Edge edge1, Edge edge2){//edges sorting by end names
-    return edge1.get_end() < edge2.get_end();
-}
-
 int main() {
     char begin, end;
     int size;
@@ -176,11 +185,6 @@ int main() {
         total_flow += edge.get_flow();
     }
     cout << total_flow << '\n';
-    for (std::pair<char, Node> node : graph) {
-        std::sort(graph[node.first].m_edges.begin(), graph[node.first].m_edges.end(), lex_cmp);
-        for (Edge edge : node.second.m_edges) {
-            cout << node.first << ' ' << edge.get_end() << ' ' << std::max(0, edge.get_flow()) << '\n';
-        }
-    }
+    printGraph(graph);
     return 0;
 }
